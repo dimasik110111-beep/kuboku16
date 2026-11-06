@@ -1,0 +1,30 @@
+name: Inspect FHR team list markup
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/inspect-team-links.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          pip -q install beautifulsoup4
+          python3 - <<'PY'
+          from bs4 import BeautifulSoup
+          import urllib.request,re
+          url='https://junior.fhr.ru/tournaments/kubokrossii-25008909/teams/'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+          s=BeautifulSoup(urllib.request.urlopen(req,timeout=25).read(),'html.parser')
+          for a in s.select('a[href]'):
+              if re.search(r'/tournaments/kubokrossii-25008909/[a-z-]+_\d+/',a.get('href','')):
+                  print('TEAM_ANCHOR',str(a)[:1600].replace('\n',' '));break
+          u='https://junior.fhr.ru/tournaments/kubokrossii-25008909/krasnaya-mashina-yunior_7500809/'
+          s=BeautifulSoup(urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=25).read(),'html.parser')
+          for e in s.select('img[src*="/teams/"]'):
+              anc=e.find_parent('a');print('TEAMIMG',str(e.parent.parent)[:1000].replace('\n',' '));break
+          title=s.select_one('.school-name,.team-name,h1')
+          print('TEAM_TITLE',str(title)[:800] if title else '')
+          for e in s.select('a.team-player-card')[:2]:print('ROSTER',str(e)[:500].replace('\n',' '))
+          PY
