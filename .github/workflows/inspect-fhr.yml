@@ -1,0 +1,42 @@
+name: Inspect FHR teams and assets
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/inspect-fhr.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect actual FHR markup
+        shell: bash
+        run: |
+          pip -q install beautifulsoup4
+          python3 - <<'PY'
+          import urllib.request,re
+          from bs4 import BeautifulSoup
+          base='https://junior.fhr.ru'
+          paths=[
+          '/tournaments/kubokrossii-25008909/',
+          '/tournaments/kubokrossii-25008909/teams/',
+          '/tournaments/kubokrossii-25008909/krasnaya-mashina-yunior_7500809/',
+          '/games/25170469/',
+          ]
+          for path in paths:
+            print('==============',path,flush=True)
+            try:
+              req=urllib.request.Request(base+path,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html'})
+              with urllib.request.urlopen(req,timeout=25) as resp: html=resp.read().decode('utf-8','ignore')
+              soup=BeautifulSoup(html,'html.parser')
+              print('bytes',len(html),'title',soup.title.get_text(' ',strip=True)[:130] if soup.title else '',flush=True)
+              print('IMAGES',[(i.get('class'),i.get('src'),i.get('data-src'),i.get('alt')) for i in soup.select('img')[:18]],flush=True)
+              print('TEAM_LINKS',[(a.get_text(' ',strip=True)[:55],a.get('href')) for a in soup.select('a[href]') if '25008909/' in str(a.get('href'))][:38],flush=True)
+              print('PLAYER_LINKS',[(a.get_text(' ',strip=True)[:55],a.get('href')) for a in soup.select('a[href]') if 'player' in str(a.get('href')).lower()][:12],flush=True)
+              print('MARKERS',[(k,len(soup.select(k))) for k in ['.team-logo','.team-title','.team-card','.player-card','.player-item','.roster','.players','.tournament-logo','.team-players','.match-protocol','.protocol','.composition']],flush=True)
+              for h in soup.select('h1,h2,h3')[:14]:print('HEADING',h.get_text(' ',strip=True)[:160],flush=True)
+              for key in ['Состав команды','Игроки','tournament-logo','team-logo','player-photo','События']:
+                pos=html.find(key)
+                if pos>=0:print('NEAR',key, re.sub(r'\s+',' ',html[max(0,pos-300):pos+850])[:1150],flush=True)
+            except Exception as e:print('ERROR',repr(e),flush=True)
+          PY
