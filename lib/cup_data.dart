@@ -70,6 +70,15 @@ class Match {
     return RegExp(r'ГРУППА\s+[^ ]+-(I|II|III)(\s|$)').hasMatch(s) ||
       s.contains('СТЫКОВ') || s.contains('ПЛЕЙ-ОФФ');
   }
+  bool get isCrossover {
+    final s=stage.toUpperCase().replaceAll('Ё','Е');
+    return (s.contains('СТЫКОВ') || s.contains('ПЛЕЙ-ОФФ')) &&
+      !s.contains('ЗОЛОТОЙ ФИНАЛ') && !s.contains('СЕРЕБРЯНЫЙ ФИНАЛ');
+  }
+  bool get isFinalStage {
+    final s=stage.toUpperCase().replaceAll('Ё','Е');
+    return s.contains('ЗОЛОТОЙ ФИНАЛ') || s.contains('СЕРЕБРЯНЫЙ ФИНАЛ');
+  }
   String get key => gameId?.toString() ?? '$stage|$date|$home|$away';
   DateTime? get matchDate => DateTime.tryParse(date);
   String get dayLabel {
@@ -119,13 +128,22 @@ class FhrFeed {
       final count = group['matchesCount'];
       final error = group['error'];
       if (error != null) issues.add('$name: $error');
-      final expected = name.startsWith('Группа') ? 10 :
-          (name.contains('Плей-офф') || name.contains('Стыков')) ? 5 : 0;
-      if (expected > 0 && count != expected) issues.add('$name: ${count ?? '?'} / $expected матчей');
+      final upper=name.toUpperCase().replaceAll('Ё','Е');
+      final expected = upper.startsWith('ГРУППА ') && RegExp(r'-(I|II|III)$').hasMatch(upper) ? 10 :
+        (upper.contains('СТЫКОВ') || upper.startsWith('ПЛЕЙ-ОФФ')) ? 5 : 0;
+      if (expected > 0 && count is num && count>expected) {
+        issues.add('Неожиданное количество игр в $name: $count');
+      }
     }
     final fetched = (json['groupsFetched'] as num?)?.toInt() ?? 0;
-    if (fetched < 10) issues.add('Загружено только $fetched из 10 разделов первых двух туров');
-    if (records.length < 90) issues.add('Получено ${records.length} из 90 матчей двух первых туров');
+    // First two qualification tours contain eight 5-team groups and two
+    // five-game crossover sections. Later sections appear only when FHR publishes them.
+    if (stages.isNotEmpty && fetched < stages.length) {
+      issues.add('Не загружены некоторые опубликованные разделы ФХР');
+    }
+    if (stages.length >= 10 && records.length < 90) {
+      issues.add('Получено ${records.length} из ожидаемых 90 матчей двух первых туров');
+    }
     final byDate = records.values.toList()
       ..sort((a,b) {
         final c = b.date.compareTo(a.date);
@@ -224,92 +242,114 @@ class FhrApiClient {
 
 class Rank {
   final String team;
-  int gp = 0, pts = 0, w = 0, rw = 0, gf = 0, ga = 0;
+  int gp=0, pts=0, w=0, rw=0, gf=0, ga=0, otLosses=0;
+  bool provisionalTie=false;
   Rank(this.team);
-  int get diff => gf-ga;
+  int get diff=>gf-ga;
 }
 
-List<Rank> ranking(List<Match> matches, {DateTime? utcNow}) {
-  final when = utcNow ?? DateTime.now().toUtc();
-  final table = <String,Rank>{};
-  final played = <Match>[];
-  // Seed every published qualifier participant, including future fixtures.
-  for (final m in matches) {
-    if (!m.isQualifier) continue;
+/// Regulation FHR 2026/27, Articles 14, 17 and 18.
+/// Points: 2 per win, 1 per OT/SO defeat, 0 per regulation defeat.
+/// A final/tournament-stage table can be computed independently by setting
+/// includeFinals=true and passing only the relevant final-round fixtures.
+List<Rank> ranking(List<Match> matches,{
+  DateTime? utcNow,
+  bool includeFinals=false,
+  Iterable<String> participants=const <String>[],
+}) {
+  final when=utcNow??DateTime.now().toUtc();
+  final table=<String,Rank>{};
+  final played=<Match>[];
+  for (final team in participants) {
+    if(team.isNotEmpty)table.putIfAbsent(team,()=>Rank(team));
+  }
+  for(final m in matches){
+    if(!m.isQualifier && !(includeFinals&&m.isFinalStage))continue;
     table.putIfAbsent(m.home,()=>Rank(m.home));
     table.putIfAbsent(m.away,()=>Rank(m.away));
-    if (!m.isResultAt(when)) continue;
-    final g = m.goals;
-    if (g == null || g[0] == g[1]) continue;
+    if(!m.isResultAt(when))continue;
+    final g=m.goals;
+    if(g==null||g[0]==g[1])continue;
+    final home=table[m.home]!,away=table[m.away]!;
+    home.gp++;away.gp++;
+    home.gf+=g[0];home.ga+=g[1];
+    away.gf+=g[1];away.ga+=g[0];
+    final winner=g[0]>g[1]?home:away,loser=g[0]>g[1]?away:home;
+    winner.w++;winner.pts+=2;
+    if(m.overtime){loser.otLosses++;loser.pts++;}else{winner.rw++;}
     played.add(m);
-    final a = table[m.home]!, b=table[m.away]!;
-    a.gp++; b.gp++;
-    a.gf+=g[0];a.ga+=g[1];b.gf+=g[1];b.ga+=g[0];
-    final win = g[0]>g[1]?a:b, lose=g[0]>g[1]?b:a;
-    win.pts+=2; win.w++;
-    if(m.overtime){lose.pts++;}else{win.rw++;}
   }
-  final byPoints=<int,List<Rank>>{};
-  for(final team in table.values) {
-    byPoints.putIfAbsent(team.pts,()=>[]).add(team);
+  final buckets=<int,List<Rank>>{};
+  for(final team in table.values){
+    buckets.putIfAbsent(team.pts,()=>[]).add(team);
   }
-  final ranks=<Rank>[];
-  for(final pts in (byPoints.keys.toList()..sort((a,b)=>b.compareTo(a)))) {
-    ranks.addAll(_breakTies(byPoints[pts]!, played));
+  final result=<Rank>[];
+  for(final points in (buckets.keys.toList()..sort((a,b)=>b.compareTo(a)))){
+    result.addAll(_regulationTieBreak(buckets[points]!,played));
   }
-  return ranks;
+  return result;
 }
 
-List<Rank> _breakTies(List<Rank> group,List<Match> games) {
-  if (group.length<2) return group;
-  final names=group.map((t)=>t.team).toSet();
-  final meetings=games.where((m)=>names.contains(m.home)&&names.contains(m.away)).toList();
-  final pairs = <String>{};
-  for (final m in meetings) {
-    final teams=[m.home,m.away]..sort();
-    pairs.add(teams.join('|'));
+List<Rank> _regulationTieBreak(List<Rank> teams,List<Match> games){
+  if(teams.length<2)return teams;
+  final tied=teams.map((e)=>e.team).toSet();
+  final meetings=games.where((m)=>tied.contains(m.home)&&tied.contains(m.away)).toList();
+  final pairs=<String>{};
+  for(final m in meetings){
+    final ordered=[m.home,m.away]..sort();
+    pairs.add(ordered.join('|'));
   }
-  final completeMeetings=pairs.length==group.length*(group.length-1)~/2;
-  final criteria=completeMeetings?<int>[1,2,3,4,5,6]:<int>[5,3,6];
-  for (final criterion in criteria) {
-    final buckets=<int,List<Rank>>{};
-    for (final team in group) {
-      buckets.putIfAbsent(_criterion(team,criterion,meetings),()=>[]).add(team);
+  final required=teams.length*(teams.length-1)~/2;
+  // Article 17: head-to-head criteria only when the relevant opponents
+  // have played each other. For incomplete mini-leagues, use the
+  // global fallback; ties remain explicitly provisional.
+  final complete=required>0&&pairs.length==required;
+  final criteria=complete?<int>[1,2,3,4,5,6]:<int>[5,3,6];
+  for(final criterion in criteria){
+    final groups=<int,List<Rank>>{};
+    for(final rank in teams){
+      groups.putIfAbsent(_rankCriterion(rank,criterion,meetings),()=>[]).add(rank);
     }
-    if (buckets.length==1) continue;
-    final out=<Rank>[];
-    for (final k in (buckets.keys.toList()..sort((a,b)=>b.compareTo(a)))) {
-      out.addAll(_breakTies(buckets[k]!,games));
+    if(groups.length<=1)continue;
+    final result=<Rank>[];
+    for(final key in (groups.keys.toList()..sort((a,b)=>b.compareTo(a)))){
+      // A new mini-league must restart criteria at the beginning.
+      result.addAll(_regulationTieBreak(groups[key]!,games));
     }
-    return out;
+    if(!complete){for(final rank in result){rank.provisionalTie=true;}}
+    return result;
   }
-  // Official criteria cannot separate these teams; alphabetic order is provisional.
-  return group.toList()..sort((a,b)=>a.team.compareTo(b.team));
+  // No extra alphabetical tie breaker exists in the FHR regulation.
+  // Stable alphabetical display with a visible "not settled" marker.
+  for(final rank in teams){rank.provisionalTie=true;}
+  return teams.toList()..sort((a,b)=>a.team.compareTo(b.team));
 }
 
-int _criterion(Rank team,int criterion,List<Match> meetings) {
-  switch(criterion) {
+int _rankCriterion(Rank rank,int criterion,List<Match> meetings) {
+  switch(criterion){
     case 1:
       var points=0;
-      for(final m in meetings) {
-        if(m.home!=team.team && m.away!=team.team) continue;
-        final g=m.goals!;
-        final win=(m.home==team.team?g[0]>g[1]:g[1]>g[0]);
-        points+=win?2:(m.overtime?1:0);
+      for(final m in meetings){
+        if(m.home!=rank.team&&m.away!=rank.team)continue;
+        final goals=m.goals;
+        if(goals==null)continue;
+        final winner=m.home==rank.team?goals[0]>goals[1]:goals[1]>goals[0];
+        points+=winner?2:(m.overtime?1:0);
       }
       return points;
     case 2:
-      var diff=0;
-      for(final m in meetings) {
-        final g=m.goals!;
-        if(m.home==team.team)diff+=g[0]-g[1];
-        if(m.away==team.team)diff+=g[1]-g[0];
+      var difference=0;
+      for(final m in meetings){
+        final goals=m.goals;
+        if(goals==null)continue;
+        if(m.home==rank.team)difference+=goals[0]-goals[1];
+        if(m.away==rank.team)difference+=goals[1]-goals[0];
       }
-      return diff;
-    case 3:return team.diff;
-    case 4:return team.w;
-    case 5:return team.rw;
-    case 6:return team.gf;
-    default: return 0;
+      return difference;
+    case 3:return rank.diff;
+    case 4:return rank.w;
+    case 5:return rank.rw;
+    case 6:return rank.gf;
+    default:return 0;
   }
 }
