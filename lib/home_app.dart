@@ -12,29 +12,51 @@ import 'player_statistics_page.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
-class JuniorApp extends StatelessWidget {
+class JuniorApp extends StatefulWidget {
   const JuniorApp({super.key});
-  @override
-  Widget build(BuildContext context)=>MaterialApp(
-    debugShowCheckedModeBanner:false,title:'JUNIOR U16 · Кубок России',
-    theme:ThemeData(
-      useMaterial3:true,brightness:Brightness.dark,
-      scaffoldBackgroundColor:CupUi.background,
-      colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:Brightness.dark),
-      splashFactory:InkRipple.splashFactory,
-      appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
-        foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent),
-      dividerColor:CupUi.stroke,
-      textTheme:TextTheme(
-        bodyMedium:TextStyle(color:CupUi.white),
-        bodySmall:TextStyle(color:CupUi.muted)),
-    ),
-    home:ScoresHome(),
-  );
+  @override State<JuniorApp> createState()=>_JuniorAppState();
 }
-
+class _JuniorAppState extends State<JuniorApp>{
+  bool light=false;
+  @override void initState(){
+    super.initState();
+    CupUi.light=false;
+    SharedPreferences.getInstance().then((p){
+      if(mounted){
+        setState((){
+          light=p.getBool('junior_u16_light_theme')??false;
+          CupUi.light=light;
+        });
+      }
+    });
+  }
+  void switchTheme(){
+    setState((){light=!light;CupUi.light=light;});
+    SharedPreferences.getInstance().then((p)=>p.setBool('junior_u16_light_theme',light));
+  }
+  @override Widget build(BuildContext context){
+    CupUi.light=light;
+    final brightness=light?Brightness.light:Brightness.dark;
+    return MaterialApp(
+      debugShowCheckedModeBanner:false,title:'JUNIOR U16 · Кубок России',
+      theme:ThemeData(
+        useMaterial3:true,brightness:brightness,
+        scaffoldBackgroundColor:CupUi.background,
+        colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness),
+        appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
+          foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent),
+        dividerColor:CupUi.stroke,
+        textTheme:TextTheme(bodyMedium:TextStyle(color:CupUi.white),
+          bodySmall:TextStyle(color:CupUi.muted)),
+      ),
+      home:ScoresHome(light:light,onSwitchTheme:switchTheme),
+    );
+  }
+}
 class ScoresHome extends StatefulWidget{
-  const ScoresHome({super.key});
+  final bool light;
+  final VoidCallback onSwitchTheme;
+  const ScoresHome({super.key,required this.light,required this.onSwitchTheme});
   @override State<ScoresHome> createState()=>_ScoresHomeState();
 }
 
