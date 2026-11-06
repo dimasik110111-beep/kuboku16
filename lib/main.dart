@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         error = latest.isEmpty ? 'ФХР не передал распознаваемые строки. Откройте официальный календарь.' : null;
       });
     } catch (e) {
-      if (mounted) setState(() => error = 'Не удалось обновить ФХР: ' + e.toString());
+      if (mounted) setState(() => error = 'Не удалось обновить ФХР: $e');
     } finally {
       if (mounted) setState(() => loading = false);
     }
@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget pageTitle(String text, {String? subtitle}) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 19, 16, 12),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(text, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w850, letterSpacing: -.4)),
+      Text(text, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: -.4)),
       if (subtitle != null) Padding(padding: const EdgeInsets.only(top: 5),
         child: Text(subtitle, style: const TextStyle(color: muted, fontSize: 12))),
     ]),
@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       Container(width:7,height:7,decoration:BoxDecoration(color:loading?amber:(error==null?const Color(0xff58ca90):muted),shape:BoxShape.circle)),
       const SizedBox(width:8),
       Expanded(child:Text(updated==null?'Ожидание данных ФХР':
-        'ФХР Джуниор  ·  обновлено '+fmtTime(updated!)+'  ·  '+matches.length.toString()+' матчей',
+        'ФХР Джуниор  ·  обновлено ${fmtTime(updated!)}  ·  ${matches.length} матчей',
         style: const TextStyle(fontSize:11,color:muted))),
       if(loading)const SizedBox(width:13,height:13,child:CircularProgressIndicator(strokeWidth:2)),
       GestureDetector(onTap: refresh, child: const Icon(Icons.refresh_rounded,size:19,color:muted)),
@@ -273,12 +273,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Container(width:2,height:34,color:m.finished?stroke:red.withValues(alpha:.65)),
         const SizedBox(width:10),
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Text(m.home,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w650)),
+          Text(m.home,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
           const SizedBox(height:9),
-          Text(m.away,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w650)),
+          Text(m.away,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
         ])),
         SizedBox(width:43,child:Text(m.score.isNotEmpty?m.score:'–',
-          maxLines:1,textAlign:TextAlign.center,style:TextStyle(fontWeight:FontWeight.w850,fontSize:16,color:m.finished?Colors.white:muted))),
+          maxLines:1,textAlign:TextAlign.center,style:TextStyle(fontWeight:FontWeight.w800,fontSize:16,color:m.finished?Colors.white:muted))),
         const Icon(Icons.chevron_right_rounded,size:18,color:muted),
       ]),
     ),
@@ -294,9 +294,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child:const Icon(Icons.sports_hockey,size:16,color:red)),
           const SizedBox(width:9),
           Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            const Text('РОССИЯ · U16',style:TextStyle(color:muted,fontSize:10,fontWeight:FontWeight.w650)),
+            const Text('РОССИЯ · U16',style:TextStyle(color:muted,fontSize:10,fontWeight:FontWeight.w600)),
             const SizedBox(height:3),
-            Text(name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w850)),
+            Text(name,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),
           ])),
           Text(group.length.toString(),style:const TextStyle(color:muted,fontSize:12)),
         ]),
@@ -401,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         child:Row(children:[
           Container(width:27,alignment:Alignment.centerLeft,
             child:Text((i+1).toString(),style:TextStyle(color:i<8?gold:muted,fontWeight:FontWeight.bold,fontSize:12))),
-          Expanded(child:Text(ranks[i].team,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w650,fontSize:12))),
+          Expanded(child:Text(ranks[i].team,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:12))),
           SizedBox(width:29,child:Text(ranks[i].gp.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:12))),
           SizedBox(width:36,child:Text(ranks[i].diff.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:12,color:muted))),
           SizedBox(width:34,child:Text(ranks[i].pts.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:12,fontWeight:FontWeight.w900))),
@@ -437,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       body:ListView(children:[
         Container(color:panel,padding:const EdgeInsets.all(28),child:Column(children:[
           const Icon(Icons.shield_outlined,size:64,color:red),
-          const SizedBox(height:12),Text(name,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w850)),
+          const SizedBox(height:12),Text(name,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w800)),
           const Text('Кубок России U16 · 2026/27',style:TextStyle(fontSize:12,color:muted)),
         ])),
         Padding(padding:const EdgeInsets.fromLTRB(16,20,16,8),child:Text('Матчи',style:Theme.of(ctx).textTheme.titleLarge)),
