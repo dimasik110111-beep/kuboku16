@@ -45,7 +45,7 @@ class _OfficialMatchProtocolPageState extends State<OfficialMatchProtocolPage> {
     return Scaffold(
       appBar:AppBar(title:const Text('Официальный протокол ФХР'),actions:[
         if(allowed)IconButton(onPressed:()=>controller.reload(),icon:const Icon(Icons.refresh)),
-        IconButton(onPressed:allowed?()=>launchUrl(uri,mode:LaunchMode.externalApplication):null,
+        IconButton(onPressed:allowed?()=>launchUrl(Uri.parse(widget.matchUrl),mode:LaunchMode.externalApplication):null,
           icon:const Icon(Icons.open_in_new)),
       ]),
       body:!allowed?const Center(child:Text('Недопустимая ссылка на протокол'))
