@@ -8,6 +8,7 @@ import 'match_center.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
 import 'tournament_page.dart';
+import 'player_statistics_page.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
@@ -53,7 +54,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   static const sections=[
     (Icons.home_outlined,Icons.home_rounded,'Главная'),
     (Icons.sports_hockey_outlined,Icons.sports_hockey,'Матчи'),
-    (Icons.leaderboard_outlined,Icons.leaderboard_rounded,'Таблица'),
+    (Icons.leaderboard_outlined,Icons.leaderboard_rounded,'Турнир'),
+    (Icons.bar_chart_outlined,Icons.bar_chart_rounded,'Игроки'),
     (Icons.shield_outlined,Icons.shield_rounded,'Команды'),
     (Icons.star_border_rounded,Icons.star_rounded,'Избранное'),
   ];
@@ -495,7 +497,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     body:Column(children:[
       _header(),_syncBar(),
       Expanded(child:IndexedStack(index:tab,children:[
-        _homePage(),_matchesPage(),_standingPage(),_teamPage(),_favoritesPage(),
+        _homePage(),_matchesPage(),_standingPage(),
+        const PlayerStatisticsPage(),_teamPage(),_favoritesPage(),
       ])),
     ]),
     bottomNavigationBar:_nav(),
