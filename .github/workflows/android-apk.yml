@@ -7,7 +7,7 @@ on:
 
 concurrency:
   group: junior-u16-apk
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
