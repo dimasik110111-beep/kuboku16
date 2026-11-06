@@ -1,83 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as html;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'cup_data.dart';
 
 const navy = Color(0xff11141b);
 const panel = Color(0xff1b202b);
 const red = Color(0xffef4c60);
 const muted = Color(0xffa1a9b8);
-const calendarUrl = 'https://junior.fhr.ru/tournaments/kubokrossii-25008909/calendar/';
+const calendarUrl = fhrCalendarUrl;
 const tournamentUrl = 'https://junior.fhr.ru/tournaments/kubokrossii-25008909/';
-
 void main() => runApp(const JuniorApp());
-
-class Match {
-  final String date, home, away, score, stage, arena;
-  const Match(this.date, this.home, this.away, this.score, this.stage, this.arena);
-  bool get finished => RegExp(r'^\d+\s*:\s*\d+').hasMatch(score);
-  List<int>? get goals {
-    final found = RegExp(r'(\d+)\s*:\s*(\d+)').firstMatch(score);
-    if (!finished || found == null) return null;
-    return [int.parse(found[1]!), int.parse(found[2]!)];
-  }
-  bool get overtime => score.toLowerCase().contains('от') || score.toLowerCase().contains('бул');
-  String get key => '$stage|$date|$home|$away';
-}
-
-class Rank {
-  final String team;
-  int gp=0, pts=0, w=0, rw=0, gf=0, ga=0;
-  Rank(this.team);
-  int get diff => gf-ga;
-}
-
-List<Rank> ranking(List<Match> matches) {
-  final table=<String,Rank>{};
-  for(final m in matches) {
-    final stage=m.stage.toUpperCase();
-    if(stage.contains('ЗОЛОТОЙ ФИНАЛ') || stage.contains('СЕРЕБРЯНЫЙ ФИНАЛ')) continue;
-    if(!(RegExp(r'-(I|II|III)\b').hasMatch(stage) || stage.contains('СТЫК') || stage.contains('ПЛЕЙ-ОФФ'))) continue;
-    final g=m.goals;
-    if(g==null || g[0]==g[1]) continue;
-    final a=table.putIfAbsent(m.home,()=>Rank(m.home));
-    final b=table.putIfAbsent(m.away,()=>Rank(m.away));
-    a.gp++;b.gp++;a.gf+=g[0];a.ga+=g[1];b.gf+=g[1];b.ga+=g[0];
-    final win=g[0]>g[1]?a:b, lose=g[0]>g[1]?b:a;
-    win.pts+=2;win.w++;if(m.overtime){lose.pts++;}else{win.rw++;}
-  }
-  final standings=table.values.toList();
-  standings.sort((a,b){
-    for(final d in [b.pts-a.pts,b.rw-a.rw,b.diff-a.diff,b.gf-a.gf]) {if(d!=0)return d;}
-    return a.team.compareTo(b.team);
-  });
-  return standings;
-}
-
-Future<List<Match>> fetchVisibleMatches() async {
-  final response=await http.get(Uri.parse(calendarUrl),headers:{'User-Agent':'Mozilla/5.0 JUNIOR-U16'},).timeout(const Duration(seconds:20));
-  if(response.statusCode!=200) throw Exception('ФХР: HTTP ${response.statusCode}');
-  final doc=html.parse(response.body);
-  final output=<Match>[];
-  for(final table in doc.querySelectorAll('table')) {
-    final heads=table.querySelectorAll('th').map((x)=>x.text.trim().toLowerCase()).join(' ');
-    if(!heads.contains('команда') || !heads.contains('сч'))continue;
-    final stage=table.parent?.querySelector('h2,h3,h4')?.text.trim() ?? 'Раздел ФХР (этап не установлен)';
-    for(final tr in table.querySelectorAll('tr')){
-      final cells=tr.querySelectorAll('td').map((e)=>e.text.replaceAll(RegExp(r'\s+'),' ').trim()).toList();
-      if(cells.length<5)continue;
-      final date=cells.length>1?cells[1]:'';
-      final home=cells.length>2?cells[2]:'';
-      final away=cells.length>3?cells[3]:'';
-      final score=cells.length>4?cells[4]:'';
-      if(home.isEmpty || away.isEmpty || date.isEmpty)continue;
-      output.add(Match(date,home,away,score,stage,cells.length>5?cells[5]:''));
-    }
-  }
-  return {for(final m in output)m.key:m}.values.toList();
-}
-
 
 const bg2 = Color(0xff151921);
 const stroke = Color(0xff2a303b);
@@ -120,44 +55,97 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   String? error;
   List<Match> matches = [];
   Timer? timer;
-  static const teams = <String>[
-    'ЦСКА', 'Северсталь', 'Нефтехимик', 'Армия СКА', 'Красная Машина Юниор',
-    'Ак Барс', 'Спартак', 'Динамо СПб', 'Академия Михайлова', 'Динамо-Джуниверс',
-    'Торпедо', 'Локомотив', 'Динамо Москва', 'МАХ', 'Авангард',
-    'Крылья Советов', 'Сибирь', 'Лада', 'Трактор', 'Локомотив-2004',
-  ];
+  final FhrApiClient api = FhrApiClient(http.Client());
+  List<String> importIssues = [];
+  bool allStagesComplete = false;
+  int groupsFetched = 0;
+  bool fromCache = false;
+  String? liveError;
+  List<String> get teams {
+    final set=<String>{};
+    for (final m in matches) {
+      if (m.home.isNotEmpty) set.add(m.home);
+      if (m.away.isNotEmpty) set.add(m.away);
+    }
+    return set.toList()..sort((a,b)=>a.compareTo(b));
+  }
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    refresh();
-    timer = Timer.periodic(const Duration(seconds: 60), (_) => refresh());
+    loadCache().then((_) => refresh());
+    timer = Timer.periodic(const Duration(seconds: 20), (_) => refresh());
   }
   @override
   void dispose() {
     timer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
+    api.client.close();
     super.dispose();
   }
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) refresh();
   }
+  Future<void> loadCache() async {
+    try {
+      final prefs=await SharedPreferences.getInstance();
+      final raw=prefs.getString('junior_u16_calendar_v9');
+      if(raw==null)return;
+      final decoded=jsonDecode(raw);
+      if(decoded is! Map)return;
+      final feed=FhrFeed.fromApi(Map<String,dynamic>.from(decoded));
+      if(!mounted)return;
+      setState(() {
+        matches=feed.matches;
+        updated=feed.updatedAt;
+        groupsFetched=feed.groupsFetched;
+        importIssues=['Сохранённые данные: нет свежего подтверждения ФХР'];
+        allStagesComplete=false;
+        fromCache=true;
+      });
+    } catch (_) { /* corrupted cache must not crash the application */ }
+  }
   Future<void> refresh() async {
     if (loading) return;
     setState(() => loading = true);
     try {
-      final latest = await fetchVisibleMatches();
-      if (!mounted) return;
-      setState(() {
-        matches = latest;
-        updated = DateTime.now();
-        error = latest.isEmpty ? 'ФХР не передал распознаваемые строки. Откройте официальный календарь.' : null;
+      final feed = await api.calendar();
+      final byId=<String,Match>{for(final m in feed.matches)m.key:m};
+      String? liveWarning;
+      try {
+        final checked=await api.liveCheck();
+        for (final detail in checked) {
+          final id=detail['gameId']?.toString();
+          if(id==null)continue;
+          final current=byId[id];
+          if(current!=null)byId[id]=current.withDetail(detail);
+        }
+      } catch(e) {
+        liveWarning='LIVE-статусы временно не проверены: $e';
+      }
+      final list=byId.values.toList()
+        ..sort((a,b){
+          final d=b.date.compareTo(a.date);
+          return d!=0?d:b.timeMsk.compareTo(a.timeMsk);
+        });
+      if(!mounted)return;
+      setState((){
+        matches=list;
+        updated=feed.updatedAt ?? DateTime.now().toUtc();
+        groupsFetched=feed.groupsFetched;
+        importIssues=feed.issues;
+        allStagesComplete=feed.allStagesComplete;
+        fromCache=false;
+        liveError=liveWarning;
+        error=null;
       });
-    } catch (e) {
-      if (mounted) setState(() => error = 'Не удалось обновить ФХР: $e');
-    } finally {
-      if (mounted) setState(() => loading = false);
+      final prefs=await SharedPreferences.getInstance();
+      await prefs.setString('junior_u16_calendar_v9',jsonEncode(feed.toCache()));
+    }catch(e) {
+      if(mounted)setState(()=>error='Не удалось обновить ФХР: $e');
+    }finally {
+      if(mounted)setState(()=>loading=false);
     }
   }
   Future<void> openFhr(String url) async {
@@ -176,10 +164,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return s.isEmpty || s.contains('не установлен') ? 'КУБОК РОССИИ U16' : s.toUpperCase();
   }
   bool isToday(Match m, DateTime dt) {
-    final s = m.date;
-    final p = RegExp(r'(\d{1,2})[./-](\d{1,2})').firstMatch(s);
-    if (p == null) return false;
-    return int.parse(p[1]!) == dt.day && int.parse(p[2]!) == dt.month;
+    final parsed=m.matchDate;
+    return parsed!=null && parsed.year==dt.year && parsed.month==dt.month && parsed.day==dt.day;
   }
   List<Match> visibleMatches() {
     var list = matches.where((m) {
@@ -218,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ),
   );
   Widget dateRibbon() {
-    final base = DateTime.now();
+    final base = DateTime.now().toUtc().add(const Duration(hours:3));
     return Container(color: bg2, padding: const EdgeInsets.fromLTRB(8, 9, 8, 10), child: Row(children: [
       IconButton(onPressed: () => setState(() {dateFilter=false; selectedDate=base;}), icon: const Icon(Icons.calendar_today_outlined, size: 20), tooltip:'Все даты'),
       Expanded(child: SizedBox(height: 58, child: ListView.builder(
@@ -251,8 +237,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     child: Row(children:[
       Container(width:7,height:7,decoration:BoxDecoration(color:loading?amber:(error==null?const Color(0xff58ca90):muted),shape:BoxShape.circle)),
       const SizedBox(width:8),
-      Expanded(child:Text(updated==null?'Ожидание данных ФХР':
-        'ФХР Джуниор  ·  обновлено ${fmtTime(updated!)}  ·  ${matches.length} матчей',
+      Expanded(child:Text(updated==null?'Ожидание ФХР Джуниор':
+        '${fromCache?'КЭШ · ':'ФХР · '}${matches.length} игр · ${groupsFetched}/10 групп · ${fmtTime(updated!.toUtc().add(const Duration(hours:3)))} МСК',
+        maxLines:1,overflow:TextOverflow.ellipsis,
         style: const TextStyle(fontSize:11,color:muted))),
       if(loading)const SizedBox(width:13,height:13,child:CircularProgressIndicator(strokeWidth:2)),
       GestureDetector(onTap: refresh, child: const Icon(Icons.refresh_rounded,size:19,color:muted)),
@@ -265,20 +252,25 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       decoration: const BoxDecoration(border:Border(bottom:BorderSide(color:stroke,width:.6))),
       child: Row(children:[
         SizedBox(width:49,child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Text(m.finished?'КОН.':(m.date.length>5?m.date.substring(0,5):m.date),
-            style: TextStyle(color:m.finished?muted:amber,fontSize:10,fontWeight:FontWeight.w700)),
+          Text(m.isLive?'LIVE':m.finished?'КОН.':m.timeMsk.isNotEmpty?m.timeMsk:m.dayLabel,
+            style: TextStyle(color:m.isLive?red:(m.finished?muted:amber),fontSize:10,fontWeight:FontWeight.w700)),
           const SizedBox(height:6),
-          Icon(m.finished?Icons.check_circle_outline:Icons.schedule_outlined,size:15,color:muted),
+          Icon(m.isLive?Icons.radio_button_checked:(m.finished?Icons.check_circle_outline:Icons.schedule_outlined),
+            size:15,color:m.isLive?red:muted),
         ])),
-        Container(width:2,height:34,color:m.finished?stroke:red.withValues(alpha:.65)),
+        Container(width:2,height:34,color:m.isLive?red:(m.finished?stroke:amber.withValues(alpha:.65))),
         const SizedBox(width:10),
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Text(m.home,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
           const SizedBox(height:9),
           Text(m.away,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
         ])),
-        SizedBox(width:43,child:Text(m.score.isNotEmpty?m.score:'–',
-          maxLines:1,textAlign:TextAlign.center,style:TextStyle(fontWeight:FontWeight.w800,fontSize:16,color:m.finished?Colors.white:muted))),
+        SizedBox(width:53,child:Column(children:[
+          Text(m.score.isNotEmpty?m.score:'–',
+            maxLines:1,textAlign:TextAlign.center,
+            style:TextStyle(fontWeight:FontWeight.w800,fontSize:16,color:m.isLive?red:(m.finished?Colors.white:muted))),
+          if(m.scoreNote.isNotEmpty)Text(m.scoreNote,style:const TextStyle(fontSize:9,color:amber)),
+        ])),
         const Icon(Icons.chevron_right_rounded,size:18,color:muted),
       ]),
     ),
@@ -337,6 +329,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             icon:const Icon(Icons.close,size:15),label:const Text('Показать все даты'))),
         if(error!=null)Padding(padding:const EdgeInsets.all(12),
           child:Text(error!,style:const TextStyle(color:amber,fontSize:12))),
+        if(!allStagesComplete && importIssues.isNotEmpty)Padding(padding:const EdgeInsets.symmetric(horizontal:14,vertical:5),
+          child:Text('Проверка данных: ${importIssues.first}',style:const TextStyle(fontSize:11,color:amber))),
+        if(liveError!=null && dashboard)Padding(padding:const EdgeInsets.symmetric(horizontal:14,vertical:5),
+          child:Text(liveError!,style:const TextStyle(fontSize:11,color:muted))),
+        if(dashboard && matches.any((m)=>m.isLive))
+          leagueSection('ПОДТВЕРЖДЁННЫЕ LIVE',matches.where((m)=>m.isLive).toList()),
         if(list.isEmpty)emptyState('Матчи пока не отображаются',
           'ФХР не опубликовала доступные данные или выбранная дата не содержит матчей. Приложение не подставляет вымышленные счета.',
           action:()=>openFhr(calendarUrl)),
@@ -380,9 +378,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       pageTitle('Турнирная таблица',subtitle:'20 участников · квалификация'),
       Container(margin:const EdgeInsets.fromLTRB(12,0,12,14),padding:const EdgeInsets.all(13),
         decoration:BoxDecoration(color:const Color(0xff352d27),borderRadius:BorderRadius.circular(10)),
-        child:const Row(children:[Icon(Icons.info_outline,size:18,color:amber),SizedBox(width:10),
-          Expanded(child:Text('Предварительно: пока не подтверждена полнота импорта всех групп и стыковых матчей.',
-            style:TextStyle(color:amber,fontSize:11,height:1.4)))])),
+        child:Row(children:[const Icon(Icons.info_outline,size:18,color:amber),const SizedBox(width:10),
+          Expanded(child:Text(allStagesComplete
+            ? 'Таблица предварительная: учитывает опубликованные результаты всех 10 разделов ФХР. Тай-брейки по регламенту.'
+            : 'Предварительно: полнота данных не подтверждена (${groupsFetched}/10 разделов).',
+            style:const TextStyle(color:amber,fontSize:11,height:1.4)))])),
       Container(margin:const EdgeInsets.symmetric(horizontal:12),padding:const EdgeInsets.symmetric(horizontal:12,vertical:12),
         color:bg2,child:const Row(children:[
           SizedBox(width:27,child:Text('#',style:TextStyle(color:muted,fontSize:11))),
