@@ -201,6 +201,11 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       ])),
       if(games.any((m)=>m.isLive))Padding(padding:EdgeInsets.only(right:6),
         child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
+      IconButton(
+        tooltip:widget.light?'Тёмная тема':'Светлая тема',
+        onPressed:widget.onSwitchTheme,
+        icon:Icon(widget.light?Icons.dark_mode_outlined:Icons.light_mode_outlined,
+          color:CupUi.soft,size:21)),
       IconButton(onPressed:loading?null:refresh,tooltip:'Обновить ФХР',
         icon:loading?SizedBox(height:19,width:19,
           child:CircularProgressIndicator(strokeWidth:2)):
@@ -232,7 +237,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             color:i==tab?CupUi.red:CupUi.muted),
           SizedBox(height:4),
           Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
-            fontSize:10,fontWeight:i==tab?FontWeight.w800:FontWeight.w600)),
+            fontSize:9.4,fontWeight:i==tab?FontWeight.w800:FontWeight.w600)),
         ]))),
     ]),
   ));
