@@ -1,0 +1,33 @@
+name: Inspect FHR rosters, logos and protocols
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/inspect-fhr-detail.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Investigate FHR markup
+        run: |
+          pip -q install beautifulsoup4
+          python3 - <<'PY'
+          import urllib.request,re,json
+          from bs4 import BeautifulSoup
+          base='https://junior.fhr.ru'
+          paths=['/tournaments/kubokrossii-25008909/teams/','/tournaments/kubokrossii-25008909/krasnaya-mashina-yunior_7500809/','/games/25170469/']
+          for path in paths:
+            print('===',path,flush=True)
+            req=urllib.request.Request(base+path,headers={'User-Agent':'Mozilla/5.0'})
+            html=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','ignore')
+            s=BeautifulSoup(html,'html.parser')
+            print('TEAM_FILTERS',[(x.name,x.get('class'),x.get('data-ajax-link'),x.get_text(' ',strip=True)[:40]) for x in s.select('[data-ajax-link]')][:25],flush=True)
+            print('TEAMLINKS',[(x.get_text(' ',strip=True)[:40],x.get('href')) for x in s.select('a[href]') if re.search(r'/tournaments/kubokrossii-25008909/[a-z0-9-]+_\d+/',x.get('href',''))][:25],flush=True)
+            for selector in ['a.team-player-card','.player-cards-wrap','.team-player-card img','.team-player-card .name','.team-player-card .photo','.team-player-card .position','.team-player-card .number','.team-player-card .player-name','.match-score','.match-result','.event-row','.period-score','.tournament-logo-wrap','img[src*="teams/"]','img[src*="players/"]','img[src*="tournaments/"]']:
+              els=s.select(selector)
+              if els:print('SELECTOR',selector,'COUNT',len(els),'FIRST',str(els[0])[:1800].replace('\n',' '),flush=True)
+            for phrase in ['team-player-card','team-logo-wrap','team-logo','command-logo','club-logo','match-event','event-row','match-players','match-roster','player-name','goal-time','penalty','score-col','statistic','Составы','Протокол','Броски','Шайбы','Удаления','Заявка','data-ajax-link']:
+              pos=html.find(phrase)
+              if pos>=0:print('AROUND',phrase,re.sub(r'\s+',' ',html[max(0,pos-220):pos+900])[:1120],flush=True)
+          PY
