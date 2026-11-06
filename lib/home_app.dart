@@ -7,6 +7,7 @@ import 'cup_data.dart';
 import 'match_center.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
+import 'tournament_page.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
@@ -45,7 +46,6 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   DateTime? updatedAt;
   String? error,teamError;
   String search='';
-  String? selectedGroup;
   List<Match> games=[];
   List<TeamInfo> clubs=[];
   Set<String> favorites={};
@@ -424,73 +424,16 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     const SizedBox(height:24),
   ]));
 
-  List<String> get stageNames {
-    final set=games.map((e)=>e.stage).where((s)=>s.startsWith('Группа ')).toSet().toList();
-    set.sort((a,b){final x=a.split('-').last,y=b.split('-').last;
-      final c=(x=='I'?1:x=='II'?2:3).compareTo(y=='I'?1:y=='II'?2:3);
-      return c==0?a.compareTo(b):c;});
-    return set;
-  }
-  Widget _standingPage(){
-    final group=selectedGroup!=null&&stageNames.contains(selectedGroup)?selectedGroup:null;
-    final played=group==null?games:games.where((e)=>e.stage==group).toList();
-    final standings=ranking(played);
-    return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
-      const CupSection(title:'ТУРНИРНЫЕ ТАБЛИЦЫ',subtitle:'Общая таблица и отдельные группы'),
-      SingleChildScrollView(scrollDirection:Axis.horizontal,padding:const EdgeInsets.fromLTRB(12,2,12,12),
-        child:Row(children:[
-          _filterChip('ОБЩАЯ',group==null,()=>setState(()=>selectedGroup=null)),
-          for(final s in stageNames)_filterChip(s.replaceFirst('Группа ','ГР. '),group==s,
-            ()=>setState(()=>selectedGroup=s)),
-        ])),
-      CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,14),padding:const EdgeInsets.all(12),
-        color:CupUi.raised,child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          const Icon(Icons.info_outline_rounded,size:18,color:CupUi.yellow),const SizedBox(width:9),
-          Expanded(child:Text(group==null
-            ? 'Общий рейтинг предварительный до завершения всех квалификационных туров. Стыковые матчи учитываются.'
-            : 'В таблице $group учитываются только матчи этой группы. Стыковки относятся к общему рейтингу.',
-            style:const TextStyle(color:CupUi.soft,fontSize:11,height:1.5))),
-        ])),
-      CupCard(padding:const EdgeInsets.only(top:2,bottom:2),
-        child:Column(children:[
-          Container(color:CupUi.raised,padding:const EdgeInsets.symmetric(horizontal:11,vertical:13),
-            child:Row(children:[
-              const SizedBox(width:23,child:Text('#',style:TextStyle(color:CupUi.muted,fontSize:10))),
-              const Expanded(child:Text('КОМАНДА',style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800))),
-              for(final label in ['И','РШ','О'])SizedBox(width:label=='РШ'?44:29,
-                child:Text(label,textAlign:TextAlign.center,
-                  style:const TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800))),
-            ])),
-          for(var i=0;i<standings.length;i++)...[
-            InkWell(onTap:(){
-              final c=findClub(standings[i].team);
-              if(c!=null)openClub(c);
-            },child:Padding(padding:const EdgeInsets.symmetric(horizontal:9,vertical:11),
-              child:Row(children:[
-                Container(width:23,alignment:Alignment.centerLeft,
-                  child:Text('${i+1}',style:TextStyle(color:i<8&&group==null?CupUi.green:CupUi.muted,
-                    fontSize:11,fontWeight:FontWeight.w800))),
-                fhrTeamLogo(findClub(standings[i].team)?.logo,size:22),
-                const SizedBox(width:7),
-                Expanded(child:Text(standings[i].team,maxLines:1,overflow:TextOverflow.ellipsis,
-                  style:const TextStyle(color:CupUi.white,fontSize:11,fontWeight:FontWeight.w700))),
-                SizedBox(width:29,child:Text('${standings[i].gp}',textAlign:TextAlign.center,
-                  style:const TextStyle(color:CupUi.soft,fontSize:11))),
-                SizedBox(width:44,child:Text('${standings[i].diff}',textAlign:TextAlign.center,
-                  style:const TextStyle(color:CupUi.muted,fontSize:11))),
-                SizedBox(width:29,child:Text('${standings[i].pts}',textAlign:TextAlign.center,
-                  style:const TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900))),
-              ]))),
-            if(i+1<standings.length)const CupDiv(indent:10),
-          ],
-        ])),
-      if(standings.isEmpty)const CupMessage(title:'Нет опубликованных игр',
-        message:'Таблица появится, когда ФХР опубликует расписание и результаты.'),
-      const Padding(padding:EdgeInsets.fromLTRB(18,11,18,30),
-        child:Text('Порядок команд при сложных равенствах очков требует сверки с официальным регламентом и ФХР.',
-          style:TextStyle(fontSize:11,color:CupUi.muted,height:1.4))),
-    ]));
-  }
+  Widget _standingPage()=>TournamentPage(
+    matches:games,
+    teams:clubs.map((team)=>team.fullName),
+    teamLogo:(name)=>findClub(name)?.logo,
+    onTeam:(name){
+      final club=findClub(name);
+      if(club!=null)openClub(club);
+    },
+    onMatch:openMatch,
+  );
 
   Widget _teamPage(){
     final list=clubs.where((x)=>x.fullName.toLowerCase().contains(search.toLowerCase())).toList();
