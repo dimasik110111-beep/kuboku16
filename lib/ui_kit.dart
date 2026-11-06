@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
 class CupUi {
-  static const background=Color(0xFF0C1018);
-  static const surface=Color(0xFF171D27);
-  static const raised=Color(0xFF202836);
-  static const stroke=Color(0xFF2A3341);
+  // v14: both palettes are genuine UI colors. Team/player images are unchanged.
+  // The root app sets light when the saved theme preference changes.
+  static bool light=false;
+  static Color get background=>light?const Color(0xFFF4F6FA):const Color(0xFF0C1018);
+  static Color get surface=>light?const Color(0xFFFFFFFF):const Color(0xFF171D27);
+  static Color get raised=>light?const Color(0xFFECF1F7):const Color(0xFF202836);
+  static Color get stroke=>light?const Color(0xFFE0E6EF):const Color(0xFF2A3341);
   static const red=Color(0xFFED4860);
-  static const redMuted=Color(0xFF4C2833);
-  static const green=Color(0xFF42CE91);
-  static const yellow=Color(0xFFF5BE5B);
-  static const white=Color(0xFFF6F8FC);
-  static const soft=Color(0xFFCFD6E0);
-  static const muted=Color(0xFF8995A6);
-  static const dim=Color(0xFF5E697A);
+  static Color get redMuted=>light?const Color(0xFFFFE5EA):const Color(0xFF4C2833);
+  static Color get green=>light?const Color(0xFF087D56):const Color(0xFF42CE91);
+  static Color get yellow=>light?const Color(0xFF91600F):const Color(0xFFF5BE5B);
+  static Color get white=>light?const Color(0xFF142235):const Color(0xFFF6F8FC);
+  static Color get soft=>light?const Color(0xFF34435A):const Color(0xFFCFD6E0);
+  static Color get muted=>light?const Color(0xFF62738B):const Color(0xFF8995A6);
+  static Color get dim=>light?const Color(0xFF8796AA):const Color(0xFF5E697A);
 }
 
 class CupCard extends StatelessWidget {
@@ -25,8 +28,10 @@ class CupCard extends StatelessWidget {
   Widget build(BuildContext context)=>Container(
     margin:margin??const EdgeInsets.symmetric(horizontal:12,vertical:6),
     padding:padding,
-    decoration:BoxDecoration(color:color??CupUi.surface,borderRadius:BorderRadius.circular(14),
-      border:Border.all(color:CupUi.stroke,width:.8)),
+    decoration:BoxDecoration(color:color??CupUi.surface,borderRadius:BorderRadius.circular(16),
+      border:Border.all(color:CupUi.stroke,width:.75),
+      boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
+        blurRadius:18,offset:const Offset(0,5))]:null),
     clipBehavior:Clip.antiAlias,
     child:child,
   );
@@ -57,15 +62,18 @@ class CupTag extends StatelessWidget {
   final String text;
   final Color color;
   final bool filled;
-  const CupTag({super.key,required this.text,this.color=CupUi.muted,this.filled=false});
+  const CupTag({super.key,required this.text,this.color=const Color(0xFF8995A6),this.filled=false});
   @override
-  Widget build(BuildContext context)=>Container(
+  Widget build(BuildContext context){
+    final effectiveColor=color==const Color(0xFF8995A6)?CupUi.muted:color;
+    return Container(
     padding:const EdgeInsets.symmetric(horizontal:9,vertical:5),
     decoration:BoxDecoration(
       color:filled?color.withValues(alpha:.17):CupUi.raised,
       borderRadius:BorderRadius.circular(6)),
-    child:Text(text,style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,color:color,letterSpacing:.2)),
+    child:Text(text,style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,color:effectiveColor,letterSpacing:.2)),
   );
+  }
 }
 
 class CupMessage extends StatelessWidget {
