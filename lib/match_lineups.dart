@@ -271,7 +271,7 @@ class _MatchLineupPanelState extends State<MatchLineupPanel>{
         if(canOpen)...[
           const SizedBox(height:22),
           SizedBox(width:double.infinity,child:FilledButton.icon(
-            onPressed:()=>launchUrl(url,mode:LaunchMode.externalApplication),
+            onPressed:()=>launchUrl(url!,mode:LaunchMode.externalApplication),
             icon:const Icon(Icons.open_in_new_rounded,size:17),
             label:const Text('ПРОФИЛЬ ИГРОКА НА ФХР'))),
         ],
