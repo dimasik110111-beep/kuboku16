@@ -310,9 +310,36 @@ class _TournamentPageState extends State<TournamentPage>{
         if(crossover.isNotEmpty)_gameCard(crossover,heading:'СТЫКОВЫЕ МАТЧИ · ТУР ${selectedTour==CupTour.second?'II':'III'}'),
         if(crossover.isNotEmpty)_notice('Стыковые матчи приносят очки в ОБЩУЮ таблицу, '
           'но НЕ влияют на места внутри групп этого тура.'),
+        if(selectedTour==CupTour.second&&names.isEmpty)_secondTourPreview(cup),
         if(selectedTour==CupTour.third&&names.isEmpty)_snakePreview(cup),
       ],
       const SizedBox(height:20),
+    ]);
+  }
+
+  Widget _secondTourPreview(CupTournament cup){
+    final preview=cup.secondTourPreview();
+    return Column(children:[
+      const CupSection(title:'РАСПРЕДЕЛЕНИЕ НА ВТОРОЙ ТУР',
+        subtitle:'Статья 4: результаты первого тура и пятые места'),
+      if(!cup.firstComplete)_notice(
+        'До завершения первого тура показана только схема рассева. '
+        'Фактические группы определяются по местам после тура.'),
+      for(var i=0;i<preview.length;i++)CupCard(
+        padding:const EdgeInsets.fromLTRB(13,12,13,12),
+        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text('ГРУППА ${i+1}',style:const TextStyle(
+            color:CupUi.white,fontWeight:FontWeight.w900,fontSize:12)),
+          const SizedBox(height:9),
+          for(var j=0;j<preview[i].length;j++)Padding(
+            padding:const EdgeInsets.symmetric(vertical:5),
+            child:Row(children:[
+              SizedBox(width:25,child:Text('${j+1}.',
+                style:const TextStyle(color:CupUi.red,fontWeight:FontWeight.w800,fontSize:11))),
+              Expanded(child:Text(preview[i][j],
+                style:const TextStyle(color:CupUi.soft,fontSize:12))),
+            ])),
+        ])),
     ]);
   }
 
