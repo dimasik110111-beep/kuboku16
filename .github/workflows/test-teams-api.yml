@@ -16,13 +16,14 @@ jobs:
           def get(p):
               with urllib.request.urlopen(urllib.request.Request(base+p,headers={'User-Agent':'JuniorU16-Check'}),timeout=45) as response:
                   return json.load(response)
-          try:
-              teams=get('/api/v1/teams')
-              print('TEAMS API',{'ok':teams.get('ok'),'count':teams.get('count'),'complete':teams.get('complete'),'groups':teams.get('groups')},flush=True)
-              print('TEAMS',[(t.get('id'),t.get('fullName'),t.get('logo')) for t in teams.get('teams',[])],flush=True)
-              assert teams.get('count') == 20, 'Not all 20 teams are loaded'\n              assert all(t.get('logo','').startswith('https://img.fhr.ru/teams/') for t in teams.get('teams',[])), 'Missing official club crests'\n              if teams.get('teams'):
-                  team=teams['teams'][0]
-                  roster=get('/api/v1/teams/'+str(team['id']))
-                  print('ROSTER',{'ok':roster.get('ok'),'team':team['fullName'],'count':roster.get('playersCount'),'sample':roster.get('players',[])[:2]},flush=True)\n                  assert roster.get('playersCount',0)>=15, 'Roster is incomplete'\n                  assert any(p.get('photo') for p in roster.get('players',[])), 'No published player portraits recovered'
-          except Exception as e: print('API ERROR',repr(e),flush=True); raise
+          teams=get('/api/v1/teams')
+          print('TEAM COUNT',teams.get('count'),'COMPLETE',teams.get('complete'),flush=True)
+          print('LOGOS',[(t.get('fullName'),t.get('logo')) for t in teams.get('teams',[])],flush=True)
+          assert teams.get('count') == 20,'Need all 20 official teams'
+          assert all((t.get('logo') or '').startswith('https://img.fhr.ru/teams/') for t in teams.get('teams',[])),'Missing club crests'
+          team=teams['teams'][0]
+          roster=get('/api/v1/teams/'+str(team['id']))
+          print('ROSTER',team['fullName'],roster.get('playersCount'),roster.get('players',[])[:2],flush=True)
+          assert roster.get('playersCount',0)>=15,'Incomplete roster'
+          assert any((p.get('photo') or '').startswith('https://img.fhr.ru/players/') for p in roster.get('players',[])),'No official player portraits'
           PY
