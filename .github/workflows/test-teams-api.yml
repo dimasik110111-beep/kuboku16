@@ -1,0 +1,28 @@
+name: Verify FHR squads and images API
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/test-teams-api.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python3 - <<'PY'
+          import urllib.request,json
+          base='https://kubok-u16-live.dimasik110111.workers.dev'
+          def get(p):
+              with urllib.request.urlopen(urllib.request.Request(base+p,headers={'User-Agent':'JuniorU16-Check'}),timeout=45) as response:
+                  return json.load(response)
+          try:
+              teams=get('/api/v1/teams')
+              print('TEAMS API',{'ok':teams.get('ok'),'count':teams.get('count'),'complete':teams.get('complete'),'groups':teams.get('groups')},flush=True)
+              print('TEAMS',[(t.get('id'),t.get('fullName'),t.get('logo')) for t in teams.get('teams',[])],flush=True)
+              if teams.get('teams'):
+                  team=teams['teams'][0]
+                  roster=get('/api/v1/teams/'+str(team['id']))
+                  print('ROSTER',{'ok':roster.get('ok'),'team':team['fullName'],'count':roster.get('playersCount'),'sample':roster.get('players',[])[:2]},flush=True)
+          except Exception as e: print('API ERROR',repr(e),flush=True); raise
+          PY
