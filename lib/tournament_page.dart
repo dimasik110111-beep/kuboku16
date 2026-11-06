@@ -140,6 +140,7 @@ class _TournamentPageState extends State<TournamentPage>{
               style:const TextStyle(color:CupUi.muted,fontSize:10))),
         ])),
       ));
+  }
 
   Widget _regulationInfo()=>CupCard(
     padding:const EdgeInsets.fromLTRB(14,15,14,15),
@@ -302,7 +303,7 @@ class _TournamentPageState extends State<TournamentPage>{
               _gameCard(cup.groupMatches(name),heading:'МАТЧИ ГРУППЫ'),
             ],
           ]else...[
-            CupSection(title:selected!.toUpperCase(),subtitle:'Официальные матчи группы'),
+            CupSection(title:selected.toUpperCase(),subtitle:'Официальные матчи группы'),
             _standingsTable(cup.table(group:selected)),
             _gameCard(cup.groupMatches(selected),heading:'КАЛЕНДАРЬ ГРУППЫ'),
           ],
