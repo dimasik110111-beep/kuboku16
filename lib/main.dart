@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     finally{if(mounted)setState(()=>loadingTeams=false);}
   }
   String normName(String value) => value.toUpperCase()
-    .replaceAll('Ё','Е').replaceAll(RegExp(r'\\s+'),' ').trim();
+    .replaceAll('Ё','Е').replaceAll(RegExp(r'\s+'),' ').trim();
   TeamInfo? findTeam(String name) {
     final key=normName(name);
     for(final t in directory) {
