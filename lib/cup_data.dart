@@ -143,6 +143,40 @@ class FhrFeed {
   };
 }
 
+class TeamInfo {
+  final int id;
+  final String name, city, fullName, url;
+  final String? logo;
+  const TeamInfo(this.id,this.name,this.city,this.fullName,this.url,this.logo);
+  factory TeamInfo.fromApi(Map<String,dynamic> data) => TeamInfo(
+    (data['id'] as num).toInt(),
+    data['name']?.toString()??'',
+    data['city']?.toString()??'',
+    data['fullName']?.toString()??'',
+    data['url']?.toString()??'',
+    data['logo']?.toString(),
+  );
+}
+
+class PlayerInfo {
+  final String number,name,position,url;
+  final String? photo;
+  const PlayerInfo(this.number,this.name,this.position,this.url,this.photo);
+  factory PlayerInfo.fromApi(Map<String,dynamic> data) => PlayerInfo(
+    data['number']?.toString()??'',
+    data['name']?.toString()??'',
+    data['position']?.toString()??'',
+    data['url']?.toString()??'',
+    data['photo']?.toString(),
+  );
+}
+
+class TeamRoster {
+  final TeamInfo team;
+  final List<PlayerInfo> players;
+  const TeamRoster(this.team,this.players);
+}
+
 class FhrApiClient {
   final http.Client client;
   FhrApiClient(this.client);
@@ -157,6 +191,24 @@ class FhrApiClient {
     if (data is! Map) throw const FormatException('Ответ сервера не JSON-объект');
     return Map<String, dynamic>.from(data);
   }
+  Future<List<TeamInfo>> teams() async {
+    final data=await _get('/api/v1/teams');
+    if(data['ok']!=true || data['teams'] is! List) throw const FormatException('Нет списка команд ФХР');
+    return (data['teams'] as List).whereType<Map>()
+      .map((item)=>TeamInfo.fromApi(Map<String,dynamic>.from(item)))
+      .where((t)=>t.fullName.isNotEmpty && t.id>0).toList();
+  }
+  Future<TeamRoster> roster(int teamId) async {
+    final data=await _get('/api/v1/teams/$teamId');
+    if(data['ok']!=true || data['team'] is! Map || data['players'] is! List) {
+      throw const FormatException('Состав команды на ФХР пока недоступен');
+    }
+    final team=TeamInfo.fromApi(Map<String,dynamic>.from(data['team'] as Map));
+    final players=(data['players'] as List).whereType<Map>()
+      .map((item)=>PlayerInfo.fromApi(Map<String,dynamic>.from(item))).toList();
+    return TeamRoster(team,players);
+  }
+
   Future<FhrFeed> calendar() async => FhrFeed.fromApi(await _get('/api/v1/matches'));
   Future<List<Map<String, dynamic>>> liveCheck() async {
     final data = await _get('/api/v1/live');
