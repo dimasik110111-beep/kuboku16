@@ -10,8 +10,8 @@ Widget fhrTeamLogo(String? url,{double size=32}) {
   return SizedBox(width:size,height:size,
     child:valid
       ? Image.network(url!,fit:BoxFit.contain,
-        errorBuilder:(_,__,___)=>const Icon(Icons.shield_outlined,color:CupUi.muted))
-      : const Icon(Icons.shield_outlined,color:CupUi.muted));
+        errorBuilder:(_,__,___)=>Icon(Icons.shield_outlined,color:CupUi.muted))
+      : Icon(Icons.shield_outlined,color:CupUi.muted));
 }
 
 Widget fhrPlayerPhoto(String? url,{double size=54}){
@@ -20,8 +20,8 @@ Widget fhrPlayerPhoto(String? url,{double size=54}){
   return ClipRRect(borderRadius:BorderRadius.circular(9),
     child:Container(width:size,height:size,color:CupUi.raised,
       child:valid?Image.network(url!,fit:BoxFit.cover,
-        errorBuilder:(_,__,___)=>const Icon(Icons.person_outline,color:CupUi.muted)):
-        const Icon(Icons.person_outline,color:CupUi.muted)));
+        errorBuilder:(_,__,___)=>Icon(Icons.person_outline,color:CupUi.muted)):
+        Icon(Icons.person_outline,color:CupUi.muted)));
 }
 
 Future<void> fhrOpen(String url) async{
@@ -48,21 +48,21 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
   }
 
   Widget _header(int count)=>CupCard(
-    margin:const EdgeInsets.fromLTRB(12,8,12,12),
-    padding:const EdgeInsets.fromLTRB(14,25,14,24),
+    margin:EdgeInsets.fromLTRB(12,8,12,12),
+    padding:EdgeInsets.fromLTRB(14,25,14,24),
     child:Column(children:[
-      Container(width:94,height:94,padding:const EdgeInsets.all(10),
+      Container(width:94,height:94,padding:EdgeInsets.all(10),
         decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(22)),
         child:fhrTeamLogo(widget.team.logo,size:74)),
-      const SizedBox(height:14),
+      SizedBox(height:14),
       Text(widget.team.name,textAlign:TextAlign.center,
-        style:const TextStyle(fontSize:22,fontWeight:FontWeight.w900,color:CupUi.white)),
-      const SizedBox(height:5),
-      Text(widget.team.city,style:const TextStyle(fontSize:12,color:CupUi.muted)),
-      const SizedBox(height:17),
+        style:TextStyle(fontSize:22,fontWeight:FontWeight.w900,color:CupUi.white)),
+      SizedBox(height:5),
+      Text(widget.team.city,style:TextStyle(fontSize:12,color:CupUi.muted)),
+      SizedBox(height:17),
       Row(mainAxisAlignment:MainAxisAlignment.center,children:[
-        const CupTag(text:'U16 · 2026/27',color:CupUi.soft,filled:true),
-        const SizedBox(width:7),
+        CupTag(text:'U16 · 2026/27',color:CupUi.soft,filled:true),
+        SizedBox(width:7),
         CupTag(text:'$count ИГРОКОВ',color:CupUi.green,filled:true),
       ]),
     ]),
@@ -75,7 +75,7 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
       e.number.toLowerCase().contains(q)).toList();
   }
   Widget _rosterGroup(String title,List<PlayerInfo> players){
-    if(players.isEmpty)return const SizedBox.shrink();
+    if(players.isEmpty)return SizedBox.shrink();
     players.sort((a,b){
       final n=int.tryParse(a.number),m=int.tryParse(b.number);
       if(n!=null&&m!=null)return n.compareTo(m);
@@ -83,26 +83,26 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
     });
     return Column(children:[
       CupSection(title:title,subtitle:'${players.length} игроков'),
-      CupCard(padding:const EdgeInsets.symmetric(vertical:2),
+      CupCard(padding:EdgeInsets.symmetric(vertical:2),
         child:Column(children:[
           for(var i=0;i<players.length;i++)...[
             InkWell(onTap:()=>Navigator.of(context).push(MaterialPageRoute(
               builder:(_)=>PlayerCardPage(player:players[i],team:widget.team))),
-              child:Padding(padding:const EdgeInsets.symmetric(horizontal:11,vertical:9),
+              child:Padding(padding:EdgeInsets.symmetric(horizontal:11,vertical:9),
                 child:Row(children:[
                   fhrPlayerPhoto(players[i].photo,size:44),
-                  const SizedBox(width:10),
+                  SizedBox(width:10),
                   SizedBox(width:33,child:Text('#${players[i].number}',
-                    style:const TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:CupUi.red))),
+                    style:TextStyle(fontSize:13,fontWeight:FontWeight.w900,color:CupUi.red))),
                   Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
                     Text(players[i].name,maxLines:2,overflow:TextOverflow.ellipsis,
-                      style:const TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:CupUi.white)),
-                    const SizedBox(height:4),
-                    Text(players[i].position,style:const TextStyle(fontSize:11,color:CupUi.muted)),
+                      style:TextStyle(fontSize:12,fontWeight:FontWeight.w700,color:CupUi.white)),
+                    SizedBox(height:4),
+                    Text(players[i].position,style:TextStyle(fontSize:11,color:CupUi.muted)),
                   ])),
-                  const Icon(Icons.chevron_right,color:CupUi.dim,size:18),
+                  Icon(Icons.chevron_right,color:CupUi.dim,size:18),
                 ]))),
-            if(i+1<players.length)const CupDiv(indent:58),
+            if(i+1<players.length)CupDiv(indent:58),
           ],
         ]),
       ),
@@ -111,17 +111,17 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
   @override
   Widget build(BuildContext context)=>Scaffold(
     backgroundColor:CupUi.background,
-    appBar:AppBar(title:const Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+    appBar:AppBar(title:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Text('КОМАНДА',style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:15)),
       Text('КУБОК РОССИИ · U16',style:TextStyle(color:CupUi.muted,fontSize:10,letterSpacing:.5)),
     ]),actions:[
-      IconButton(onPressed:refresh,icon:const Icon(Icons.refresh_rounded)),
+      IconButton(onPressed:refresh,icon:Icon(Icons.refresh_rounded)),
       IconButton(onPressed:()=>fhrOpen(widget.team.url),
-        icon:const Icon(Icons.open_in_new_rounded,size:20)),
+        icon:Icon(Icons.open_in_new_rounded,size:20)),
     ]),
     body:FutureBuilder<TeamRoster>(future:future,builder:(context,snapshot){
       if(snapshot.connectionState!=ConnectionState.done){
-        return const CupMessage(icon:Icons.hourglass_top,title:'Загружаю состав',
+        return CupMessage(icon:Icons.hourglass_top,title:'Загружаю состав',
           message:'Получаю имена и фотографии игроков с ФХР Джуниор.');
       }
       if(snapshot.hasError){
@@ -136,27 +136,27 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
       final others=all.where((x)=>!goalies.contains(x)&&!defenders.contains(x)&&!forwards.contains(x)).toList();
       return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
         _header(roster.players.length),
-        const CupSection(title:'СОСТАВ КОМАНДЫ',subtitle:'Реестр игроков ФХР Джуниор'),
-        Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:TextField(
+        CupSection(title:'СОСТАВ КОМАНДЫ',subtitle:'Реестр игроков ФХР Джуниор'),
+        Padding(padding:EdgeInsets.symmetric(horizontal:12),child:TextField(
           onChanged:(v)=>setState(()=>query=v),
-          style:const TextStyle(color:CupUi.white,fontSize:13),
+          style:TextStyle(color:CupUi.white,fontSize:13),
           decoration:InputDecoration(
-            prefixIcon:const Icon(Icons.search,color:CupUi.muted,size:20),
-            hintText:'Игрок или номер',hintStyle:const TextStyle(color:CupUi.dim,fontSize:12),
+            prefixIcon:Icon(Icons.search,color:CupUi.muted,size:20),
+            hintText:'Игрок или номер',hintStyle:TextStyle(color:CupUi.dim,fontSize:12),
             filled:true,fillColor:CupUi.surface,
-            contentPadding:const EdgeInsets.symmetric(vertical:11,horizontal:13),
-            border:OutlineInputBorder(borderSide:const BorderSide(color:CupUi.stroke),
+            contentPadding:EdgeInsets.symmetric(vertical:11,horizontal:13),
+            border:OutlineInputBorder(borderSide:BorderSide(color:CupUi.stroke),
               borderRadius:BorderRadius.circular(11)),
-            enabledBorder:OutlineInputBorder(borderSide:const BorderSide(color:CupUi.stroke),
+            enabledBorder:OutlineInputBorder(borderSide:BorderSide(color:CupUi.stroke),
               borderRadius:BorderRadius.circular(11)),
-            focusedBorder:OutlineInputBorder(borderSide:const BorderSide(color:CupUi.red),
+            focusedBorder:OutlineInputBorder(borderSide:BorderSide(color:CupUi.red),
               borderRadius:BorderRadius.circular(11)),
           ))),
         _rosterGroup('ВРАТАРИ',goalies),_rosterGroup('ЗАЩИТНИКИ',defenders),
         _rosterGroup('НАПАДАЮЩИЕ',forwards),_rosterGroup('ДРУГИЕ',others),
-        if(all.isEmpty)const CupMessage(title:'Игрок не найден',
+        if(all.isEmpty)CupMessage(title:'Игрок не найден',
           message:'Попробуй другую фамилию или игровой номер.'),
-        const Padding(padding:EdgeInsets.fromLTRB(17,12,17,27),
+        Padding(padding:EdgeInsets.fromLTRB(17,12,17,27),
           child:Text('Официальный состав ФХР. Заявка на конкретный матч может отличаться.',
             style:TextStyle(color:CupUi.muted,fontSize:11,height:1.4))),
       ]));
@@ -171,53 +171,53 @@ class PlayerCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context)=>Scaffold(
     backgroundColor:CupUi.background,
-    appBar:AppBar(title:const Text('ПРОФИЛЬ ИГРОКА',
+    appBar:AppBar(title:Text('ПРОФИЛЬ ИГРОКА',
       style:TextStyle(color:CupUi.white,fontSize:15,fontWeight:FontWeight.w900))),
     body:ListView(children:[
-      CupCard(margin:const EdgeInsets.fromLTRB(12,12,12,10),
-        padding:const EdgeInsets.fromLTRB(16,25,16,25),
+      CupCard(margin:EdgeInsets.fromLTRB(12,12,12,10),
+        padding:EdgeInsets.fromLTRB(16,25,16,25),
         child:Column(children:[
-          Container(padding:const EdgeInsets.all(4),
+          Container(padding:EdgeInsets.all(4),
             decoration:BoxDecoration(border:Border.all(color:CupUi.stroke),
               borderRadius:BorderRadius.circular(17)),
             child:fhrPlayerPhoto(player.photo,size:146)),
-          const SizedBox(height:19),
+          SizedBox(height:19),
           Text(player.name,textAlign:TextAlign.center,
-            style:const TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900,height:1.2)),
-          const SizedBox(height:11),
+            style:TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900,height:1.2)),
+          SizedBox(height:11),
           CupTag(text:'№ ${player.number}  ·  ${player.position.toUpperCase()}',
             color:CupUi.red,filled:true),
-          const SizedBox(height:20),
-          const CupDiv(),
-          const SizedBox(height:15),
+          SizedBox(height:20),
+          CupDiv(),
+          SizedBox(height:15),
           Row(mainAxisAlignment:MainAxisAlignment.center,children:[
-            fhrTeamLogo(team.logo,size:32),const SizedBox(width:10),
-            Flexible(child:Text(team.fullName,style:const TextStyle(
+            fhrTeamLogo(team.logo,size:32),SizedBox(width:10),
+            Flexible(child:Text(team.fullName,style:TextStyle(
               color:CupUi.soft,fontSize:12,fontWeight:FontWeight.w700))),
           ]),
         ]),
       ),
-      const CupSection(title:'ДАННЫЕ ИГРОКА'),
-      CupCard(padding:const EdgeInsets.symmetric(horizontal:15,vertical:16),
+      CupSection(title:'ДАННЫЕ ИГРОКА'),
+      CupCard(padding:EdgeInsets.symmetric(horizontal:15,vertical:16),
         child:Column(children:[
           Row(children:[
-            const Expanded(child:Text('Команда',style:TextStyle(color:CupUi.muted,fontSize:12))),
+            Expanded(child:Text('Команда',style:TextStyle(color:CupUi.muted,fontSize:12))),
             Flexible(child:Text(team.name,textAlign:TextAlign.right,
-              style:const TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700))),
+              style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700))),
           ]),
-          const SizedBox(height:13),const CupDiv(),const SizedBox(height:13),
+          SizedBox(height:13),CupDiv(),SizedBox(height:13),
           Row(children:[
-            const Expanded(child:Text('Амплуа',style:TextStyle(color:CupUi.muted,fontSize:12))),
-            Text(player.position,style:const TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700)),
+            Expanded(child:Text('Амплуа',style:TextStyle(color:CupUi.muted,fontSize:12))),
+            Text(player.position,style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700)),
           ]),
         ])),
-      const Padding(padding:EdgeInsets.fromLTRB(18,10,18,10),
+      Padding(padding:EdgeInsets.fromLTRB(18,10,18,10),
         child:Text('Фото и сведения получены из официального профиля ФХР Джуниор.',
           style:TextStyle(color:CupUi.muted,fontSize:11))),
-      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:FilledButton.icon(
-        onPressed:()=>fhrOpen(player.url),icon:const Icon(Icons.open_in_new_rounded,size:18),
-        label:const Text('ПРОФИЛЬ НА ФХР'))),
-      const SizedBox(height:30),
+      Padding(padding:EdgeInsets.symmetric(horizontal:12),child:FilledButton.icon(
+        onPressed:()=>fhrOpen(player.url),icon:Icon(Icons.open_in_new_rounded,size:18),
+        label:Text('ПРОФИЛЬ НА ФХР'))),
+      SizedBox(height:30),
     ]),
   );
 }
