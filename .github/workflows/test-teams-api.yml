@@ -20,9 +20,9 @@ jobs:
               teams=get('/api/v1/teams')
               print('TEAMS API',{'ok':teams.get('ok'),'count':teams.get('count'),'complete':teams.get('complete'),'groups':teams.get('groups')},flush=True)
               print('TEAMS',[(t.get('id'),t.get('fullName'),t.get('logo')) for t in teams.get('teams',[])],flush=True)
-              if teams.get('teams'):
+              assert teams.get('count') == 20, 'Not all 20 teams are loaded'\n              assert all(t.get('logo','').startswith('https://img.fhr.ru/teams/') for t in teams.get('teams',[])), 'Missing official club crests'\n              if teams.get('teams'):
                   team=teams['teams'][0]
                   roster=get('/api/v1/teams/'+str(team['id']))
-                  print('ROSTER',{'ok':roster.get('ok'),'team':team['fullName'],'count':roster.get('playersCount'),'sample':roster.get('players',[])[:2]},flush=True)
+                  print('ROSTER',{'ok':roster.get('ok'),'team':team['fullName'],'count':roster.get('playersCount'),'sample':roster.get('players',[])[:2]},flush=True)\n                  assert roster.get('playersCount',0)>=15, 'Roster is incomplete'\n                  assert any(p.get('photo') for p in roster.get('players',[])), 'No published player portraits recovered'
           except Exception as e: print('API ERROR',repr(e),flush=True); raise
           PY
