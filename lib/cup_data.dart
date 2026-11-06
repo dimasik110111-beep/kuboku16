@@ -131,8 +131,8 @@ class FhrFeed {
       final upper=name.toUpperCase().replaceAll('Ё','Е');
       final expected = upper.startsWith('ГРУППА ') && RegExp(r'-(I|II|III)$').hasMatch(upper) ? 10 :
         (upper.contains('СТЫКОВ') || upper.startsWith('ПЛЕЙ-ОФФ')) ? 5 : 0;
-      if (expected > 0 && count is num && count>expected) {
-        issues.add('Неожиданное количество игр в $name: $count');
+      if (expected > 0 && count is num && count.toInt()!=expected) {
+        issues.add('$name: опубликовано $count из $expected ожидаемых матчей');
       }
     }
     final fetched = (json['groupsFetched'] as num?)?.toInt() ?? 0;
