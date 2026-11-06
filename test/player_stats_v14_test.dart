@@ -65,7 +65,7 @@ void main(){
   testWidgets('Dedicated Players screen renders skaters and switches to goalies',
       (tester)async{
     final client=MockClient((request)async{
-      expect(request.path,'/api/v1/stats');
+      expect(request.url.path,'/api/v1/stats');
       return http.Response(jsonEncode(sampleStats()),200,
         headers:{'content-type':'application/json'});
     });
