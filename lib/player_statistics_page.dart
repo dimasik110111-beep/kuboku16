@@ -275,7 +275,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
           message:'Не удалось получить полные таблицы. ${snapshot.error}',
           retry:load);
       }
-      final data=snapshot.hasData?snapshot.data!:latest;
+      final data=latest;
       if(data==null)return SizedBox.shrink();
       return RefreshIndicator(onRefresh:load,child:_content(data));
     });

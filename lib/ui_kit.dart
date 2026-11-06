@@ -33,7 +33,7 @@ class CupCard extends StatelessWidget {
       boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
         blurRadius:18,offset:Offset(0,5))]:null),
     clipBehavior:Clip.antiAlias,
-    child:child,
+    child:Material(type:MaterialType.transparency,child:child),
   );
 }
 

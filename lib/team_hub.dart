@@ -41,7 +41,7 @@ class _TeamHubPageState extends State<TeamHubPage>{
         FutureBuilder<CupStatistics>(future:stats,builder:(context,s){
           if(s.hasError)return CupMessage(title:'Лидеры не загружены',message:'Проверь интернет и повтори загрузку.',retry:()=>setState(()=>stats=CupStatisticsClient(client).fetch()));
           if(!s.hasData)return const Padding(padding:EdgeInsets.all(20),child:LinearProgressIndicator());
-          final leaders=sortCupPlayers(s.data!.skaters.where((p)=>sameClub('${p.team} ${p.city}',widget.team.fullName)||sameClub(p.team,widget.team.name)),PlayerStatSort.points).take(5);
+          final leaders=sortCupPlayers(s.data!.skaters.where((p)=>sameClub('${p.team} ${p.city}',widget.team.fullName)||((p.city.isEmpty||widget.team.city.isEmpty)&&sameClub(p.team,widget.team.name))),PlayerStatSort.points).take(5);
           return Column(children:[for(final p in leaders)ListTile(title:Text(p.name),subtitle:Text('${p.goals} + ${p.assists} · ${p.games} игр'),trailing:Text('${p.points} О'),onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>CupPlayerProfilePage(player:p))))]);
         }),const SizedBox(height:24),
       ]),
