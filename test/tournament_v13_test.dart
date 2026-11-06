@@ -4,7 +4,7 @@ import 'package:junior_u16/cup_data.dart';
 import 'package:junior_u16/tournament.dart';
 import 'package:junior_u16/tournament_page.dart';
 
-const now=DateTime.utc(2026,11,9,20);
+final now=DateTime.utc(2026,11,9,20);
 
 Match game(String home,String away,String score,String stage,{
   String date='2026-09-20',String note='',String status='FINAL',
