@@ -420,7 +420,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
           :const Icon(Icons.refresh_rounded,color:CupUi.soft)),
         IconButton(onPressed:openOfficial,tooltip:'Источник ФХР',
           icon:const Icon(Icons.open_in_new_rounded,color:CupUi.soft,size:20)),
-      ]),
+      ],
     ),
     body:RefreshIndicator(onRefresh:refresh,child:ListView(children:[
       _hero(),
