@@ -1,0 +1,67 @@
+name: Publish JUNIOR U16 v13 APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-v13.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download verified v13 build APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/13548235147/zip" \
+            --output app-artifact.zip
+          unzip -q app-artifact.zip
+          test -f app-release.apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          apk=Path('app-release.apk')
+          assert apk.stat().st_size>40_000_000,'Unexpectedly small Android package'
+          with zipfile.ZipFile(apk) as archive:
+              assert archive.testzip() is None,'Corrupted APK'
+              files=set(archive.namelist())
+              assert 'classes.dex' in files
+              assert 'AndroidManifest.xml' in files
+              assert any(n.startswith('lib/arm64-v8a/') for n in files)
+          Path('SHA256SUMS.txt').write_text(
+              hashlib.sha256(apk.read_bytes()).hexdigest()+'  JUNIOR-U16-v13.apk\n')
+          print('v13 verified APK:',apk.stat().st_size,'bytes')
+          PY
+          mv app-release.apk JUNIOR-U16-v13.apk
+      - name: Publish GitHub Release v13
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v13.0.0 >/dev/null 2>&1; then
+            gh release upload v13.0.0 JUNIOR-U16-v13.apk SHA256SUMS.txt --clobber
+          else
+            gh release create v13.0.0 JUNIOR-U16-v13.apk SHA256SUMS.txt \
+              --title "JUNIOR U16 v13 · Full Tournament System" \
+              --notes "JUNIOR U16 v13 (Android test build). Complete regulation-based 2026/27 FHR tournament system: 3 qualification tours, 2 crossover rounds, overall standings (140 expected qualifying fixtures), individual group tables, article 17 tie-break indicators, 2-1-0 points, stage calendars, regulation seeding (second-tour redistribution and third-tour snake), 8 Gold / 12 Silver final slots, and official dynamic final fixtures when FHR publishes them. No invented knockout pairings or prematurely confirmed final qualification. Official FHR first-two-stage calendar audited (90 matches across 10 sections). Flutter analyzer, tests including a simulated 140-match season, and release APK build passed. This is a test build: device acceptance testing is still required. Android update may fail if signing differs from an older APK; reinstalling can erase locally saved data." \
+              --prerelease
+          fi
+      - name: Verify GitHub Release asset by downloading it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view v13.0.0 --json url,tagName,assets,isPrerelease
+          mkdir -p downloaded
+          gh release download v13.0.0 --pattern 'JUNIOR-U16-v13.apk' --dir downloaded
+          cmp downloaded/JUNIOR-U16-v13.apk JUNIOR-U16-v13.apk
+          sha256sum -c SHA256SUMS.txt
