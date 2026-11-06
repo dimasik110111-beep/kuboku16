@@ -23,14 +23,15 @@ void main(){
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('App opens five primary dark sports tabs',(tester) async {
+  testWidgets('App opens six sports tabs including all player statistics',(tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
     expect(find.text('JUNIOR U16'),findsOneWidget);
     expect(find.text('Главная'),findsOneWidget);
     expect(find.text('Матчи'),findsOneWidget);
-    expect(find.text('Таблица'),findsOneWidget);
+    expect(find.text('Турнир'),findsOneWidget);
+    expect(find.text('Игроки'),findsOneWidget);
     expect(find.text('Команды'),findsOneWidget);
     expect(find.text('Избранное'),findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
