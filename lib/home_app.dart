@@ -448,7 +448,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           const Icon(Icons.info_outline_rounded,size:18,color:CupUi.yellow),const SizedBox(width:9),
           Expanded(child:Text(group==null
             ? 'Общий рейтинг предварительный до завершения всех квалификационных туров. Стыковые матчи учитываются.'
-            : 'В таблице ${group!} учитываются только матчи этой группы. Стыковки относятся к общему рейтингу.',
+            : 'В таблице $group учитываются только матчи этой группы. Стыковки относятся к общему рейтингу.',
             style:const TextStyle(color:CupUi.soft,fontSize:11,height:1.5))),
         ])),
       CupCard(padding:const EdgeInsets.only(top:2,bottom:2),
