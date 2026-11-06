@@ -27,7 +27,7 @@ class _OfficialMatchProtocolPageState extends State<OfficialMatchProtocolPage> {
       ..setBackgroundColor(const Color(0xff11141b))
       ..setNavigationDelegate(NavigationDelegate(
         onProgress:(p){if(mounted)setState(()=>progress=p);},
-        onWebResourceError:(e){if(e.isForMainFrame && mounted)setState(()=>error=e.description);},
+        onWebResourceError:(e){if(e.isForMainFrame==true && mounted)setState(()=>error=e.description);},
         onNavigationRequest:(request){
           final u=Uri.tryParse(request.url);
           return (u!=null && u.scheme=='https' &&
