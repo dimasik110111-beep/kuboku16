@@ -6,11 +6,12 @@ import 'team_pages.dart';
 import 'ui_kit.dart';
 
 class PlayerStatisticsPage extends StatefulWidget{
-  const PlayerStatisticsPage({super.key});
+  final http.Client? client;
+  const PlayerStatisticsPage({super.key,this.client});
   @override State<PlayerStatisticsPage> createState()=>_PlayerStatisticsPageState();
 }
 class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
-  late final CupStatisticsClient api=CupStatisticsClient(http.Client());
+  late final CupStatisticsClient api=CupStatisticsClient(widget.client??http.Client());
   Future<CupStatistics>? pending;
   CupStatistics? latest;
   String? group,team;
@@ -19,7 +20,10 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
   PlayerStatSort sort=PlayerStatSort.points;
   bool loading=false;
   @override void initState(){super.initState();load();}
-  @override void dispose(){api.client.close();super.dispose();}
+  @override void dispose(){
+    if(widget.client==null)api.client.close();
+    super.dispose();
+  }
   Future<void> load()async{
     if(loading)return;
     loading=true;
