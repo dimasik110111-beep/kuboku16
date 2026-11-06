@@ -1,0 +1,31 @@
+name: Probe JUNIOR U16 LIVE API
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/test-fhr-api.yml'
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployed FHR proxy
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request,urllib.error
+          base='https://kubok-u16-live.dimasik110111.workers.dev'
+          for path in ['/health','/api/v1/matches','/api/v1/live']:
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(base+path,headers={'User-Agent':'JuniorU16-Project-Probe'}),timeout=30) as r:
+                      data=json.load(r)
+                  if path=='/api/v1/matches':
+                      print(path, {'ok':data.get('ok'),'matchesCount':data.get('matchesCount'),'groupsFetched':data.get('groupsFetched'),
+                        'groups':data.get('groups'),'groupErrors':data.get('groupErrors'),'sample':data.get('matches',[])[:3]}, flush=True)
+                  elif path=='/api/v1/live':
+                      print(path, {'ok':data.get('ok'),'checkedCount':data.get('checkedCount'),
+                        'liveCount':len(data.get('matches',[])),'errors':data.get('errors'),'detail':data.get('detail')},flush=True)
+                  else: print(path,data,flush=True)
+              except Exception as e: print(path,'ERROR',repr(e),flush=True)
+          PY
