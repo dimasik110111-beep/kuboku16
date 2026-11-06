@@ -405,15 +405,15 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     ]));
   }
 
-  Widget _metric(String value,String label,IconData icon)=>Expanded(flex:1,
-    child:CupCard(margin:const EdgeInsets.fromLTRB(4,0,4,8),
-      padding:const EdgeInsets.symmetric(vertical:12,horizontal:7),
-      child:Column(children:[
-        Icon(icon,color:CupUi.red,size:18),const SizedBox(height:7),
-        Text(value,style:const TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900)),
-        const SizedBox(height:3),
-        Text(label,style:const TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w800)),
-      ])));
+  Widget _metric(String value,String label,IconData icon)=>CupCard(
+    margin:const EdgeInsets.fromLTRB(4,0,4,8),
+    padding:const EdgeInsets.symmetric(vertical:12,horizontal:7),
+    child:Column(children:[
+      Icon(icon,color:CupUi.red,size:18),const SizedBox(height:7),
+      Text(value,style:const TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900)),
+      const SizedBox(height:3),
+      Text(label,style:const TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w800)),
+    ]));
 
   Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(children:[
     const CupSection(title:'ВСЕ МАТЧИ',subtitle:'Календарь Кубка России U16'),
