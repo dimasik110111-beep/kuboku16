@@ -5,6 +5,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: junior-u16-apk
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -43,6 +47,8 @@ jobs:
         run: flutter pub get
       - name: Analyze
         run: flutter analyze --no-fatal-infos
+      - name: Check standings and LIVE rules
+        run: flutter test
       - name: Build release APK
         run: flutter build apk --release
       - name: Upload APK
