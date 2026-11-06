@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -64,6 +65,7 @@ void main(){
   });
   testWidgets('Dedicated Players screen renders skaters and switches to goalies',
       (tester)async{
+    SharedPreferences.setMockInitialValues({});
     final client=MockClient((request)async{
       expect(request.url.path,'/api/v1/stats');
       return http.Response(jsonEncode(sampleStats()),200,
@@ -73,7 +75,11 @@ void main(){
     await tester.pumpAndSettle();
     expect(find.text('СТАТИСТИКА ИГРОКОВ'),findsOneWidget);
     expect(find.textContaining('3 полевых'),findsOneWidget);
+    await tester.drag(find.byType(CustomScrollView),const Offset(0,-400));
+    await tester.pumpAndSettle();
     expect(find.text('Иван Первый'),findsWidgets);
+    await tester.drag(find.byType(CustomScrollView),const Offset(0,600));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('ВРАТАРИ'));
     await tester.pumpAndSettle();
     // The ranking rows are below the scroll viewport in the compact test window.
@@ -83,3 +89,4 @@ void main(){
     client.close();
   });
 }
+
