@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'cup_data.dart';
+import 'match_lineups.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
 
@@ -23,11 +24,8 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
   String? error;
   bool loading=false;
   int tab=0;
-  bool rostersLoading=false;
-  String? rostersError;
   TeamInfo? homeTeam,awayTeam;
-  TeamRoster? homeRoster,awayRoster;
-  int lineupIndex=0;
+  int eventFilter=0;
   @override void initState(){
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -56,29 +54,6 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       if(mounted)setState(()=>error='Не удалось проверить матч: $e');
     }finally{if(mounted)setState(()=>loading=false);}
   }
-  String normalize(String s)=>s.toUpperCase().replaceAll('Ё','Е').replaceAll(RegExp(r'\s+'),' ').trim();
-  Future<void> loadRosters() async {
-    if(rostersLoading||homeRoster!=null&&awayRoster!=null)return;
-    setState(()=>rostersLoading=true);
-    try{
-      final teams=await api.teams();
-      TeamInfo? lookup(String name,TeamInfo? fallback){
-        if(fallback!=null)return fallback;
-        for(final t in teams) {
-          if(normalize(t.fullName)==normalize(name)||normalize(t.name)==normalize(name))return t;
-        }
-        return null;
-      }
-      final h=lookup(match.home,homeTeam),a=lookup(match.away,awayTeam);
-      if(h==null||a==null)throw Exception('Не удалось сопоставить команды с каталогом ФХР');
-      final results=await Future.wait([api.roster(h.id),api.roster(a.id)]);
-      if(!mounted)return;
-      setState((){
-        homeTeam=h;awayTeam=a;homeRoster=results[0];awayRoster=results[1];rostersError=null;
-      });
-    }catch(e){if(mounted)setState(()=>rostersError='Не удалось загрузить составы: $e');}
-    finally{if(mounted)setState(()=>rostersLoading=false);}
-  }
   Future<void> openOfficial() async {
     final link='https://junior.fhr.ru/games/${match.gameId}/';
     await launchUrl(Uri.parse(link),mode:LaunchMode.externalApplication);
@@ -102,6 +77,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
 
   Widget _hero() {
     final live=match.isLive;
+    final lineups=GameLineups.fromDetail(data);
     final label=data?['statusText']?.toString();
     final status=label!=null&&label.isNotEmpty?label:
       live?'LIVE':match.finished?'Матч завершён':'По расписанию';
@@ -117,7 +93,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
         CupTag(text:status.toUpperCase(),color:live?CupUi.green:(match.finished?CupUi.soft:CupUi.yellow),filled:true),
         const SizedBox(height:19),
         Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
-          Expanded(child:_heroTeam(match.home,homeTeam?.logo)),
+          Expanded(child:_heroTeam(match.home,homeTeam?.logo??lineups.side('home')?.logo)),
           Container(constraints:const BoxConstraints(minWidth:108),alignment:Alignment.center,
             child:Column(children:[
               Text(match.score.isEmpty?'–  :  –':match.score.replaceAll(':',' : '),
@@ -126,7 +102,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
               if(match.scoreNote.isNotEmpty)Text(match.scoreNote,
                 style:const TextStyle(color:CupUi.yellow,fontSize:11)),
             ])),
-          Expanded(child:_heroTeam(match.away,awayTeam?.logo)),
+          Expanded(child:_heroTeam(match.away,awayTeam?.logo??lineups.side('away')?.logo)),
         ]),
         if(live&&data?['period']!=null)...[
           const SizedBox(height:15),
@@ -168,7 +144,6 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       for(var i=0;i<4;i++)Expanded(child:InkWell(
         onTap:(){
           setState(()=>tab=i);
-          if(i==2)loadRosters();
         },
         child:Container(
           padding:const EdgeInsets.symmetric(vertical:16),
@@ -270,91 +245,91 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
         if(penalties.length>3)Padding(padding:const EdgeInsets.symmetric(horizontal:12),
           child:TextButton(onPressed:()=>setState(()=>tab=1),child:const Text('ВСЕ СОБЫТИЯ МАТЧА'))),
       ],
+      if(data!=null)...[
+        const CupSection(title:'ЗАЯВКИ КОМАНД'),
+        CupCard(padding:const EdgeInsets.all(14),
+          child:InkWell(onTap:()=>setState(()=>tab=2),
+            child:Row(children:[
+              const Icon(Icons.groups_2_outlined,color:CupUi.red,size:22),
+              const SizedBox(width:11),
+              Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                Text(GameLineups.fromDetail(data).available
+                  ?'Подтверждённые заявки ФХР':'Заявки ФХР пока не подтверждены',
+                  style:const TextStyle(color:CupUi.white,fontWeight:FontWeight.w800,fontSize:12)),
+                const SizedBox(height:4),
+                const Text('Игроки, тренеры, капитаны и статистика',
+                  style:TextStyle(color:CupUi.muted,fontSize:11)),
+              ])),
+              const Icon(Icons.chevron_right_rounded,color:CupUi.soft),
+            ]))),
+      ],
       const CupSection(title:'ИНФОРМАЦИЯ О МАТЧЕ'),
       _introInfo(),const SizedBox(height:26),
     ]);
   }
 
   Widget _eventList(){
-    if(data==null)return const CupMessage(title:'Загружаю протокол',message:'Запрашиваю события матча ФХР.');
-    if(events.isEmpty)return const CupMessage(title:'События не опубликованы',
-      message:'На странице ФХР пока нет доступного протокола. Проверьте позже.');
+    if(data==null)return const CupMessage(
+      title:'Загружаю протокол',message:'Запрашиваю события матча ФХР.');
+    if(events.isEmpty)return const CupMessage(
+      title:'События не опубликованы',
+      message:'На странице ФХР пока нет подтверждённого протокола. Проверь позже.');
+    final filterTypes=<String>['','GOAL','PENALTY','GOALKEEPER'];
+    final visible=events.where((e)=>eventFilter==0||str(e,'type')==filterTypes[eventFilter]).toList();
     final out=<Widget>[];
     int? prevPeriod;
-    for(final e in events){
+    for(final e in visible){
       final p=e['period'] is num?(e['period'] as num).toInt():null;
       if(p!=prevPeriod){
         final label=periodLabel(p);
         if(label!=null)out.add(CupSection(title:label,
-          subtitle:'Время матча — по протоколу ФХР'));
+          subtitle:'Время матча — по официальному протоколу ФХР'));
         prevPeriod=p;
       }
       out.add(_goalEntry(e));
     }
-    return Column(children:[...out,const SizedBox(height:20)]);
+    return Column(children:[
+      const CupSection(title:'ХРОНОЛОГИЯ МАТЧА',
+        subtitle:'Голы, передачи, штрафы, вратари и тайм-ауты'),
+      SingleChildScrollView(scrollDirection:Axis.horizontal,
+        padding:const EdgeInsets.fromLTRB(12,1,12,14),
+        child:Row(children:[
+          for(var i=0;i<4;i++)Padding(
+            padding:const EdgeInsets.only(right:7),
+            child:InkWell(
+              onTap:()=>setState(()=>eventFilter=i),
+              borderRadius:BorderRadius.circular(9),
+              child:Container(padding:const EdgeInsets.symmetric(horizontal:13,vertical:10),
+                decoration:BoxDecoration(
+                  color:i==eventFilter?CupUi.red:CupUi.surface,
+                  borderRadius:BorderRadius.circular(9),
+                  border:Border.all(color:i==eventFilter?CupUi.red:CupUi.stroke)),
+                child:Text(const ['ВСЕ','ГОЛЫ','УДАЛЕНИЯ','ВРАТАРИ'][i],
+                  style:TextStyle(color:i==eventFilter?CupUi.white:CupUi.muted,
+                    fontSize:10,fontWeight:FontWeight.w800))),
+            )),
+        ])),
+      if(visible.isEmpty)const CupMessage(title:'Нет событий в категории',
+        message:'Попробуй другой фильтр хронологии.'),
+      ...out,
+      const SizedBox(height:20),
+    ]);
   }
 
   Widget _lineup(){
-    if(rostersLoading&&homeRoster==null)return const CupMessage(
-      icon:Icons.hourglass_top,title:'Загружаю составы',
-      message:'Получаю игроков и фотографии из ФХР Джуниор.');
-    if(rostersError!=null)return CupMessage(
-      icon:Icons.cloud_off_outlined,title:'Составы недоступны',
-      message:rostersError!,retry:loadRosters);
-    if(homeRoster==null||awayRoster==null)return CupMessage(
-      title:'Ожидаю составы ФХР',message:'Составы загружаются из официальных карточек клубов.',retry:loadRosters);
-    final roster=lineupIndex==0?homeRoster!:awayRoster!;
-    final club=lineupIndex==0?homeTeam:awayTeam;
-    final groups=<String,List<PlayerInfo>>{'ВРАТАРИ':[],'ЗАЩИТНИКИ':[],'НАПАДАЮЩИЕ':[],'ДРУГИЕ':[]};
-    for(final player in roster.players) {
-      final role=player.position.toLowerCase();
-      final key=role.contains('вратарь')?'ВРАТАРИ':role.contains('защитник')?'ЗАЩИТНИКИ':
-        role.contains('нападающий')?'НАПАДАЮЩИЕ':'ДРУГИЕ';
-      groups[key]!.add(player);
-    }
-    return Column(children:[
-      CupCard(child:Row(children:[
-        for(var i=0;i<2;i++)Expanded(child:InkWell(
-          onTap:()=>setState(()=>lineupIndex=i),
-          child:Padding(padding:const EdgeInsets.symmetric(vertical:13,horizontal:9),
-            child:Row(mainAxisAlignment:MainAxisAlignment.center,children:[
-              fhrTeamLogo((i==0?homeTeam:awayTeam)?.logo,size:24),
-              const SizedBox(width:8),
-              Flexible(child:Text((i==0?match.home:match.away).split(' ').first,
-                maxLines:1,overflow:TextOverflow.ellipsis,
-                style:TextStyle(fontSize:11,fontWeight:FontWeight.w800,
-                  color:lineupIndex==i?CupUi.white:CupUi.muted))),
-            ])),
-        )),
-      ])),
-      Padding(padding:const EdgeInsets.symmetric(horizontal:17,vertical:7),
-        child:Text('Состав на турнире ФХР · ${roster.players.length} игроков. Это не заявка на конкретный матч.',
-          style:const TextStyle(color:CupUi.muted,fontSize:11,height:1.4))),
-      for(final entry in groups.entries)if(entry.value.isNotEmpty)...[
-        CupSection(title:entry.key,subtitle:'${entry.value.length} игроков'),
-        CupCard(padding:const EdgeInsets.symmetric(vertical:4),
-          child:Column(children:[
-            for(var i=0;i<entry.value.length;i++)...[
-              _playerLine(entry.value[i],club),
-              if(i+1<entry.value.length)const CupDiv(indent:57),
-            ],
-          ])),
-      ],
-      const SizedBox(height:25),
-    ]);
+    if(data==null)return CupMessage(
+      icon:Icons.description_outlined,
+      title:'Проверяю заявку на матч',
+      message:error??'Получаю официальный список игроков, тренеров и статистику из карточки этой встречи на ФХР.',
+      retry:refresh);
+    final lineups=GameLineups.fromDetail(data);
+    return MatchLineupPanel(
+      lineups:lineups,
+      home:match.home,away:match.away,
+      homeLogo:homeTeam?.logo??lineups.side('home')?.logo,
+      awayLogo:awayTeam?.logo??lineups.side('away')?.logo,
+    );
   }
-  Widget _playerLine(PlayerInfo p,TeamInfo? club)=>InkWell(
-    onTap:club==null?null:()=>Navigator.of(context).push(MaterialPageRoute(
-      builder:(_)=>PlayerCardPage(player:p,team:club))),
-    child:Padding(padding:const EdgeInsets.fromLTRB(12,9,12,9),
-      child:Row(children:[
-        fhrPlayerPhoto(p.photo,size:39),const SizedBox(width:10),
-        SizedBox(width:30,child:Text('#${p.number}',
-          style:const TextStyle(color:CupUi.muted,fontWeight:FontWeight.w700,fontSize:12))),
-        Expanded(child:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis,
-          style:const TextStyle(color:CupUi.white,fontWeight:FontWeight.w600,fontSize:12))),
-        const Icon(Icons.chevron_right,size:17,color:CupUi.dim),
-      ])));
 
   Widget _compareBar(String title,int left,int right){
     final sum=left+right;
@@ -381,6 +356,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final goals=events.where((e)=>str(e,'type')=='GOAL').toList();
     final penalties=events.where((e)=>str(e,'type')=='PENALTY').toList();
     final periods=data?['periodScores'] is List ? data!['periodScores'] as List : [];
+    final lineups=GameLineups.fromDetail(data);
     int count(List<Map<String,dynamic>> values,String side)=>
       values.where((e)=>str(e,'side')==side).length;
     return Column(children:[
@@ -398,6 +374,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       if(periods.isEmpty&&events.isEmpty)const CupMessage(
         title:'Детальная статистика не опубликована',
         message:'ФХР пока не предоставляет числовые показатели для этого матча.'),
+      if(lineups.available)MatchScorersPanel(lineups:lineups,home:match.home,away:match.away),
       const CupSection(title:'ДРУГИЕ ПОКАЗАТЕЛИ'),
       const CupCard(padding:EdgeInsets.all(16),
         child:Text('Броски, вбрасывания и другие показатели появятся, когда ФХР предоставит проверенные данные. Мы не подменяем их расчётами.',
