@@ -346,32 +346,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ])),
     ]));
   }
-  void openMatch(Match m) => Navigator.of(context).push(MaterialPageRoute(
-    builder:(context)=>Scaffold(
-      appBar:AppBar(title:const Text('Матч'),actions:[IconButton(onPressed:()=>openFhr(calendarUrl),icon:const Icon(Icons.open_in_new))]),
-      body:ListView(children:[
-        Container(color:panel,padding:const EdgeInsets.fromLTRB(18,28,18,30),child:Column(children:[
-          Text(groupName(m),textAlign:TextAlign.center,style:const TextStyle(fontSize:11,color:muted)),
-          const SizedBox(height:12),
-          Text(m.date,style:const TextStyle(fontSize:12,color:muted)),
-          const SizedBox(height:24),
-          Row(children:[
-            Expanded(child:Text(m.home,textAlign:TextAlign.center,style:const TextStyle(fontWeight:FontWeight.bold,fontSize:16))),
-            Container(padding:const EdgeInsets.symmetric(horizontal:13),
-              child:Text(m.score.isEmpty?'– : –':m.score,style:const TextStyle(fontSize:27,fontWeight:FontWeight.w900))),
-            Expanded(child:Text(m.away,textAlign:TextAlign.center,style:const TextStyle(fontWeight:FontWeight.bold,fontSize:16))),
-          ]),
-          const SizedBox(height:18),
-          Text(m.finished?'МАТЧ ЗАВЕРШЁН':'ПО РАСПИСАНИЮ',style:TextStyle(fontSize:11,fontWeight:FontWeight.bold,color:m.finished?muted:amber)),
-        ])),
-        if(m.arena.isNotEmpty)ListTile(leading:const Icon(Icons.stadium_outlined),title:const Text('Арена'),subtitle:Text(m.arena)),
-        const Padding(padding:EdgeInsets.all(18),child:Text(
-          'События и подробный протокол доступны на ФХР. Статусы LIVE и авторов голов нельзя подтверждать без официальных данных.',
-          style:TextStyle(color:muted,fontSize:13))),
-        Padding(padding:const EdgeInsets.all(16),child:FilledButton(
-          onPressed:()=>openFhr(calendarUrl),child:const Text('Открыть на ФХР Джуниор'))),
-      ]),
-    )));
+  void openMatch(Match m) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder:(_)=>FhrMatchDetails(initial:m)));
+  }
+
   Widget rankingPage() {
     final ranks=ranking(matches);
     return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
@@ -509,6 +488,136 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class FhrMatchDetails extends StatefulWidget {
+  final Match initial;
+  const FhrMatchDetails({super.key,required this.initial});
+  @override
+  State<FhrMatchDetails> createState()=>_FhrMatchDetailsState();
+}
+
+class _FhrMatchDetailsState extends State<FhrMatchDetails> {
+  final FhrApiClient api=FhrApiClient(http.Client());
+  Timer? ticker;
+  late Match match;
+  Map<String,dynamic>? detail;
+  String? error;
+  bool loading=false;
+  @override
+  void initState() {
+    super.initState();
+    match=widget.initial;
+    update();
+    ticker=Timer.periodic(const Duration(seconds:20),(_)=>update());
+  }
+  @override
+  void dispose() {ticker?.cancel();api.client.close();super.dispose();}
+  Future<void> update() async {
+    if(loading || widget.initial.gameId==null)return;
+    setState(()=>loading=true);
+    try {
+      final d=await api.detail(widget.initial.gameId!);
+      if(!mounted)return;
+      if(d['ok']!=true)throw Exception('ФХР не вернул протокол');
+      setState((){
+        detail=d;
+        match=widget.initial.withDetail(d);
+        error=null;
+      });
+    }catch(e){if(mounted)setState(()=>error='Протокол ФХР недоступен: $e');}
+    finally{if(mounted)setState(()=>loading=false);}
+  }
+  Future<void> openOfficial() async {
+    final url=match.matchUrl ?? calendarUrl;
+    final uri=Uri.tryParse(url);
+    if(uri==null || uri.scheme!='https' || uri.host!='junior.fhr.ru')return;
+    await launchUrl(uri,mode:LaunchMode.externalApplication);
+  }
+  String get statusLabel {
+    final fromSite=detail?['statusText']?.toString();
+    if(fromSite!=null && fromSite.isNotEmpty)return fromSite;
+    if(match.isLive)return 'LIVE · ФХР';
+    if(match.isFinalConfirmed)return 'МАТЧ ЗАВЕРШЁН · ФХР';
+    if(match.finished)return 'РЕЗУЛЬТАТ ОПУБЛИКОВАН';
+    return 'ПО РАСПИСАНИЮ';
+  }
+  @override
+  Widget build(BuildContext context) {
+    final periods=detail?['periodScores'] is List ? detail!['periodScores'] as List : [];
+    final events=detail?['events'] is List ? detail!['events'] as List : [];
+    return Scaffold(
+      appBar:AppBar(title:const Text('Протокол матча'),actions:[
+        IconButton(onPressed:update,icon:loading?const SizedBox(width:18,height:18,child:CircularProgressIndicator(strokeWidth:2))
+            :const Icon(Icons.refresh_rounded)),
+        IconButton(onPressed:openOfficial,icon:const Icon(Icons.open_in_new_rounded)),
+      ]),
+      body:ListView(children:[
+        Container(color:panel,padding:const EdgeInsets.fromLTRB(16,22,16,24),
+          child:Column(children:[
+            Text(match.stage.toUpperCase(),textAlign:TextAlign.center,
+              style:const TextStyle(color:muted,fontSize:11,fontWeight:FontWeight.bold)),
+            const SizedBox(height:8),
+            Text('${match.dayLabel} · ${match.timeMsk} МСК',
+              style:const TextStyle(color:muted,fontSize:12)),
+            const SizedBox(height:25),
+            Row(children:[
+              Expanded(child:Text(match.home,textAlign:TextAlign.center,
+                style:const TextStyle(fontWeight:FontWeight.bold,fontSize:15))),
+              SizedBox(width:95,child:Column(children:[
+                Text(match.score.isNotEmpty?match.score:'– : –',
+                  style:TextStyle(fontSize:27,fontWeight:FontWeight.w900,color:match.isLive?red:Colors.white)),
+                if(match.scoreNote.isNotEmpty)Text(match.scoreNote,style:const TextStyle(fontSize:11,color:amber)),
+              ])),
+              Expanded(child:Text(match.away,textAlign:TextAlign.center,
+                style:const TextStyle(fontWeight:FontWeight.bold,fontSize:15))),
+            ]),
+            const SizedBox(height:18),
+            Text(statusLabel,textAlign:TextAlign.center,
+              style:TextStyle(fontWeight:FontWeight.w800,fontSize:12,color:match.isLive?red:amber)),
+            if(match.isLive && detail?['period']!=null)Padding(padding:const EdgeInsets.only(top:8),
+              child:Text('Период ${detail!['period']}  ·  ${detail?['clock'] ?? ''}',
+                style:const TextStyle(fontSize:13,color:muted))),
+          ])),
+        if(error!=null)Padding(padding:const EdgeInsets.all(14),
+          child:Text(error!,style:const TextStyle(color:amber,fontSize:12))),
+        if(match.arena.isNotEmpty)ListTile(leading:const Icon(Icons.stadium_outlined,color:muted),
+          title:const Text('Арена'),subtitle:Text(match.arena)),
+        if(periods.isNotEmpty)...[
+          const Padding(padding:EdgeInsets.fromLTRB(16,19,16,12),
+            child:Text('По периодам',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800))),
+          Container(color:panel,child:Row(mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+            children:[
+              for(var i=0;i<periods.length;i++)Padding(padding:const EdgeInsets.all(12),
+                child:Column(children:[
+                  Text('${i+1}-й',style:const TextStyle(color:muted,fontSize:11)),
+                  Text('${periods[i] is Map ? periods[i]['home'] : '?'}:${periods[i] is Map ? periods[i]['away'] : '?'}',
+                    style:const TextStyle(fontWeight:FontWeight.bold,fontSize:16)),
+                ])),
+            ])),
+        ],
+        const Padding(padding:EdgeInsets.fromLTRB(16,19,16,12),
+          child:Text('События игры',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800))),
+        if(events.isEmpty)const Padding(padding:EdgeInsets.fromLTRB(16,0,16,16),
+          child:Text('ФХР пока не передал распознаваемую ленту событий.',
+            style:TextStyle(color:muted,fontSize:12))),
+        for(final e in events.take(100))
+          if(e is Map)ListTile(
+            dense:true,
+            leading:const Icon(Icons.sports_hockey_outlined,size:18,color:red),
+            title:Text(e['description']?.toString() ?? '',style:const TextStyle(fontSize:12)),
+            subtitle:Text(e['score']?.toString() ?? '',style:const TextStyle(fontSize:11,color:muted)),
+          ),
+        Padding(padding:const EdgeInsets.all(16),child:FilledButton.icon(
+          onPressed:openOfficial,icon:const Icon(Icons.open_in_new),
+          label:const Text('Официальная карточка на ФХР'))),
+        const Padding(padding:EdgeInsets.fromLTRB(16,0,16,22),
+          child:Text('Данные протокола показываются по мере публикации ФХР. Автоматическая проверка при открытом экране каждые 20 секунд.',
+            style:TextStyle(color:muted,fontSize:11))),
+      ]),
     );
   }
 }
