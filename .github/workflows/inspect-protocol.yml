@@ -1,0 +1,36 @@
+name: Inspect native FHR match data
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/inspect-protocol.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: See official match protocol DOM
+        run: |
+          python3 -m pip -q install beautifulsoup4
+          python3 - <<'PY'
+          import urllib.request
+          from bs4 import BeautifulSoup
+          u='https://junior.fhr.ru/games/25170469/'
+          page=urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=30).read()
+          soup=BeautifulSoup(page,'html.parser')
+          selectors=['.match-protocol','.match-protocol--goal','.match-protocol--penalty',
+            '.protocol-player-card','.match-protocol__left','.match-protocol__right',
+            '.event-row','.event-time','.time-score-desk','.period-score',
+            '.match-statistics','.statistic-table','.match-event','.game-player',
+            '.team-roster','.player-card','.match-history-tab','.match-score']
+          print('BYTES',len(page),flush=True)
+          for selector in selectors:
+            els=soup.select(selector)
+            print('SELECTOR',selector,'COUNT',len(els),flush=True)
+            for e in els[:2]:
+              print('  sample',str(e)[:2600].replace('\n',' '),flush=True)
+          for phrase in ['match-protocol--goal','match-protocol--penalty','protocol-player-card--sidebar']:
+            node=soup.select_one('.'+phrase)
+            if node:
+              print('PARENT',phrase,str(node.parent)[:5400].replace('\n',' '),flush=True)
+          PY
