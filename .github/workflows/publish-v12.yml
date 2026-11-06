@@ -1,0 +1,67 @@
+name: Publish JUNIOR U16 v12 APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-v12.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Download verified v12 APK from completed build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/13546572552/zip" \
+            --output app-artifact.zip
+          unzip -q app-artifact.zip
+          test -f app-release.apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          p=Path('app-release.apk')
+          assert p.stat().st_size>40_000_000, 'APK appears incomplete'
+          with zipfile.ZipFile(p) as archive:
+              assert archive.testzip() is None,'APK ZIP integrity error'
+              names=set(archive.namelist())
+              assert 'classes.dex' in names,'APK has no Android bytecode'
+              assert 'AndroidManifest.xml' in names,'APK has no Android manifest'
+              assert any(n.startswith('lib/arm64-v8a/') for n in names),'No arm64 runtime'
+          digest=hashlib.sha256(p.read_bytes()).hexdigest()
+          Path('SHA256SUMS.txt').write_text(digest+'  JUNIOR-U16-v12.apk\n')
+          print('Original v12 APK size:',p.stat().st_size,'SHA256:',digest)
+          PY
+          mv app-release.apk JUNIOR-U16-v12.apk
+      - name: Publish v12 GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v12.0.0 >/dev/null 2>&1; then
+            gh release upload v12.0.0 JUNIOR-U16-v12.apk SHA256SUMS.txt --clobber
+          else
+            gh release create v12.0.0 JUNIOR-U16-v12.apk SHA256SUMS.txt \
+              --title "JUNIOR U16 v12 · Match Lineups" \
+              --notes "Test release of JUNIOR U16 v12 for Android. NEW: native, match-specific FHR lineups (separate from tournament rosters), official game player photos, captain/assistant markers, goal/assist/points/penalty match stats, team coaches, game scorers leaderboard, and event filters in the match center. All data comes from FHR Junior. Published match lineups are only shown when FHR provides them; unavailable stats are not fabricated. Backend verified against two real FHR games. Flutter analyzer, widget tests and APK build succeeded. Android device acceptance testing is still required. Note: Android update over old APK may fail if app signing differs; reinstalling can erase locally saved app data." \
+              --prerelease
+          fi
+      - name: Verify release asset download and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view v12.0.0 --json url,tagName,assets,isPrerelease
+          mkdir -p verified
+          gh release download v12.0.0 --pattern 'JUNIOR-U16-v12.apk' --dir verified
+          cmp verified/JUNIOR-U16-v12.apk JUNIOR-U16-v12.apk
+          sha256sum -c SHA256SUMS.txt
