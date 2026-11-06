@@ -69,7 +69,7 @@ class CupTag extends StatelessWidget {
     return Container(
     padding:EdgeInsets.symmetric(horizontal:9,vertical:5),
     decoration:BoxDecoration(
-      color:filled?color.withValues(alpha:.17):CupUi.raised,
+      color:filled?effectiveColor.withValues(alpha:.14):CupUi.raised,
       borderRadius:BorderRadius.circular(6)),
     child:Text(text,style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,color:effectiveColor,letterSpacing:.2)),
   );
