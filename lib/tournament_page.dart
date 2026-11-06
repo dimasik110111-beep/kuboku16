@@ -32,7 +32,7 @@ class _TournamentPageState extends State<TournamentPage>{
         decoration:BoxDecoration(color:active?CupUi.red:CupUi.surface,
           borderRadius:BorderRadius.circular(9),
           border:Border.all(color:active?CupUi.red:CupUi.stroke)),
-        child:Text(text,style:TextStyle(color:active?CupUi.white:CupUi.muted,
+        child:Text(text,style:TextStyle(color:active?Colors.white:CupUi.muted,
           fontSize:10,fontWeight:FontWeight.w900,letterSpacing:.25)),
       )));
 
