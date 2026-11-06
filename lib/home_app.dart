@@ -252,7 +252,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         borderRadius:BorderRadius.circular(8),
         border:Border.all(color:active?CupUi.red:CupUi.stroke)),
       child:Text(text,style:TextStyle(fontSize:10,letterSpacing:.3,
-        color:active?CupUi.white:CupUi.muted,fontWeight:FontWeight.w800))),
+        color:active?Colors.white:CupUi.muted,fontWeight:FontWeight.w800))),
   );
 
   Widget _dateSelector(){
