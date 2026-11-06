@@ -177,7 +177,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
               color:i==0?CupUi.yellow:CupUi.white,fontSize:22,fontWeight:FontWeight.w900)),
             Text(rows[i].team,maxLines:1,overflow:TextOverflow.ellipsis,textAlign:TextAlign.center,
               style:TextStyle(color:CupUi.muted,fontSize:9)),
-          ])),
+          ]))
         ),
       ]),
     );
