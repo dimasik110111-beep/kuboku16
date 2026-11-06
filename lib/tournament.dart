@@ -115,6 +115,38 @@ class CupTournament {
 
   List<Rank> get qualificationRanking=>table();
 
+  /// Second-round groups from Article 4:
+  /// Group 1 = all first places plus last place of initial group 4;
+  /// Group 2 = all second places plus last place of initial group 3;
+  /// Group 3 = all third places plus last place of initial group 2;
+  /// Group 4 = all fourth places plus last place of initial group 1.
+  List<List<String>> secondTourPreview(){
+    final groups=groupNames(round:CupTour.first);
+    final positions=[
+      [1,1,1,1,5],
+      [2,2,2,2,5],
+      [3,3,3,3,5],
+      [4,4,4,4,5],
+    ];
+    final lastGroups=[3,2,1,0];
+    return [
+      for(var i=0;i<4;i++)[
+        for(var g=0;g<4;g++)
+          _firstTourSeed(groups,g,positions[i][g]),
+        _firstTourSeed(groups,lastGroups[i],5),
+      ],
+    ];
+  }
+
+  String _firstTourSeed(List<String> groups,int groupIndex,int position){
+    if(!firstComplete||groups.length!=4){
+      return '$position-е место группы ${groupIndex+1} I тура';
+    }
+    final ranks=table(group:groups[groupIndex]);
+    if(ranks.length<position)return '$position-е место группы ${groupIndex+1} I тура';
+    return ranks[position-1].team;
+  }
+
   /// The third tour is seeded by a snake distribution over the combined
   /// standings after rounds one and two (Article 4).
   static const List<List<int>> thirdTourSnake=[
