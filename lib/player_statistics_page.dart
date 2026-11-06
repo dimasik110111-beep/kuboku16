@@ -178,7 +178,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
             Text(rows[i].team,maxLines:1,overflow:TextOverflow.ellipsis,textAlign:TextAlign.center,
               style:TextStyle(color:CupUi.muted,fontSize:9)),
           ])),
-        )),
+        ),
       ]),
     );
   }
