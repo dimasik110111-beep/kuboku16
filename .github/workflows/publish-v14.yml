@@ -1,0 +1,67 @@
+name: Publish JUNIOR U16 v14 APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-v14.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download verified v14 APK from successful Android build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/13548643345/zip" \
+            --output app-artifact.zip
+          unzip -q app-artifact.zip
+          test -f app-release.apk
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          apk=Path('app-release.apk')
+          assert apk.stat().st_size>40_000_000,'Incomplete v14 APK'
+          with zipfile.ZipFile(apk) as z:
+              assert z.testzip() is None
+              names=set(z.namelist())
+              assert 'AndroidManifest.xml' in names
+              assert 'classes.dex' in names
+              assert any(p.startswith('lib/arm64-v8a/') for p in names)
+          print('v14 APK size:',apk.stat().st_size,'bytes')
+          digest=hashlib.sha256(apk.read_bytes()).hexdigest()
+          Path('SHA256SUMS.txt').write_text(digest+'  JUNIOR-U16-v14.apk\n')
+          PY
+          mv app-release.apk JUNIOR-U16-v14.apk
+      - name: Publish release on GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view v14.0.0 >/dev/null 2>&1; then
+            gh release upload v14.0.0 JUNIOR-U16-v14.apk SHA256SUMS.txt --clobber
+          else
+            gh release create v14.0.0 JUNIOR-U16-v14.apk SHA256SUMS.txt \
+              --title "JUNIOR U16 v14 · All Player Statistics & Light Theme" \
+              --notes "JUNIOR U16 v14 Android test release: official complete FHR 2026/27 U16 Cup statistics (434 skater entries and 47 goalie entries at verification), sortable scorers/goals/assists/plus-minus/penalties and goalie save percentage, GAA, wins and saves. Filter statistics by official group and team, search names, view player photo and individual tournament metrics. A new Players navigation tab has been added. True light/dark theme is switchable in the header and its selection persists locally. Refined light and dark app cards, borders and contrast. Backend API /api/v1/stats is sourced from official junior.fhr.ru and rejects incomplete tables. Flutter static analysis, widget tests for player statistics/theme, and the Android release APK build passed. APK has not been acceptance-tested across Android devices. If Android cannot upgrade due to signing differences, reinstall may erase local favorites." \
+              --prerelease
+          fi
+      - name: Verify public release APK by downloading it again
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view v14.0.0 --json url,tagName,assets,isPrerelease
+          mkdir -p verified
+          gh release download v14.0.0 --pattern 'JUNIOR-U16-v14.apk' --dir verified
+          cmp verified/JUNIOR-U16-v14.apk JUNIOR-U16-v14.apk
+          sha256sum -c SHA256SUMS.txt
