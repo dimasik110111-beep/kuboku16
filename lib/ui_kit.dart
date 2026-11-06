@@ -26,12 +26,12 @@ class CupCard extends StatelessWidget {
   const CupCard({super.key,required this.child,this.padding,this.margin,this.color});
   @override
   Widget build(BuildContext context)=>Container(
-    margin:margin??const EdgeInsets.symmetric(horizontal:12,vertical:6),
+    margin:margin??EdgeInsets.symmetric(horizontal:12,vertical:6),
     padding:padding,
     decoration:BoxDecoration(color:color??CupUi.surface,borderRadius:BorderRadius.circular(16),
       border:Border.all(color:CupUi.stroke,width:.75),
       boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
-        blurRadius:18,offset:const Offset(0,5))]:null),
+        blurRadius:18,offset:Offset(0,5))]:null),
     clipBehavior:Clip.antiAlias,
     child:child,
   );
@@ -44,14 +44,14 @@ class CupSection extends StatelessWidget {
   const CupSection({super.key,required this.title,this.subtitle,this.trailing});
   @override
   Widget build(BuildContext context)=>Padding(
-    padding:const EdgeInsets.fromLTRB(18,21,16,10),
+    padding:EdgeInsets.fromLTRB(18,21,16,10),
     child:Row(children:[
       Container(height:17,width:3,decoration:BoxDecoration(color:CupUi.red,borderRadius:BorderRadius.circular(2))),
-      const SizedBox(width:9),
+      SizedBox(width:9),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text(title,style:const TextStyle(color:CupUi.white,fontWeight:FontWeight.w800,fontSize:13,letterSpacing:.3)),
-        if(subtitle!=null)Padding(padding:const EdgeInsets.only(top:4),
-          child:Text(subtitle!,style:const TextStyle(color:CupUi.muted,fontSize:11))),
+        Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w800,fontSize:13,letterSpacing:.3)),
+        if(subtitle!=null)Padding(padding:EdgeInsets.only(top:4),
+          child:Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:11))),
       ])),
       if(trailing!=null)trailing!,
     ]),
@@ -67,7 +67,7 @@ class CupTag extends StatelessWidget {
   Widget build(BuildContext context){
     final effectiveColor=color==const Color(0xFF8995A6)?CupUi.muted:color;
     return Container(
-    padding:const EdgeInsets.symmetric(horizontal:9,vertical:5),
+    padding:EdgeInsets.symmetric(horizontal:9,vertical:5),
     decoration:BoxDecoration(
       color:filled?color.withValues(alpha:.17):CupUi.raised,
       borderRadius:BorderRadius.circular(6)),
@@ -84,15 +84,15 @@ class CupMessage extends StatelessWidget {
   const CupMessage({super.key,this.icon=Icons.info_outline,required this.title,required this.message,this.retry});
   @override
   Widget build(BuildContext context)=>Padding(
-    padding:const EdgeInsets.symmetric(horizontal:20,vertical:30),
+    padding:EdgeInsets.symmetric(horizontal:20,vertical:30),
     child:Column(mainAxisSize:MainAxisSize.min,children:[
       Container(height:52,width:52,decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(15)),
         child:Icon(icon,color:CupUi.muted,size:26)),
-      const SizedBox(height:13),
-      Text(title,textAlign:TextAlign.center,style:const TextStyle(color:CupUi.white,fontSize:15,fontWeight:FontWeight.w800)),
-      const SizedBox(height:7),
-      Text(message,textAlign:TextAlign.center,style:const TextStyle(color:CupUi.muted,fontSize:12,height:1.45)),
-      if(retry!=null)TextButton(onPressed:retry,child:const Text('ПОВТОРИТЬ')),
+      SizedBox(height:13),
+      Text(title,textAlign:TextAlign.center,style:TextStyle(color:CupUi.white,fontSize:15,fontWeight:FontWeight.w800)),
+      SizedBox(height:7),
+      Text(message,textAlign:TextAlign.center,style:TextStyle(color:CupUi.muted,fontSize:12,height:1.45)),
+      if(retry!=null)TextButton(onPressed:retry,child:Text('ПОВТОРИТЬ')),
     ]),
   );
 }
