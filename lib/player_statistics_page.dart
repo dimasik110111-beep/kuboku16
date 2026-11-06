@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'player_statistics.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
+import 'player_insights.dart';
+import 'app_services.dart';
 
 class PlayerStatisticsPage extends StatefulWidget{
   final http.Client? client;
@@ -19,10 +21,18 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
   bool goalies=false;
   PlayerStatSort sort=PlayerStatSort.points;
   bool loading=false;
-  @override void initState(){super.initState();load();}
+  bool cached=false;
+  String? loadError;
+  @override void initState(){super.initState();restore();}
   @override void dispose(){
     if(widget.client==null)api.client.close();
     super.dispose();
+  }
+  Future<void> restore()async{
+    final data=await api.cached(group:group);
+    if(!mounted)return;
+    if(data!=null)setState((){latest=data;cached=true;});
+    await load();
   }
   Future<void> load()async{
     if(loading)return;
@@ -32,10 +42,10 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
     try {
       final data=await future;
       if(mounted)setState((){
-        latest=data;
+        latest=data;cached=false;loadError=null;
         if(team!=null&&!data.teams.contains(team))team=null;
       });
-    }catch(_){/* FutureBuilder provides the correct error state. */}
+    }catch(e){Diagnostics.record('stats',e);if(mounted)setState(()=>loadError='Обновление не удалось. Показаны последние загруженные данные.');}
     finally{loading=false;}
   }
   String mskUpdate(DateTime? time){
@@ -68,12 +78,12 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
           DropdownMenuItem(value:group,child:Text(group,maxLines:1,overflow:TextOverflow.ellipsis)),
       ],
       onChanged:(next) {
-        if(next==null)return;
+        if(next==null||loading)return;
         setState((){
           group=next.isEmpty?null:next;
-          team=null;
+          team=null;latest=null;pending=null;loadError=null;
         });
-        load();
+        restore();
       },
     )));
   Widget teamFilter(CupStatistics source)=>filterWrap('КОМАНДА',
@@ -108,10 +118,10 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
     }
   }
   List<CupPlayerStats> filtered(CupStatistics data){
-    final q=search.toLowerCase().trim();
+    final q=search.toLowerCase().replaceAll('ё','е').trim();
     final rows=(goalies?data.goalies:data.skaters).where((p){
       if(team!=null&&p.fullClub!=team)return false;
-      return q.isEmpty||p.name.toLowerCase().contains(q)||
+      return q.isEmpty||p.name.toLowerCase().replaceAll('ё','е').contains(q)||
         p.team.toLowerCase().contains(q)||p.number.contains(q);
     });
     return sortCupPlayers(rows,sort);
@@ -185,7 +195,9 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
 
   Widget _content(CupStatistics data){
     final rows=filtered(data);
-    return ListView(children:[
+    return CustomScrollView(key:const PageStorageKey('player-stats'),slivers:[SliverList.list(children:[
+      if(loading)const LinearProgressIndicator(),
+      if(cached||loadError!=null)Padding(padding:const EdgeInsets.all(16),child:Text(loadError??'Сохранённая статистика · обновляю…')),
       CupSection(title:'СТАТИСТИКА ИГРОКОВ',
         subtitle:'Кубок России U16 · 2026/27 · официальный источник ФХР'),
       CupCard(
@@ -209,6 +221,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
           SizedBox(width:8),
           Expanded(child:sectionButton('ВРАТАРИ',goalies,()=>setState((){goalies=true;sort=PlayerStatSort.savesPercentage;}))),
         ])),
+      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>PlayerComparisonPage(data:data))),icon:const Icon(Icons.compare_arrows),label:const Text('Сравнить игроков'))),
       groupFilter(data),teamFilter(data),
       Padding(padding:EdgeInsets.fromLTRB(12,5,12,12),
         child:TextField(
@@ -241,28 +254,20 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
         subtitle:'Рейтинги обновляются по публикациям ФХР'),
       if(rows.isEmpty)CupMessage(title:'Ничего не найдено',
         message:'Выбери другой этап, команду или поисковый запрос.'),
-      if(rows.isNotEmpty)CupCard(
-        margin:EdgeInsets.fromLTRB(12,0,12,18),
-        padding:EdgeInsets.symmetric(vertical:4),
-        child:ListView.separated(
-          shrinkWrap:true,physics:NeverScrollableScrollPhysics(),
-          itemCount:rows.length,
-          separatorBuilder:(_,__)=>CupDiv(indent:39),
-          itemBuilder:(_,i)=>_playerRow(rows[i],i),
-        )),
+    ]),
+      SliverList.builder(itemCount:rows.length,itemBuilder:(_,i)=>_playerRow(rows[i],i)),
+      SliverList.list(children:[
       Padding(padding:EdgeInsets.fromLTRB(17,2,17,22),
         child:Text('Рейтинг включает игроков, имеющих запись в официальной статистике ФХР. '
           'Игроки без опубликованной статистики доступны в общих составах команд. '
           'При отсутствии данных показатель не вычисляется самостоятельно.',
           style:TextStyle(color:CupUi.muted,fontSize:11,height:1.5))),
-    ]);
+    ])]);
   }
   @override Widget build(BuildContext context){
     return FutureBuilder<CupStatistics>(future:pending,builder:(context,snapshot){
       if(snapshot.connectionState!=ConnectionState.done && latest==null){
-        return CupMessage(icon:Icons.hourglass_top_rounded,
-          title:'Загружаю всю статистику ФХР',
-          message:'Получаю официальные таблицы полевых игроков и вратарей.');
+        return const LoadingCards();
       }
       if(snapshot.hasError && latest==null){
         return CupMessage(icon:Icons.cloud_off_outlined,
@@ -299,7 +304,7 @@ class CupPlayerProfilePage extends StatelessWidget{
     final trusted=uri!=null && uri.scheme=='https' && uri.host=='junior.fhr.ru';
     return Scaffold(backgroundColor:CupUi.background,
       appBar:AppBar(title:Text('ИГРОК · КУБОК РОССИИ U16',
-        style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900))),
+        style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900)),actions:[IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,player.name,[player.fullClub,'${player.games} игр',if(!player.goalie)'${player.goals} голов · ${player.assists} передач · ${player.points} очков',if(player.goalie)'Отражено ${player.savePercentText} · КН ${player.gaaText}']))]),
       body:ListView(children:[
         CupCard(margin:EdgeInsets.fromLTRB(12,10,12,8),
           padding:EdgeInsets.fromLTRB(15,22,15,20),
@@ -338,6 +343,7 @@ class CupPlayerProfilePage extends StatelessWidget{
               ]),
             ),
           )),
+        RecentPlayerGames(player:player),
         if(trusted)Padding(padding:EdgeInsets.fromLTRB(12,13,12,2),
           child:FilledButton.icon(
             onPressed:()=>launchUrl(uri,mode:LaunchMode.externalApplication),
@@ -351,3 +357,4 @@ class CupPlayerProfilePage extends StatelessWidget{
     );
   }
 }
+

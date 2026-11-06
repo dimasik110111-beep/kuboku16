@@ -6,6 +6,7 @@ import 'cup_data.dart';
 import 'match_lineups.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
+import 'app_services.dart';
 
 class MatchCenterPage extends StatefulWidget {
   final Match match;
@@ -33,11 +34,13 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     homeTeam=widget.homeTeam;
     awayTeam=widget.awayTeam;
     refresh();
-    timer=Timer.periodic(Duration(seconds:20),(_)=>refresh());
+    startPolling();
   }
   @override void didChangeAppLifecycleState(AppLifecycleState state){
-    if(state==AppLifecycleState.resumed)refresh();
+    timer?.cancel();
+    if(state==AppLifecycleState.resumed){refresh();startPolling();}
   }
+  void startPolling(){timer?.cancel();timer=Timer.periodic(const Duration(seconds:20),(_){if(!match.finished&&(ModalRoute.of(context)?.isCurrent??true))refresh();});}
   @override void dispose(){
     timer?.cancel();WidgetsBinding.instance.removeObserver(this);api.client.close();super.dispose();
   }
@@ -51,7 +54,8 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       if(raw['ok']!=true)throw Exception('ФХР не прислал протокол');
       setState((){data=raw;match=widget.match.withDetail(raw);error=null;});
     }catch(e){
-      if(mounted)setState(()=>error='Не удалось проверить матч: $e');
+      Diagnostics.record('match',e);
+      if(mounted)setState(()=>error='Не удалось обновить протокол. Проверь интернет.');
     }finally{if(mounted)setState(()=>loading=false);}
   }
   Future<void> openOfficial() async {
@@ -392,6 +396,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
         Text('МАТЧ-ЦЕНТР · U16',style:TextStyle(fontSize:10,color:CupUi.muted,letterSpacing:1.1)),
       ]),
       actions:[
+        IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,'${match.home} — ${match.away}',[match.hasScore?match.score:'Матч впереди','${match.dayLabel} · ${match.timeMsk}',match.stage])),
         IconButton(onPressed:loading?null:refresh,icon:loading
           ?SizedBox(height:18,width:18,child:CircularProgressIndicator(strokeWidth:2))
           :Icon(Icons.refresh_rounded,color:CupUi.soft)),
@@ -419,3 +424,4 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     ])),
   );
 }
+

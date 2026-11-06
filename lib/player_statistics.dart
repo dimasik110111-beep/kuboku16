@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'cup_data.dart';
+import 'app_services.dart';
 
 double? _decimal(dynamic value) {
   if(value is num)return value.toDouble();
@@ -136,6 +137,11 @@ class CupStatistics {
 class CupStatisticsClient {
   final http.Client client;
   CupStatisticsClient(this.client);
+  Future<CupStatistics?> cached({String? group})async{
+    final raw=await FeedCache.read('stats:${group??''}');
+    if(raw==null)return null;
+    try{return CupStatistics.fromApi(raw);}catch(e){Diagnostics.record('stats cache',e);return null;}
+  }
   Future<CupStatistics> fetch({String? group})async{
     final uri=Uri.parse('$fhrApiBase/api/v1/stats').replace(
       queryParameters:group==null||group.isEmpty?null:{'group':group});
@@ -144,6 +150,10 @@ class CupStatisticsClient {
     if(response.statusCode!=200)throw Exception('Статистика ФХР: HTTP ${response.statusCode}');
     final raw=jsonDecode(utf8.decode(response.bodyBytes));
     if(raw is! Map)throw const FormatException('Статистика ФХР вернула неверный формат');
-    return CupStatistics.fromApi(Map<String,dynamic>.from(raw));
+    final obj=Map<String,dynamic>.from(raw);
+    final result=CupStatistics.fromApi(obj);
+    await FeedCache.write('stats:${group??''}',obj);
+    return result;
   }
 }
+

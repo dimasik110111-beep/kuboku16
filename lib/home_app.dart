@@ -9,6 +9,8 @@ import 'team_pages.dart';
 import 'ui_kit.dart';
 import 'tournament_page.dart';
 import 'player_statistics_page.dart';
+import 'team_hub.dart';
+import 'app_services.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
@@ -63,6 +65,8 @@ class ScoresHome extends StatefulWidget{
 class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   final api=FhrApiClient(http.Client());
   Timer? timer;
+  bool foreground=true;
+  final visited=<int>{0};
   int tab=0,filter=0;
   bool loading=false,loadingTeams=false,cached=false,dateFilter=false;
   DateTime date=DateTime.now().toUtc().add(Duration(hours:3));
@@ -84,10 +88,22 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   @override void initState(){
     super.initState();WidgetsBinding.instance.addObserver(this);
     _loadLocal().then((_){refresh();loadClubs();});
-    timer=Timer.periodic(Duration(seconds:25),(_)=>refresh());
+    _startPolling();
   }
   @override void didChangeAppLifecycleState(AppLifecycleState state){
-    if(state==AppLifecycleState.resumed){refresh();loadClubs();}
+    foreground=state==AppLifecycleState.resumed;
+    timer?.cancel();
+    if(foreground){refresh();loadClubs();_startPolling();}
+  }
+  void _startPolling(){
+    timer?.cancel();
+    timer=Timer.periodic(const Duration(seconds:25),(_){
+      if(foreground && (ModalRoute.of(context)?.isCurrent??true))refresh();
+    });
+  }
+  void selectTab(int value){
+    setState((){tab=value;visited.add(value);});
+    SharedPreferences.getInstance().then((p)=>p.setInt('junior_tab',value));
   }
   @override void dispose(){
     timer?.cancel();WidgetsBinding.instance.removeObserver(this);api.client.close();super.dispose();
@@ -97,6 +113,12 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     try{
       final p=await SharedPreferences.getInstance();
       final f=p.getStringList('junior_favorites')??[];
+      final savedTab=(p.getInt('junior_tab')??0).clamp(0,5);
+      final savedClubs=await FeedCache.read('/api/v1/teams');
+      if(!mounted)return;
+      setState((){tab=savedTab;visited.add(tab);
+        if(savedClubs?['teams'] is List)clubs=(savedClubs!['teams'] as List).whereType<Map>().map((t)=>TeamInfo.fromApi(Map<String,dynamic>.from(t))).toList();
+      });
       final content=p.getString('junior_u16_calendar_v9');
       if(!mounted)return;
       if(content!=null){
@@ -134,14 +156,15 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           'Данные ФХР частичные: ${feed.issues.first}';
       });
       final p=await SharedPreferences.getInstance();
-      await p.setString('junior_u16_calendar_v9',jsonEncode(feed.toCache()));
+      await p.setString('junior_u16_calendar_v9',jsonEncode(FhrFeed(rows,feed.updatedAt,feed.issues,feed.groupsFetched,feed.allStagesComplete,feed.expectedMatchCount).toCache()));
     }catch(e){
-      if(mounted)setState(()=>error='Нет обновления ФХР: $e');
+      Diagnostics.record('calendar',e);
+      if(mounted)setState((){cached=games.isNotEmpty;error='Не удалось обновить данные. Проверь интернет и повтори.';});
     }finally{if(mounted)setState(()=>loading=false);}
   }
 
   Future<void> loadClubs() async {
-    if(loadingTeams||clubs.length>=20)return;
+    if(loadingTeams)return;
     if(mounted)setState(()=>loadingTeams=true);
     try{
       final data=await api.teams();
@@ -165,7 +188,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   void openMatch(Match m)=>Navigator.of(context).push(MaterialPageRoute(
     builder:(_)=>MatchCenterPage(match:m,homeTeam:findClub(m.home),awayTeam:findClub(m.away))));
   void openClub(TeamInfo t)=>Navigator.of(context).push(MaterialPageRoute(
-    builder:(_)=>TeamRosterPage(team:t)));
+    builder:(_)=>TeamHubPage(team:t,matches:games,teams:clubs)));
   Future<void> toggleFavorite(Match m) async {
     setState((){
       if(favorites.contains(m.key)){favorites.remove(m.key);}else{favorites.add(m.key);}
@@ -201,6 +224,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       ])),
       if(games.any((m)=>m.isLive))Padding(padding:EdgeInsets.only(right:6),
         child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
+      IconButton(tooltip:'Приложение',icon:Icon(Icons.tune_rounded,color:CupUi.soft),onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()))),
       IconButton(
         tooltip:widget.light?'Тёмная тема':'Светлая тема',
         onPressed:widget.onSwitchTheme,
@@ -219,7 +243,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       Container(width:6,height:6,decoration:BoxDecoration(shape:BoxShape.circle,
         color:cached?CupUi.yellow:(error==null?CupUi.green:CupUi.yellow))),
       SizedBox(width:7),
-      Expanded(child:Text(cached?'КЭШ · последнее сохранение':refreshTime(),
+      Expanded(child:Text(cached?'Сохранено · ${refreshTime()}':refreshTime(),
         style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w600))),
       Text('${games.length} матчей · ${clubs.length} клубов',
         style:TextStyle(color:CupUi.muted,fontSize:10)),
@@ -227,18 +251,18 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   );
 
   Widget _nav()=>SafeArea(top:false,child:Container(
-    height:67,decoration:BoxDecoration(color:CupUi.surface,
+    constraints:const BoxConstraints(minHeight:72),decoration:BoxDecoration(color:CupUi.surface,
       border:Border(top:BorderSide(color:CupUi.stroke,width:.7))),
     child:Row(children:[
       for(var i=0;i<sections.length;i++)Expanded(child:InkWell(
-        onTap:()=>setState((){tab=i;filter=0;dateFilter=false;search='';}),
-        child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+        onTap:()=>selectTab(i),
+        child:Padding(padding:const EdgeInsets.symmetric(vertical:12),child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
           Icon(i==tab?sections[i].$2:sections[i].$1,size:22,
             color:i==tab?CupUi.red:CupUi.muted),
           SizedBox(height:4),
           Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
-            fontSize:9.4,fontWeight:i==tab?FontWeight.w800:FontWeight.w600)),
-        ]))),
+            fontSize:10,fontWeight:i==tab?FontWeight.w800:FontWeight.w600),maxLines:1,overflow:TextOverflow.ellipsis),
+        ])))),
     ]),
   ));
 
@@ -401,7 +425,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   Widget _homePage(){
     final recent=filtered();
     final live=games.where((m)=>m.isLive).toList();
-    return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
+    return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
       Padding(padding:EdgeInsets.fromLTRB(16,20,16,4),
         child:Text('КУБОК РОССИИ U16',style:TextStyle(
           color:CupUi.white,fontSize:22,fontWeight:FontWeight.w900,letterSpacing:-.5))),
@@ -428,7 +452,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         retry:refresh),
       for(final block in _gamesGrouped(recent,limit:22))block,
       if(recent.length>22)Padding(padding:EdgeInsets.fromLTRB(12,6,12,20),
-        child:FilledButton.tonal(onPressed:()=>setState(()=>tab=1),
+        child:FilledButton.tonal(onPressed:()=>selectTab(1),
           child:Text('ПОКАЗАТЬ ВСЕ МАТЧИ'))),
       SizedBox(height:20),
     ]));
@@ -444,7 +468,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       Text(label,style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w800)),
     ]));
 
-  Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(children:[
+  Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('matches'),children:[
     CupSection(title:'ВСЕ МАТЧИ',subtitle:'Календарь Кубка России U16'),
     _dateSelector(),_filters(),
     if(filtered().isEmpty)CupMessage(icon:Icons.calendar_month_outlined,title:'Ничего не найдено',
@@ -523,11 +547,17 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     backgroundColor:CupUi.background,
     body:Column(children:[
       _header(),_syncBar(),
+      if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:loading?null:refresh,child:const Text('Повторить'))]),
       Expanded(child:IndexedStack(index:tab,children:[
-        _homePage(),_matchesPage(),_standingPage(),
-        const PlayerStatisticsPage(),_teamPage(),_favoritesPage(),
+        games.isEmpty&&loading?const LoadingCards():_homePage(),
+        visited.contains(1)?_matchesPage():const SizedBox.shrink(),
+        visited.contains(2)?_standingPage():const SizedBox.shrink(),
+        visited.contains(3)?const PlayerStatisticsPage():const SizedBox.shrink(),
+        visited.contains(4)?_teamPage():const SizedBox.shrink(),
+        visited.contains(5)?_favoritesPage():const SizedBox.shrink(),
       ])),
     ]),
     bottomNavigationBar:_nav(),
   );
 }
+

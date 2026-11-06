@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'app_services.dart';
 
 const fhrApiBase = 'https://kubok-u16-live.dimasik110111.workers.dev';
 const fhrCalendarUrl = 'https://junior.fhr.ru/tournaments/kubokrossii-25008909/calendar/';
@@ -21,7 +22,7 @@ class Match {
       item['home']?.toString().trim() ?? '',
       item['away']?.toString().trim() ?? '',
       score,
-      item['group']?.toString().trim() ?? 'Этап не определён',
+      (item['group']??item['stage'])?.toString().trim() ?? 'Этап не определён',
       item['arena']?.toString().trim() ?? '',
       timeMsk: item['timeMsk']?.toString() ?? '',
       scoreNote: item['scoreNote']?.toString() ?? '',
@@ -32,7 +33,7 @@ class Match {
   }
 
   Map<String, dynamic> toJson() => {
-    'date': date, 'home': home, 'away': away, 'stage': stage, 'arena': arena,
+    'date': date, 'home': home, 'away': away, 'group': stage, 'arena': arena,
     'timeMsk': timeMsk, 'status': status, 'scoreNote': scoreNote,
     'gameId': gameId, 'matchUrl': matchUrl,
     'homeScore': goals?[0], 'awayScore': goals?[1],
@@ -284,6 +285,7 @@ class FhrApiClient {
   final http.Client client;
   FhrApiClient(this.client);
   Future<Map<String, dynamic>> _get(String path) async {
+    try {
     final response = await client.get(Uri.parse('$fhrApiBase$path'),
       headers: {'Accept':'application/json'})
       .timeout(const Duration(seconds: 25));
@@ -292,7 +294,10 @@ class FhrApiClient {
     }
     final data = jsonDecode(utf8.decode(response.bodyBytes));
     if (data is! Map) throw const FormatException('Ответ сервера не JSON-объект');
-    return Map<String, dynamic>.from(data);
+    final result=Map<String,dynamic>.from(data);
+    if(result['ok']==true && path!='/api/v1/live')await FeedCache.write(path,result);
+    return result;
+    }catch(e){Diagnostics.record(path,e);rethrow;}
   }
   Future<List<TeamInfo>> teams() async {
     final data=await _get('/api/v1/teams');
@@ -350,10 +355,12 @@ List<Rank> ranking(List<Match> matches,{
   final when=utcNow??DateTime.now().toUtc();
   final table=<String,Rank>{};
   final played=<Match>[];
+  final seen=<String>{};
   for (final team in participants) {
     if(team.isNotEmpty)table.putIfAbsent(team,()=>Rank(team));
   }
   for(final m in matches){
+    if(!seen.add(m.key))continue;
     if(!m.isQualifier && !(includeFinals&&m.isFinalStage))continue;
     table.putIfAbsent(m.home,()=>Rank(m.home));
     table.putIfAbsent(m.away,()=>Rank(m.away));
@@ -443,3 +450,4 @@ int _rankCriterion(Rank rank,int criterion,List<Match> meetings) {
     default:return 0;
   }
 }
+

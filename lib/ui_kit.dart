@@ -4,11 +4,11 @@ class CupUi {
   // v14: both palettes are genuine UI colors. Team/player images are unchanged.
   // The root app sets light when the saved theme preference changes.
   static bool light=false;
-  static Color get background=>light?const Color(0xFFF4F6FA):const Color(0xFF0C1018);
-  static Color get surface=>light?const Color(0xFFFFFFFF):const Color(0xFF171D27);
-  static Color get raised=>light?const Color(0xFFECF1F7):const Color(0xFF202836);
-  static Color get stroke=>light?const Color(0xFFE0E6EF):const Color(0xFF2A3341);
-  static const red=Color(0xFFED4860);
+  static Color get background=>light?const Color(0xFFF4F6FA):const Color(0xFF0A1220);
+  static Color get surface=>light?const Color(0xFFFFFFFF):const Color(0xFF142033);
+  static Color get raised=>light?const Color(0xFFECF1F7):const Color(0xFF1C2C43);
+  static Color get stroke=>light?const Color(0xFFE0E6EF):const Color(0xFF2A3C55);
+  static const red=Color(0xFFFF536D);
   static Color get redMuted=>light?const Color(0xFFFFE5EA):const Color(0xFF4C2833);
   static Color get green=>light?const Color(0xFF087D56):const Color(0xFF42CE91);
   static Color get yellow=>light?const Color(0xFF91600F):const Color(0xFFF5BE5B);
@@ -28,7 +28,7 @@ class CupCard extends StatelessWidget {
   Widget build(BuildContext context)=>Container(
     margin:margin??EdgeInsets.symmetric(horizontal:12,vertical:6),
     padding:padding,
-    decoration:BoxDecoration(color:color??CupUi.surface,borderRadius:BorderRadius.circular(16),
+    decoration:BoxDecoration(color:color??CupUi.surface,borderRadius:BorderRadius.circular(20),
       border:Border.all(color:CupUi.stroke,width:.75),
       boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
         blurRadius:18,offset:Offset(0,5))]:null),
@@ -102,3 +102,4 @@ class CupDiv extends StatelessWidget {
   const CupDiv({super.key,this.indent=0});
   @override Widget build(BuildContext context)=>Container(height:.8,color:CupUi.stroke,margin:EdgeInsets.only(left:indent));
 }
+
