@@ -195,6 +195,91 @@ class TeamRoster {
   const TeamRoster(this.team,this.players);
 }
 
+double? _statsNum(dynamic source) {
+  if(source is num)return source.toDouble();
+  if(source==null)return null;
+  return double.tryParse(source.toString().replaceAll(',','.'));
+}
+
+class SeasonPlayerStat {
+  final int id;
+  final String name,number,position,team,city,kind,profile;
+  final String? photo,teamLogo;
+  final int? gp,goals,assists,points,plusMinus,pim,ppg,shg;
+  final int? wins,losses,saves,shotsAgainst,goalsAgainst,shutouts;
+  final double? pointsPerGame,savePercentage,gaa;
+  final String? timeOnIce;
+  const SeasonPlayerStat({
+    required this.id,required this.name,required this.number,
+    required this.position,required this.team,required this.city,
+    required this.kind,required this.profile,this.photo,this.teamLogo,
+    this.gp,this.goals,this.assists,this.points,this.plusMinus,this.pim,
+    this.ppg,this.shg,this.pointsPerGame,this.wins,this.losses,
+    this.saves,this.shotsAgainst,this.savePercentage,this.gaa,
+    this.goalsAgainst,this.shutouts,this.timeOnIce,
+  });
+
+  factory SeasonPlayerStat.fromApi(Map<String,dynamic> json,{required bool goalie}){
+    int? number(String key){
+      final value=json[key];
+      return value is num?value.toInt():int.tryParse(value?.toString()??'');
+    }
+    return SeasonPlayerStat(
+      id:number('id')??0,name:json['name']?.toString()??'',
+      number:json['number']?.toString()??'',
+      position:json['position']?.toString()??(goalie?'Вратарь':''),
+      team:json['team']?.toString()??'',city:json['city']?.toString()??'',
+      kind:goalie?'goalie':'skater',profile:json['profile']?.toString()??'',
+      photo:json['photo']?.toString(),teamLogo:json['teamLogo']?.toString(),
+      gp:number('gp'),goals:number('goals'),assists:number('assists'),
+      points:number('points'),plusMinus:number('plusMinus'),
+      pim:number('pim'),ppg:number('powerplayGoals'),
+      shg:number('shorthandedGoals'),
+      pointsPerGame:_statsNum(json['pointsPerGame']),
+      wins:number('wins'),losses:number('losses'),saves:number('saves'),
+      shotsAgainst:number('shotsAgainst'),savePercentage:_statsNum(json['savePercentage']),
+      gaa:_statsNum(json['gaa']),goalsAgainst:number('goalsAgainst'),
+      shutouts:number('shutouts'),timeOnIce:json['timeOnIce']?.toString()
+    );
+  }
+  bool get isGoalie=>kind=='goalie';
+  String get teamFullName=>city.isEmpty?team:'$team $city';
+}
+
+class OfficialStatsFeed {
+  final String group;
+  final List<String> groups;
+  final DateTime? fetchedAt;
+  final List<SeasonPlayerStat> skaters,goalies;
+  final bool complete;
+  const OfficialStatsFeed({required this.group,required this.groups,
+    required this.skaters,required this.goalies,required this.complete,this.fetchedAt});
+  factory OfficialStatsFeed.fromApi(Map<String,dynamic> json){
+    if(json['ok']!=true||json['skaters'] is! List||json['goalies'] is! List||
+      json['complete']!=true) {
+      throw const FormatException('Полная статистика игроков ФХР сейчас недоступна');
+    }
+    final skaters=(json['skaters'] as List).whereType<Map>()
+      .map((x)=>SeasonPlayerStat.fromApi(Map<String,dynamic>.from(x),goalie:false)).toList();
+    final goalies=(json['goalies'] as List).whereType<Map>()
+      .map((x)=>SeasonPlayerStat.fromApi(Map<String,dynamic>.from(x),goalie:true)).toList();
+    final expectedSkaters=(json['skaterCount'] as num?)?.toInt();
+    final expectedGoalies=(json['goalieCount'] as num?)?.toInt();
+    if((expectedSkaters!=null&&expectedSkaters!=skaters.length)||
+      (expectedGoalies!=null&&expectedGoalies!=goalies.length)){
+      throw const FormatException('В ответе ФХР отсутствуют некоторые игроки');
+    }
+    return OfficialStatsFeed(
+      group:json['group']?.toString()??'Общая статистика',
+      groups:(json['availableGroups'] is List)
+        ?(json['availableGroups'] as List).map((e)=>e.toString()).toList()
+        :const ['Общая статистика'],
+      skaters:skaters,goalies:goalies,complete:true,
+      fetchedAt:DateTime.tryParse(json['fetchedAt']?.toString()??''),
+    );
+  }
+}
+
 class FhrApiClient {
   final http.Client client;
   FhrApiClient(this.client);
@@ -227,6 +312,11 @@ class FhrApiClient {
     return TeamRoster(team,players);
   }
 
+  Future<OfficialStatsFeed> statistics({String? group}) async {
+    final normalized=group?.trim()??'';
+    final suffix=normalized.isEmpty?'':'?group=${Uri.encodeQueryComponent(normalized)}';
+    return OfficialStatsFeed.fromApi(await _get('/api/v1/stats$suffix'));
+  }
   Future<FhrFeed> calendar() async => FhrFeed.fromApi(await _get('/api/v1/matches'));
   Future<List<Map<String, dynamic>>> liveCheck() async {
     final data = await _get('/api/v1/live');
