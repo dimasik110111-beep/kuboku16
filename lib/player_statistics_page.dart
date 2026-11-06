@@ -28,7 +28,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
     if(loading)return;
     loading=true;
     final future=api.fetch(group:group);
-    setState(()=>pending=future);
+    setState((){pending=future;});
     try {
       final data=await future;
       if(mounted)setState((){
