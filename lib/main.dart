@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'cup_data.dart';
+import 'team_pages.dart';
+import 'official_protocol.dart';
 
 const navy = Color(0xff11141b);
 const panel = Color(0xff1b202b);
@@ -57,6 +59,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Timer? timer;
   final FhrApiClient api = FhrApiClient(http.Client());
   List<String> importIssues = [];
+  List<TeamInfo> directory = [];
+  bool loadingTeams = false;
+  String? teamsError;
+  String? selectedGroup;
   bool allStagesComplete = false;
   int groupsFetched = 0;
   bool fromCache = false;
@@ -74,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     loadCache().then((_) => refresh());
+    fetchTeams();
     timer = Timer.periodic(const Duration(seconds: 20), (_) => refresh());
   }
   @override
@@ -87,6 +94,43 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) refresh();
   }
+  Future<void> fetchTeams() async {
+    if(loadingTeams)return;
+    setState(()=>loadingTeams=true);
+    try{
+      final teams=await api.teams();
+      if(mounted)setState((){
+        directory=teams;
+        teamsError=teams.length==20?null:'ФХР прислал ${teams.length} из 20 клубов';
+      });
+    }catch(e){if(mounted)setState(()=>teamsError='Составы ФХР: $e');}
+    finally{if(mounted)setState(()=>loadingTeams=false);}
+  }
+  String normName(String value) => value.toUpperCase()
+    .replaceAll('Ё','Е').replaceAll(RegExp(r'\\s+'),' ').trim();
+  TeamInfo? findTeam(String name) {
+    final key=normName(name);
+    for(final t in directory) {
+      if(normName(t.fullName)==key || normName(t.name)==key)return t;
+    }
+    return null;
+  }
+  String? logoFor(String name) => findTeam(name)?.logo;
+  List<String> get stages {
+    final groupNames=matches.map((m)=>m.stage).where((s)=>s.startsWith('Группа ')).toSet().toList();
+    groupNames.sort((a,b) {
+      int n(String s) {
+        if(s.endsWith('-I'))return 1;
+        if(s.endsWith('-II'))return 2;
+        if(s.endsWith('-III'))return 3;
+        return 10;
+      }
+      final cmp=n(a).compareTo(n(b));
+      return cmp!=0?cmp:a.compareTo(b);
+    });
+    return groupNames;
+  }
+
   Future<void> loadCache() async {
     try {
       final prefs=await SharedPreferences.getInstance();
@@ -261,9 +305,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Container(width:2,height:34,color:m.isLive?red:(m.finished?stroke:amber.withValues(alpha:.65))),
         const SizedBox(width:10),
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Text(m.home,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
-          const SizedBox(height:9),
-          Text(m.away,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)),
+          Row(children:[fhrTeamLogo(logoFor(m.home),size:19),const SizedBox(width:7),
+            Expanded(child:Text(m.home,maxLines:1,overflow:TextOverflow.ellipsis,
+              style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)))]),
+          const SizedBox(height:8),
+          Row(children:[fhrTeamLogo(logoFor(m.away),size:19),const SizedBox(width:7),
+            Expanded(child:Text(m.away,maxLines:1,overflow:TextOverflow.ellipsis,
+              style:const TextStyle(fontSize:13,fontWeight:FontWeight.w600)))]),
         ])),
         SizedBox(width:53,child:Column(children:[
           Text(m.score.isNotEmpty?m.score:'–',
@@ -352,15 +400,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Widget rankingPage() {
-    final ranks=ranking(matches);
+    final current=selectedGroup!=null && stages.contains(selectedGroup)?selectedGroup:null;
+    final rankGames=current==null?matches:matches.where((m)=>m.stage==current).toList();
+    final ranks=ranking(rankGames);
     return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
-      pageTitle('Турнирная таблица',subtitle:'20 участников · квалификация'),
+      pageTitle('Турнирная таблица',subtitle:current??'Общий рейтинг · все квалификационные туры'),
+      SizedBox(height:48,child:ListView(scrollDirection:Axis.horizontal,padding:const EdgeInsets.symmetric(horizontal:12),
+        children:[
+          Padding(padding:const EdgeInsets.only(right:7),child:pill('ОБЩАЯ',current==null,()=>setState(()=>selectedGroup=null))),
+          for(final stage in stages)Padding(padding:const EdgeInsets.only(right:7),
+            child:pill(stage.replaceAll('Группа ','ГР. '),current==stage,
+              ()=>setState(()=>selectedGroup=stage))),
+        ])),
+      const SizedBox(height:9),
       Container(margin:const EdgeInsets.fromLTRB(12,0,12,14),padding:const EdgeInsets.all(13),
         decoration:BoxDecoration(color:const Color(0xff352d27),borderRadius:BorderRadius.circular(10)),
         child:Row(children:[const Icon(Icons.info_outline,size:18,color:amber),const SizedBox(width:10),
-          Expanded(child:Text(allStagesComplete
-            ? 'Таблица предварительная: учитывает опубликованные результаты всех 10 разделов ФХР. Тай-брейки по регламенту.'
-            : 'Предварительно: полнота данных не подтверждена (${groupsFetched}/10 разделов).',
+          Expanded(child:Text(current!=null
+            ? 'Таблица ${current}. Учитываются только игры внутри этой группы; стыковки идут в общий рейтинг.'
+            : (allStagesComplete
+              ? 'Общая таблица с учётом всех опубликованных игр ФХР и стыковок; до третьего тура рейтинг предварительный.'
+              : 'Предварительно: полнота данных не подтверждена (${groupsFetched}/10 разделов).'),
             style:const TextStyle(color:amber,fontSize:11,height:1.4)))])),
       Container(margin:const EdgeInsets.symmetric(horizontal:12),padding:const EdgeInsets.symmetric(horizontal:12,vertical:12),
         color:bg2,child:const Row(children:[
@@ -380,6 +440,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         child:Row(children:[
           Container(width:27,alignment:Alignment.centerLeft,
             child:Text((i+1).toString(),style:TextStyle(color:i<8?gold:muted,fontWeight:FontWeight.bold,fontSize:12))),
+          fhrTeamLogo(logoFor(ranks[i].team),size:22),
+          const SizedBox(width:5),
           Expanded(child:Text(ranks[i].team,overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w600,fontSize:12))),
           SizedBox(width:29,child:Text(ranks[i].gp.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:12))),
           SizedBox(width:36,child:Text(ranks[i].diff.toString(),textAlign:TextAlign.center,style:const TextStyle(fontSize:12,color:muted))),
@@ -390,42 +452,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ]));
   }
   Widget teamPage() {
-    final names=teams.where((t)=>t.toLowerCase().contains(search.toLowerCase())).toList();
-    return ListView(children:[
-      pageTitle('Команды',subtitle:'Участники Кубка России U16'),
+    final filtered=directory.where((t)=>t.fullName.toLowerCase().contains(search.toLowerCase())).toList();
+    return RefreshIndicator(onRefresh:fetchTeams,child:ListView(children:[
+      pageTitle('Команды',subtitle:directory.isNotEmpty
+        ? '${directory.length} клубов · эмблемы и составы ФХР' : 'Загрузка команд ФХР'),
       Padding(padding:const EdgeInsets.fromLTRB(12,0,12,12),child:TextField(
         onChanged:(v)=>setState(()=>search=v),
         decoration:InputDecoration(prefixIcon:const Icon(Icons.search,color:muted),
           hintText:'Поиск команды',filled:true,fillColor:panel,
           border:OutlineInputBorder(borderRadius:BorderRadius.circular(11),borderSide:BorderSide.none)))),
-      for(final name in names)Container(
+      if(loadingTeams && directory.isEmpty)const Padding(padding:EdgeInsets.all(20),
+        child:Center(child:CircularProgressIndicator())),
+      if(teamsError!=null)Padding(padding:const EdgeInsets.all(14),
+        child:Text(teamsError!,style:const TextStyle(color:amber,fontSize:12))),
+      for(final team in filtered)Container(
         margin:const EdgeInsets.fromLTRB(12,0,12,3),
-        color:panel,child:ListTile(
-          leading:Container(width:36,height:36,decoration:BoxDecoration(color:bg2,borderRadius:BorderRadius.circular(8)),
-            child:const Icon(Icons.shield_outlined,color:red,size:21)),
-          title:Text(name,style:const TextStyle(fontSize:13,fontWeight:FontWeight.bold)),
+        color:panel,
+        child:ListTile(
+          leading:fhrTeamLogo(team.logo,size:38),
+          title:Text(team.name,style:const TextStyle(fontSize:13,fontWeight:FontWeight.bold)),
+          subtitle:Text(team.city,style:const TextStyle(fontSize:11,color:muted)),
           trailing:const Icon(Icons.chevron_right,color:muted,size:20),
-          onTap:()=>openTeam(name),
+          onTap:()=>Navigator.of(context).push(MaterialPageRoute(
+            builder:(_)=>TeamRosterPage(team:team))),
         )),
+      if(directory.isEmpty && !loadingTeams)Padding(padding:const EdgeInsets.all(14),
+        child:TextButton(onPressed:fetchTeams,child:const Text('Обновить официальный список команд'))),
+      const Padding(padding:EdgeInsets.all(14),
+        child:Text('Команды, эмблемы и составы автоматически загружаются с официального сайта ФХР.',
+          style:TextStyle(color:muted,fontSize:11))),
       const SizedBox(height:20),
-    ]);
+    ]));
   }
-  void openTeam(String name) => Navigator.of(context).push(MaterialPageRoute(
-    builder:(ctx)=>Scaffold(
-      appBar:AppBar(title:Text(name)),
-      body:ListView(children:[
-        Container(color:panel,padding:const EdgeInsets.all(28),child:Column(children:[
-          const Icon(Icons.shield_outlined,size:64,color:red),
-          const SizedBox(height:12),Text(name,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w800)),
-          const Text('Кубок России U16 · 2026/27',style:TextStyle(fontSize:12,color:muted)),
-        ])),
-        Padding(padding:const EdgeInsets.fromLTRB(16,20,16,8),child:Text('Матчи',style:Theme.of(ctx).textTheme.titleLarge)),
-        for(final m in matches.where((x)=>x.home==name||x.away==name))matchRow(m),
-        if(!matches.any((x)=>x.home==name||x.away==name))
-          emptyState('Нет загруженных матчей','Сведения о клубе и календарь можно проверить на сайте ФХР.',
-            action:()=>openFhr(tournamentUrl)),
-      ]),
-    )));
   Widget statsPage()=>ListView(children:[
     pageTitle('Статистика',subtitle:'Голы, передачи, бомбардиры и вратари'),
     Container(margin:const EdgeInsets.all(12),padding:const EdgeInsets.all(20),
@@ -447,7 +505,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     child:SafeArea(bottom:false,child:Padding(
       padding:const EdgeInsets.fromLTRB(16,9,9,10),child:Row(children:[
         Container(width:35,height:35,decoration:BoxDecoration(color:red,borderRadius:BorderRadius.circular(8)),
-          child:const Icon(Icons.sports_hockey_rounded,size:24,color:Colors.white)),
+          child:Image.network('https://img.fhr.ru/tournaments/b6/ef/25008909.webp',
+            fit:BoxFit.contain,errorBuilder:(_,__,___)=>const Icon(Icons.sports_hockey_rounded,size:24,color:Colors.white))),
         const SizedBox(width:11),
         const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Text('JUNIOR U16',style:TextStyle(fontSize:18,letterSpacing:1,fontWeight:FontWeight.w900)),
@@ -611,9 +670,16 @@ class _FhrMatchDetailsState extends State<FhrMatchDetails> {
             title:Text(e['description']?.toString() ?? '',style:const TextStyle(fontSize:12)),
             subtitle:Text(e['score']?.toString() ?? '',style:const TextStyle(fontSize:11,color:muted)),
           ),
-        Padding(padding:const EdgeInsets.all(16),child:FilledButton.icon(
+        if(match.gameId!=null)Padding(padding:const EdgeInsets.fromLTRB(16,4,16,8),
+          child:FilledButton.icon(
+            onPressed:()=>Navigator.of(context).push(MaterialPageRoute(
+              builder:(_)=>OfficialMatchProtocolPage(
+                matchUrl:'https://junior.fhr.ru/games/${match.gameId}/'))),
+            icon:const Icon(Icons.description_outlined),
+            label:const Text('Полный протокол ФХР внутри приложения'))),
+        Padding(padding:const EdgeInsets.fromLTRB(16,0,16,12),child:TextButton.icon(
           onPressed:openOfficial,icon:const Icon(Icons.open_in_new),
-          label:const Text('Официальная карточка на ФХР'))),
+          label:const Text('Открыть матч на сайте ФХР'))),
         const Padding(padding:EdgeInsets.fromLTRB(16,0,16,22),
           child:Text('Данные протокола показываются по мере публикации ФХР. Автоматическая проверка при открытом экране каждые 20 секунд.',
             style:TextStyle(color:muted,fontSize:11))),
