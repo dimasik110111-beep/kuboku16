@@ -33,6 +33,10 @@ jobs:
           flutter create --platforms=android --project-name=junior_u16 --org=ru.junioru16 .
           # Flutter template creates a MyApp test which does not apply to JUNIOR U16
           rm -f test/widget_test.dart
+      - name: Use official FHR Cup logo as Android launcher icon
+        run: |
+          python3 -m pip -q install Pillow
+          python3 tools/make_launcher_icon.py
       - name: Enable Android Internet
         run: |
           python3 - <<'PY'
