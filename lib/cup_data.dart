@@ -56,7 +56,7 @@ class Match {
     if (day == null) return false;
     final mskToday = utcNow.toUtc().add(const Duration(hours: 3));
     final mskDay = DateTime.utc(mskToday.year, mskToday.month, mskToday.day);
-    return day.isBefore(mskDay);
+    return date.compareTo('${mskDay.year.toString().padLeft(4, '0')}-${mskDay.month.toString().padLeft(2, '0')}-${mskDay.day.toString().padLeft(2, '0')}') < 0;
   }
   bool get finished => isResultAt(DateTime.now().toUtc());
   bool get overtime {
@@ -67,7 +67,7 @@ class Match {
   bool get isQualifier {
     final s = stage.toUpperCase().replaceAll('Ё','Е');
     if (s.contains('ЗОЛОТОЙ ФИНАЛ') || s.contains('СЕРЕБРЯНЫЙ ФИНАЛ')) return false;
-    return RegExp(r'\bГРУППА\s+[^ ]+-(I|II|III)\b').hasMatch(s) ||
+    return RegExp(r'ГРУППА\s+[^ ]+-(I|II|III)(\s|$)').hasMatch(s) ||
       s.contains('СТЫКОВ') || s.contains('ПЛЕЙ-ОФФ');
   }
   String get key => gameId?.toString() ?? '$stage|$date|$home|$away';
