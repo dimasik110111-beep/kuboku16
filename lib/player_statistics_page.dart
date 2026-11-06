@@ -48,7 +48,7 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
       child:AnimatedContainer(
         duration:Duration(milliseconds:160),padding:EdgeInsets.symmetric(horizontal:13,vertical:12),
         decoration:BoxDecoration(color:active?CupUi.red:CupUi.raised,borderRadius:BorderRadius.circular(9)),
-        child:Text(label,maxLines:1,style:TextStyle(color:active?CupUi.white:CupUi.soft,
+        child:Text(label,maxLines:1,style:TextStyle(color:active?Colors.white:CupUi.soft,
           fontWeight:FontWeight.w900,fontSize:10,letterSpacing:.15)),
       ));
   }
