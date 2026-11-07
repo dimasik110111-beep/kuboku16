@@ -32,8 +32,14 @@ ScenarioResult applyScenario(List<Match> source,Map<String,ScenarioScore> scores
 }
 List<Match> scenarioFixtures(List<Match> matches,{Map<String,ScenarioScore> scores=const {},DateTime? utcNow}){
   final now=utcNow??DateTime.now().toUtc();
+  final originals={for(final m in matches)m.key:m};
   final rows={for(final m in scenarioMatches(matches,scores:scores,utcNow:now))m.key:m}.values
-    .where((m)=>m.isQualifier&&!m.isResultAt(now)&&!m.isLive).toList();
+    .where((m){
+      if(!m.isQualifier)return false;
+      final original=originals[m.key];
+      if(original!=null&&(original.isResultAt(now)||original.isLive))return false;
+      return scores.containsKey(m.key)||(!m.isResultAt(now)&&!m.isLive);
+    }).toList();
   rows.sort((a,b)=>'${a.date} ${a.timeMsk} ${a.key}'.compareTo('${b.date} ${b.timeMsk} ${b.key}'));
   return rows;
 }
