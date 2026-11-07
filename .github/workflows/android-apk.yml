@@ -76,7 +76,12 @@ jobs:
         run: |
           cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v27.apk
           sha256sum JUNIOR-U16-v27.apk > SHA256SUMS.txt
-          gh release create v27.0.0 JUNIOR-U16-v27.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v27 · POLISHED EDITION · переработка приложения" --notes-file RELEASE_NOTES_v27.md
+          if gh release view v27.0.0 >/dev/null 2>&1; then
+            gh release upload v27.0.0 JUNIOR-U16-v27.apk SHA256SUMS.txt --clobber
+            gh release edit v27.0.0 --target "$GITHUB_SHA" --title "JUNIOR U16 v27 · POLISHED EDITION" --notes-file RELEASE_NOTES_v27.md
+          else
+            gh release create v27.0.0 JUNIOR-U16-v27.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v27 · POLISHED EDITION" --notes-file RELEASE_NOTES_v27.md
+          fi
       - name: Explain skipped publication
         if: steps.signing.outputs.ready != 'true'
         run: echo 'APK is for CI validation only. Configure ANDROID_SIGNING_BUNDLE to publish a permanent-signature release.'
