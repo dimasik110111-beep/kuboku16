@@ -379,26 +379,87 @@ class _TournamentPageState extends State<TournamentPage>{
   }
 
   Widget _snakePreview(CupTournament cup){
-    final preview=cup.thirdTourPreview();
-    return Column(children:[
-      CupSection(title:'РАССЕВ ТРЕТЬЕГО ТУРА',subtitle:'Схема «змейка» по статье 4 регламента'),
-      if(!cup.firstTwoComplete)_notice('Составы ниже обозначены местами в общем рейтинге. '
-        'Точные команды определяются после завершения первых двух туров.'),
-      for(var i=0;i<preview.length;i++)CupCard(
-        padding:EdgeInsets.fromLTRB(13,12,13,12),
+    final preview=cup.thirdTourProjection();
+    final rank=cup.table();
+    final places={for(var i=0;i<rank.length;i++)rank[i].team:i+1};
+    final completed=cup.firstTwoComplete;
+    const labels=['А','Б','В','Г'];
+    final before= cup.overview(CupTour.first).played+cup.overview(CupTour.second).played;
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      CupSection(title:'LIVE-РАССЕВ III ТУРА',
+        subtitle:'Автоматически меняется с каждым подтверждённым результатом ФХР'),
+      CupArena(margin:const EdgeInsets.fromLTRB(12,4,12,10),
+        padding:const EdgeInsets.fromLTRB(17,19,17,19),
         child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Text('ГРУППА ${i+1}',style:TextStyle(
-            color:CupUi.white,fontWeight:FontWeight.w900,fontSize:12)),
-          SizedBox(height:10),
-          for(var j=0;j<preview[i].length;j++)Padding(
-            padding:EdgeInsets.symmetric(vertical:5),
-            child:Row(children:[
-              SizedBox(width:28,child:Text('${CupTournament.thirdTourSnake[i][j]}.',
-                style:TextStyle(color:CupUi.red,fontWeight:FontWeight.w800,fontSize:11))),
-              Expanded(child:Text(preview[i][j],
-                style:TextStyle(color:CupUi.soft,fontSize:12))),
-            ])),
+          Row(children:[
+            Icon(Icons.hub_rounded,color:CupUi.ice,size:20),
+            const SizedBox(width:9),
+            const Expanded(child:Text('ПУТЬ В ТРЕТИЙ ТУР',style:TextStyle(
+              color:Colors.white,fontSize:14,fontWeight:FontWeight.w900))),
+            CupTag(text:completed?'ЗАКРЕПЛЁН':'ПРОЕКЦИЯ',
+              color:completed?CupUi.green:CupUi.yellow,filled:true),
+          ]),
+          const SizedBox(height:8),
+          Text(completed
+            ?'Все 90 матчей I–II туров завершены. Рассев рассчитан по общей таблице.'
+            :'В зачёт попадают завершённые матчи I–II туров, включая стыки. LIVE-счёт до подтверждения результата не учитывается.',
+            style:TextStyle(color:CupUi.soft,fontSize:11,height:1.4)),
+          const SizedBox(height:15),
+          ClipRRect(borderRadius:BorderRadius.circular(9),child:
+            LinearProgressIndicator(value:(before/(firstTourGames+secondTourGames)).clamp(0.0,1.0),
+              minHeight:6,backgroundColor:Colors.white.withValues(alpha:.16),
+              valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
+          const SizedBox(height:8),
+          Text('$before / ${firstTourGames+secondTourGames} матчей I–II туров',
+            style:TextStyle(color:CupUi.ice,fontSize:10,fontWeight:FontWeight.w800)),
         ])),
+      for(var i=0;i<preview.length;i++)CupCard(
+        margin:const EdgeInsets.fromLTRB(12,4,12,7),
+        padding:EdgeInsets.zero,
+        child:Column(children:[
+          Padding(padding:const EdgeInsets.fromLTRB(14,13,14,12),child:Row(children:[
+            Container(width:37,height:37,alignment:Alignment.center,
+              decoration:BoxDecoration(color:CupUi.redMuted,
+                borderRadius:BorderRadius.circular(12)),
+              child:Text(labels[i],style:TextStyle(color:CupUi.ice,
+                fontSize:19,fontWeight:FontWeight.w900))),
+            const SizedBox(width:11),
+            Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('ГРУППА ${labels[i]}',style:TextStyle(color:CupUi.white,
+                fontWeight:FontWeight.w900,fontSize:14)),
+              const SizedBox(height:3),
+              Text(CupTournament.thirdTourSnake[i].join(' · '),
+                style:TextStyle(color:CupUi.muted,fontSize:10)),
+            ])),
+            CupTag(text:'5 КОМАНД',color:CupUi.ice),
+          ])),
+          CupDiv(),
+          for(var j=0;j<preview[i].length;j++)AnimatedContainer(
+            key:ValueKey('seed:$i:$j:${preview[i][j]}'),
+            duration:const Duration(milliseconds:420),
+            curve:Curves.easeOutCubic,
+            padding:const EdgeInsets.symmetric(vertical:10,horizontal:14),
+            decoration:BoxDecoration(color:j.isEven
+              ?CupUi.raised.withValues(alpha:.21):Colors.transparent),
+            child:Row(children:[
+              SizedBox(width:28,child:Text(
+                '${CupTournament.thirdTourSnake[i][j]}',
+                style:TextStyle(color:CupUi.ice,fontSize:12,
+                  fontWeight:FontWeight.w900))),
+              fhrTeamLogo(widget.teamLogo(preview[i][j]),size:27),
+              const SizedBox(width:10),
+              Expanded(child:Text(preview[i][j],maxLines:2,
+                overflow:TextOverflow.ellipsis,style:TextStyle(
+                color:CupUi.white,fontWeight:FontWeight.w800,fontSize:12))),
+              if(places.containsKey(preview[i][j]))
+                Text('${rank[places[preview[i][j]]!-1].pts} О',
+                  style:TextStyle(color:CupUi.soft,fontSize:11,fontWeight:FontWeight.w900)),
+            ]),
+          ),
+        ])),
+      Padding(padding:const EdgeInsets.fromLTRB(18,9,18,18),
+        child:Text('Текущая схема — расчёт по змейке статьи 4. Пока I–II туры не завершены, команды могут менять группы после каждого официального результата.',
+          style:TextStyle(color:CupUi.muted,fontSize:11,height:1.55))),
     ]);
   }
 
