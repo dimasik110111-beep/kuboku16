@@ -431,16 +431,21 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             return InkWell(onTap:()=>setState((){date=current;dateFilter=true;}),
               borderRadius:BorderRadius.circular(8),
               child:Container(width:59,margin:EdgeInsets.symmetric(horizontal:2),
-                decoration:BoxDecoration(color:active?CupUi.raised:Colors.transparent,
-                  borderRadius:BorderRadius.circular(8),
-                  border:Border(bottom:BorderSide(width:2.5,
-                    color:active?CupUi.red:Colors.transparent))),
+                decoration:BoxDecoration(
+                  gradient:active?LinearGradient(begin:Alignment.topLeft,
+                    end:Alignment.bottomRight,colors:[
+                      CupUi.red.withValues(alpha:.95),CupUi.red.withValues(alpha:.48)]):null,
+                  color:active?null:CupUi.surface,
+                  borderRadius:BorderRadius.circular(15),
+                  border:Border.all(color:active
+                    ?CupUi.ice.withValues(alpha:.45)
+                    :CupUi.stroke.withValues(alpha:.55))),
                 child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
                   Text(i==5?'СЕГОДНЯ':weekday(current),
-                    style:TextStyle(fontSize:i==5?9:10,color:active?CupUi.red:CupUi.muted,
+                    style:TextStyle(fontSize:i==5?9:10,color:active?Colors.white:CupUi.muted,
                       fontWeight:FontWeight.w800)),
                   SizedBox(height:5),
-                  Text(shortDate(current),style:TextStyle(color:active?CupUi.white:CupUi.soft,
+                  Text(shortDate(current),style:TextStyle(color:active?Colors.white:CupUi.soft,
                     fontSize:11,fontWeight:FontWeight.w800)),
                 ])),
             );
@@ -521,8 +526,11 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   Widget _leagueBlock(String label,List<Match> list)=>CupCard(
     margin:EdgeInsets.fromLTRB(12,5,12,6),
     child:Column(children:[
-      Container(color:CupUi.raised,
-        padding:EdgeInsets.symmetric(horizontal:13,vertical:12),
+      Container(
+        decoration:BoxDecoration(gradient:LinearGradient(
+          begin:Alignment.topLeft,end:Alignment.bottomRight,
+          colors:[CupUi.raised,CupUi.surface])),
+        padding:EdgeInsets.symmetric(horizontal:13,vertical:13),
         child:Row(children:[
           Container(width:27,height:27,decoration:BoxDecoration(color:CupUi.redMuted,
             borderRadius:BorderRadius.circular(8)),
