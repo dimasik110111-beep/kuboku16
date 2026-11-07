@@ -10,7 +10,7 @@ void main(){
       fixtures.add(Match('2026-10-01',teams[i],teams[i+1],'','Группа 1-I','',gameId:i+1));
     }
     final generated=scenarioFixtures(fixtures);
-    final third=generated.where((m)=>m.stage.endsWith('-III')).toList();
+    final third=generated.where((m)=>m.stage.contains('III')).toList();
     expect(third.length,50);
     expect(third.where((m)=>m.stage.startsWith('ГРУППА ')).length,40);
     expect(third.where((m)=>m.stage.startsWith('Стыковые ')).length,10);
