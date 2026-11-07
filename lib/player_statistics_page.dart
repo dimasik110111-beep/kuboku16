@@ -204,20 +204,42 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
       if(cached||loadError!=null)Padding(padding:const EdgeInsets.all(16),child:Text(loadError??'Сохранённая статистика · обновляю…')),
       CupSection(title:'СТАТИСТИКА ИГРОКОВ',
         subtitle:'Кубок России U16 · 2026/27 · официальный источник ФХР'),
-      CupCard(
-        margin:EdgeInsets.fromLTRB(12,1,12,10),
-        padding:EdgeInsets.symmetric(vertical:13,horizontal:14),
-        child:Row(children:[
-          Icon(Icons.bar_chart_rounded,color:CupUi.red,size:23),
-          SizedBox(width:12),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            Text('${data.skaters.length} полевых · ${data.goalies.length} вратарей',
-              style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900)),
-            SizedBox(height:4),
-            Text(mskUpdate(data.updatedAt),
-              style:TextStyle(color:CupUi.muted,fontSize:10)),
-          ])),
-          CupTag(text:'ФХР',color:CupUi.green,filled:true),
+      CupArena(
+        margin:const EdgeInsets.fromLTRB(12,1,12,10),
+        padding:const EdgeInsets.fromLTRB(20,20,20,21),
+        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Row(children:[
+            const Icon(Icons.workspace_premium_rounded,color:CupUi.ice,size:21),
+            const SizedBox(width:9),
+            const Expanded(child:Text('ЛИДЕРЫ ЛЬДА',
+              style:TextStyle(color:Colors.white,fontWeight:FontWeight.w900,
+                fontSize:13,letterSpacing:1.1))),
+            CupTag(text:'OFFICIAL FHR',color:CupUi.green,filled:true),
+          ]),
+          const SizedBox(height:20),
+          Row(children:[
+            Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('${data.skaters.length}',style:const TextStyle(
+                color:Colors.white,fontSize:33,letterSpacing:-1,
+                fontWeight:FontWeight.w900)),
+              const Text('ПОЛЕВЫХ',style:TextStyle(
+                color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900,
+                letterSpacing:1)),
+            ])),
+            Container(width:1,height:49,color:Colors.white.withValues(alpha:.15)),
+            const SizedBox(width:20),
+            Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('${data.goalies.length}',style:const TextStyle(
+                color:Colors.white,fontSize:33,letterSpacing:-1,
+                fontWeight:FontWeight.w900)),
+              const Text('ВРАТАРЕЙ',style:TextStyle(
+                color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900,
+                letterSpacing:1)),
+            ])),
+          ]),
+          const SizedBox(height:17),
+          Text(mskUpdate(data.updatedAt),
+            style:const TextStyle(color:Color(0xFFD4E2FF),fontSize:10)),
         ])),
       Padding(padding:EdgeInsets.fromLTRB(12,0,12,9),
         child:Row(children:[
