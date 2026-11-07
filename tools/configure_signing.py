@@ -35,7 +35,9 @@ def configure(root, bundle, expected):
         '            storeFile = file(' + literal(str(keystore)) + ')',
         '            storePassword = ' + literal(data['storePassword']),
         '            keyAlias = ' + literal(data['alias']),
-        '            keyPassword = ' + literal(data['keyPassword']),
+        # Java's PKCS12 provider stores the private key using the keystore
+        # password; keytool ignores a distinct -keypass for this format.
+        '            keyPassword = ' + literal(data['storePassword']),
     ]) + '\n        }\n    }\n'
     source = source.replace('android {', 'android {' + config, 1)
     source = source.replace(previous, 'signingConfig = signingConfigs.getByName("permanentRelease")')
