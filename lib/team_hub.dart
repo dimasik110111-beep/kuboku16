@@ -17,8 +17,9 @@ class TeamHubPage extends StatefulWidget {
   @override State<TeamHubPage> createState()=>_TeamHubPageState();
 }
 class _TeamHubPageState extends State<TeamHubPage>{
-  final client=http.Client();late Future<CupStatistics> stats;String? opponent;
-  @override void initState(){super.initState();stats=CupStatisticsClient(client).fetch();}
+  final client=http.Client();late Future<CupStatistics?> stats;String? opponent;
+  Future<CupStatistics?> fetchStats()=>CupStatisticsClient(client).fetch().then<CupStatistics?>((value)=>value,onError:(Object error,StackTrace stack){Diagnostics.record('team stats',error);return null;});
+  @override void initState(){super.initState();stats=fetchStats();}
   @override void dispose(){client.close();super.dispose();}
   void open(Match m)=>Navigator.push(context,MaterialPageRoute(builder:(_)=>MatchCenterPage(match:m)));
   Widget fixture(Match m)=>CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,4),
@@ -180,8 +181,8 @@ class _TeamHubPageState extends State<TeamHubPage>{
         CupSection(title:'ПОСЛЕДНИЕ МАТЧИ'),for(final m in played.take(5))fixture(m),
         CupSection(title:'ЛИДЕРЫ КОМАНДЫ'),
         FutureBuilder<CupStatistics>(future:stats,builder:(context,s){
-          if(s.hasError)return CupMessage(title:'Лидеры не загружены',message:'Проверь интернет и повтори загрузку.',retry:()=>setState(()=>stats=CupStatisticsClient(client).fetch()));
-          if(!s.hasData)return const Padding(padding:EdgeInsets.all(20),child:LinearProgressIndicator());
+          if(s.connectionState!=ConnectionState.done)return const Padding(padding:EdgeInsets.all(20),child:LinearProgressIndicator());
+          if(s.data==null)return CupMessage(title:'Лидеры не загружены',message:'Статистика ФХР сейчас недоступна. Попробуй обновить.',retry:()=>setState(()=>stats=fetchStats()));
           final leaders=sortCupPlayers(s.data!.skaters.where((p)=>sameClub('${p.team} ${p.city}',widget.team.fullName)||((p.city.isEmpty||widget.team.city.isEmpty)&&sameClub(p.team,widget.team.name))),PlayerStatSort.points).take(5);
           return Column(children:[for(final p in leaders)ListTile(title:Text(p.name),subtitle:Text('${p.goals} + ${p.assists} · ${p.games} игр'),trailing:Text('${p.points} О'),onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>CupPlayerProfilePage(player:p))))]);
         }),const SizedBox(height:24),
