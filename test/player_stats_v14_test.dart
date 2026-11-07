@@ -84,7 +84,10 @@ void main(){
     await tester.pumpAndSettle();
     await tester.tap(find.text('ВРАТАРИ'));
     await tester.pumpAndSettle();
-    // The ranking rows are below the scroll viewport in the compact test window.
+    // The taller ARENA header moves the metric chips below the viewport.
+    await tester.scrollUntilVisible(find.text('СЕЙВЫ'),200,
+      scrollable:find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
     expect(find.text('СЕЙВЫ'),findsWidgets);
     expect(find.text('КН'),findsWidgets);
     await tester.pumpWidget(const SizedBox.shrink());
