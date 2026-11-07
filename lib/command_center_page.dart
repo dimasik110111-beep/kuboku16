@@ -99,7 +99,9 @@ class _CommandCenterPageState extends State<CommandCenterPage>
         }
       }catch(e){Diagnostics.record('command live details',e);}
       if(!mounted)return;
-      final nextGames=rows.values.toList();
+      final partial=feed.issues.isNotEmpty||
+        (rows.isEmpty&&games.isNotEmpty);
+      final nextGames=reconcileCalendar(games,rows.values.toList(),partial:partial);
       final nextSignature=_signature(nextGames);
       setState((){
         if(nextSignature!=_feedSignature){
