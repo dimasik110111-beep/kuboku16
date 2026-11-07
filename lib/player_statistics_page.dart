@@ -355,10 +355,13 @@ class CupPlayerProfilePage extends StatelessWidget{
           const SizedBox(height:18),
           ClipRRect(borderRadius:BorderRadius.circular(10),
             child:Row(children:[
-              Expanded(flex:total==0?1:player.goals>0?player.goals:0,
-                child:Container(height:12,color:CupUi.ice)),
-              Expanded(flex:total==0?1:player.assists>0?player.assists:0,
-                child:Container(height:12,color:CupUi.red)),
+              if(total==0)Expanded(child:Container(height:12,color:CupUi.raised))
+              else...[
+                if(player.goals>0)Expanded(flex:player.goals,
+                  child:Container(height:12,color:CupUi.ice)),
+                if(player.assists>0)Expanded(flex:player.assists,
+                  child:Container(height:12,color:CupUi.red)),
+              ],
             ])),
           const SizedBox(height:12),
           Row(children:[
