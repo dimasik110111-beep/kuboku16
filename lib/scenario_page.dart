@@ -101,56 +101,88 @@ class _ScenarioPageState extends State<ScenarioPage>{
     if(tour==CupTour.third)return m.isCrossover?4:3;
     return 5;
   }
-  Widget _hero(int available,int shifts)=>Container(
-    margin:const EdgeInsets.fromLTRB(13,12,13,7),clipBehavior:Clip.antiAlias,
-    decoration:BoxDecoration(
-      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,colors:CupUi.heroGradient),
-      borderRadius:BorderRadius.circular(30),border:Border.all(color:CupUi.ice.withValues(alpha:.18)),
-      boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.15),blurRadius:32,offset:const Offset(0,14))]),
-    child:Stack(children:[
-      Positioned(right:-72,top:35,child:Container(width:250,height:250,
-        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(color:CupUi.ice.withValues(alpha:.08),width:38)))),
-      Positioned(right:20,top:116,child:Icon(Icons.auto_awesome_rounded,size:76,color:CupUi.ice.withValues(alpha:.10))),
-      Padding(padding:const EdgeInsets.fromLTRB(23,22,23,22),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+  Widget _hero(int available,int shifts){
+    final fraction=available==0?0.0:scores.length/available;
+    return CupArena(
+      margin:const EdgeInsets.fromLTRB(13,13,13,8),
+      padding:const EdgeInsets.fromLTRB(22,23,22,23),
+      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Row(children:[
-          Container(width:31,height:31,decoration:BoxDecoration(color:CupUi.red.withValues(alpha:.2),borderRadius:BorderRadius.circular(11)),
-            child:const Icon(Icons.auto_awesome_rounded,color:CupUi.red,size:17)),
-          const SizedBox(width:8),Text('JUNIOR U16 · СИМУЛЯТОР',
-            style:TextStyle(color:CupUi.ice,fontSize:9,letterSpacing:.75,fontWeight:FontWeight.w900)),
-          const Spacer(),IconButton(tooltip:'Сбросить предикты',onPressed:!ready||scores.isEmpty?null:reset,
-            visualDensity:VisualDensity.compact,icon:const Icon(Icons.restart_alt_rounded)),
+          Container(width:34,height:34,decoration:BoxDecoration(
+            color:Colors.white.withValues(alpha:.12),borderRadius:BorderRadius.circular(11),
+            border:Border.all(color:Colors.white.withValues(alpha:.10))),
+            child:const Icon(Icons.auto_awesome_rounded,color:CupUi.ice,size:19)),
+          const SizedBox(width:10),
+          const Expanded(child:Text('JUNIOR LAB  /  2026·27',
+            style:TextStyle(color:CupUi.ice,fontSize:10,letterSpacing:1.1,fontWeight:FontWeight.w900))),
+          CupTag(text:'SIMULATOR',color:CupUi.ice,filled:true),
         ]),
-        const SizedBox(height:21),
-        const Text('ТВОЙ\nСЦЕНАРИЙ',style:TextStyle(color:Colors.white,fontSize:34,
-          height:.98,letterSpacing:-1.5,fontWeight:FontWeight.w900)),
-        const SizedBox(height:13),
-        SizedBox(width:260,child:Text('Задавай результаты матчей. Смотри, как меняются таблица, стыки и группы III тура.',
-          style:TextStyle(color:CupUi.soft,fontSize:12,height:1.45))),
         const SizedBox(height:25),
-        Container(height:1,color:Colors.white.withValues(alpha:.15)),
-        const SizedBox(height:19),
-        Row(children:[
-          _heroMetric('${scores.length}','ВВЕДЕНО',Icons.edit_note_rounded),
-          _heroMetric('$available','МАТЧЕЙ',Icons.sports_hockey_rounded),
-          _heroMetric('$shifts','СДВИГОВ',Icons.swap_vert_rounded),
-        ]),
+        const Text('ТВОЙ',style:TextStyle(color:Colors.white,
+          fontSize:41,height:.96,letterSpacing:-1.9,fontWeight:FontWeight.w900)),
+        const Text('СЦЕНАРИЙ',style:TextStyle(color:Colors.white,
+          fontSize:36,height:1.03,letterSpacing:-1.8,fontWeight:FontWeight.w900)),
+        const SizedBox(height:13),
+        Text('Меняй результаты и следи за новым рассевом, стыками и сеткой III тура.',
+          style:TextStyle(color:CupUi.soft,fontSize:12,height:1.55)),
         const SizedBox(height:21),
-        Row(children:[Icon(Icons.cloud_done_outlined,color:CupUi.green,size:14),const SizedBox(width:6),
-          Expanded(child:Text('Предикты сохраняются на устройстве',style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w600))),
-          CupTag(text:'ФХР · 2026/27',color:CupUi.soft),
+        Container(padding:const EdgeInsets.all(13),decoration:BoxDecoration(
+          color:Colors.white.withValues(alpha:.075),
+          borderRadius:BorderRadius.circular(18),
+          border:Border.all(color:Colors.white.withValues(alpha:.12))),
+          child:Column(children:[
+            Row(children:[
+              Text('ПРОГРЕСС СЦЕНАРИЯ',style:TextStyle(color:CupUi.soft,
+                fontWeight:FontWeight.w900,fontSize:9,letterSpacing:.7)),
+              const Spacer(),
+              Text('${(fraction*100).round()}%',style:const TextStyle(
+                color:Colors.white,fontWeight:FontWeight.w900,fontSize:15)),
+            ]),
+            const SizedBox(height:9),
+            ClipRRect(borderRadius:BorderRadius.circular(9),
+              child:LinearProgressIndicator(value:fraction,minHeight:6,
+                backgroundColor:Colors.white.withValues(alpha:.12),
+                valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
+            const SizedBox(height:16),
+            Row(children:[
+              _heroMetric('${scores.length}','ВВЕДЕНО',Icons.edit_note_rounded),
+              _heroMetric('$available','МАТЧЕЙ',Icons.sports_hockey_rounded),
+              _heroMetric('$shifts','ИЗМЕНЕНИЙ',Icons.swap_vert_rounded),
+            ]),
+          ])),
+        const SizedBox(height:15),
+        Row(children:[
+          Icon(Icons.cloud_done_outlined,color:CupUi.green,size:15),
+          const SizedBox(width:7),
+          Expanded(child:Text('Автосохранение на устройстве',
+            style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w700))),
+          IconButton(tooltip:'Сбросить предикты',
+            onPressed:!ready||scores.isEmpty?null:reset,
+            icon:Icon(Icons.restart_alt_rounded,color:CupUi.soft)),
         ]),
-        const SizedBox(height:10),
-        SizedBox(width:double.infinity,child:OutlinedButton.icon(onPressed:ready?saveSnapshot:null,
-          icon:const Icon(Icons.bookmark_add_outlined,size:16),label:const Text('СОХРАНИТЬ ВАРИАНТ'))),
-      ])),
+        const SizedBox(height:7),
+        SizedBox(width:double.infinity,child:FilledButton.icon(
+          onPressed:ready?saveSnapshot:null,
+          style:FilledButton.styleFrom(backgroundColor:Colors.white,
+            foregroundColor:const Color(0xFF142650)),
+          icon:const Icon(Icons.bookmark_add_outlined,size:17),
+          label:const Text('СОХРАНИТЬ ВАРИАНТ',
+            style:TextStyle(fontWeight:FontWeight.w900)))),
+      ]),
+    );
+  }
+
+  Widget _heroMetric(String value,String label,IconData icon)=>Expanded(
+    child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Icon(icon,color:CupUi.ice,size:17),
+      const SizedBox(height:8),
+      Text(value,style:const TextStyle(color:Colors.white,
+        fontSize:23,fontWeight:FontWeight.w900,height:1)),
+      const SizedBox(height:5),
+      Text(label,style:TextStyle(color:CupUi.soft,fontSize:8,
+        letterSpacing:.45,fontWeight:FontWeight.w900)),
     ]));
-  Widget _heroMetric(String value,String label,IconData icon)=>Expanded(child:Row(children:[
-    Icon(icon,color:CupUi.ice,size:18),const SizedBox(width:7),
-    Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Text(value,style:const TextStyle(color:Colors.white,fontSize:16,fontWeight:FontWeight.w900,height:1)),
-      const SizedBox(height:3),Text(label,style:TextStyle(color:CupUi.muted,fontSize:8,letterSpacing:.35,fontWeight:FontWeight.w800)),
-    ]),
-  ]));
+
   Widget _rankRow(Rank rank,int index,Map<String,int> oldPlaces,Map<String,int> oldPoints){
     final movement=(oldPlaces[rank.team]??index+1)-(index+1);
     final delta=rank.pts-(oldPoints[rank.team]??rank.pts);
