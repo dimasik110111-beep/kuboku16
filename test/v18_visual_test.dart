@@ -16,6 +16,10 @@ void main(){
     await tester.pumpWidget(MaterialApp(home:ScenarioPage(matches:matches,teams:teams)));
     await tester.pumpAndSettle();
     expect(find.text('ПРЕДИКТЫ'),findsOneWidget);
+    // The v24 simulator hero is taller, so the standings now live below the fold.
+    await tester.scrollUntilVisible(find.text('ТАБЛИЦА СЦЕНАРИЯ'),220,
+      scrollable:find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
     expect(find.text('ТАБЛИЦА СЦЕНАРИЯ'),findsOneWidget);
     await tester.scrollUntilVisible(find.text('СТЫКИ'),280,
       scrollable:find.byType(Scrollable).first);
