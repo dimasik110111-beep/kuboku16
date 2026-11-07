@@ -13,6 +13,7 @@ import 'team_hub.dart';
 import 'app_services.dart';
 import 'my_team.dart';
 import 'scenario_page.dart';
+import 'command_center_page.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
@@ -238,6 +239,10 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     }
     return null;
   }
+  void openCommandCenter()=>Navigator.of(context).push(MaterialPageRoute(
+    builder:(_)=>CommandCenterPage(matches:games,clubs:clubs,
+      onTeam:(name){final club=findClub(name);if(club!=null)openClub(club);},
+      onMatch:openMatch)));
   void openMatch(Match m)=>Navigator.of(context).push(MaterialPageRoute(
     builder:(_)=>MatchCenterPage(match:m,homeTeam:findClub(m.home),awayTeam:findClub(m.away))));
   void openClub(TeamInfo t)=>Navigator.of(context).push(MaterialPageRoute(
@@ -653,6 +658,28 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     final live=games.where((m)=>m.isLive).toList();
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
       CupReveal(child:_homeHero()),
+      CupCard(margin:const EdgeInsets.fromLTRB(12,2,12,11),
+        padding:EdgeInsets.zero,child:InkWell(
+        onTap:openCommandCenter,borderRadius:BorderRadius.circular(22),
+        child:Padding(padding:const EdgeInsets.all(17),child:Row(children:[
+          Container(width:48,height:48,
+            decoration:BoxDecoration(gradient:const LinearGradient(colors:[
+              Color(0xFF536DFA),Color(0xFF182A5B)]),
+              borderRadius:BorderRadius.circular(16)),
+            child:const Icon(Icons.radar_rounded,color:Colors.white,size:26)),
+          const SizedBox(width:13),
+          const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Text('COMMAND CENTER v26',style:TextStyle(
+              fontSize:13,fontWeight:FontWeight.w900)),
+            SizedBox(height:5),
+            Text('LIVE RACE · AI PREDICT · TIME MACHINE',
+              style:TextStyle(fontSize:9,color:CupUi.ice,fontWeight:FontWeight.w800)),
+            SizedBox(height:4),
+            Text('Все расклады Кубка на одном экране',
+              style:TextStyle(fontSize:10,color:CupUi.muted)),
+          ])),
+          Icon(Icons.arrow_forward_ios_rounded,color:CupUi.soft,size:18),
+        ])))),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
       CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
         child:Row(children:[
