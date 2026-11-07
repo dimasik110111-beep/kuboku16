@@ -85,8 +85,12 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final label=data?['statusText']?.toString();
     final status=label!=null&&label.isNotEmpty?label:
       live?'LIVE':match.finished?'Матч завершён':'По расписанию';
-    return CupCard(
-      margin:EdgeInsets.fromLTRB(12,6,12,10),padding:EdgeInsets.fromLTRB(12,19,12,20),
+    return Container(
+      margin:EdgeInsets.fromLTRB(12,6,12,10),padding:EdgeInsets.fromLTRB(12,24,12,27),
+      decoration:BoxDecoration(gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+        colors:CupUi.heroGradient),borderRadius:BorderRadius.circular(30),
+        border:Border.all(color:CupUi.ice.withValues(alpha:.18)),
+        boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.12),blurRadius:28,offset:Offset(0,12))]),
       child:Column(children:[
         Text(match.stage.toUpperCase(),textAlign:TextAlign.center,
           style:TextStyle(color:CupUi.muted,fontWeight:FontWeight.w700,fontSize:11,letterSpacing:.7)),
@@ -95,14 +99,14 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
           style:TextStyle(color:CupUi.muted,fontSize:11)),
         SizedBox(height:15),
         CupTag(text:status.toUpperCase(),color:live?CupUi.green:(match.finished?CupUi.soft:CupUi.yellow),filled:true),
-        SizedBox(height:19),
+        SizedBox(height:28),
         Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
           Expanded(child:_heroTeam(match.home,homeTeam?.logo??lineups.side('home')?.logo)),
-          Container(constraints:BoxConstraints(minWidth:108),alignment:Alignment.center,
-            padding:EdgeInsets.symmetric(horizontal:8,vertical:11),
-            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.10):CupUi.raised,
-              borderRadius:BorderRadius.circular(17),border:Border.all(
-                color:live?CupUi.green.withValues(alpha:.36):CupUi.stroke)),
+          Container(constraints:BoxConstraints(minWidth:112),alignment:Alignment.center,
+            padding:EdgeInsets.symmetric(horizontal:8,vertical:15),
+            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.12):Colors.white.withValues(alpha:.08),
+              borderRadius:BorderRadius.circular(22),border:Border.all(
+                color:live?CupUi.green.withValues(alpha:.36):Colors.white.withValues(alpha:.12))),
             child:Column(children:[
               AnimatedSwitcher(duration:const Duration(milliseconds:380),
                 switchInCurve:Curves.easeOutCubic,
@@ -110,7 +114,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
                   child:ScaleTransition(scale:Tween<double>(begin:.87,end:1).animate(animation),child:child)),
                 child:Text(match.score.isEmpty?'–  :  –':match.score.replaceAll(':',' : '),
                   key:ValueKey(match.score),style:TextStyle(color:live?CupUi.green:CupUi.white,
-                    fontSize:31,fontWeight:FontWeight.w900,letterSpacing:-1.5))),
+                    fontSize:34,fontWeight:FontWeight.w900,letterSpacing:-1.5))),
               if(match.scoreNote.isNotEmpty)Text(match.scoreNote,
                 style:TextStyle(color:CupUi.yellow,fontSize:11)),
             ])),
@@ -124,7 +128,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       ]));
   }
   Widget _heroTeam(String name,String? logo)=>Column(children:[
-    fhrTeamLogo(logo,size:58),
+    fhrTeamLogo(logo,size:68),
     SizedBox(height:10),
     Text(name,maxLines:3,overflow:TextOverflow.ellipsis,textAlign:TextAlign.center,
       style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w700,height:1.15,fontSize:12)),

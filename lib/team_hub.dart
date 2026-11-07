@@ -36,7 +36,24 @@ class _TeamHubPageState extends State<TeamHubPage>{
       IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,widget.team.fullName,[if(rank!=null)'${rank.pts} очков · ${rank.gp} игр','${played.length} завершённых матчей','Кубок России U16'])),
     ],bottom:const TabBar(isScrollable:true,tabs:[Tab(text:'Обзор'),Tab(text:'Матчи'),Tab(text:'Личные встречи'),Tab(text:'Расклады')])),body:SafeArea(child:TabBarView(children:[
       ListView(key:const PageStorageKey('team-overview'),children:[
-        CupCard(padding:const EdgeInsets.all(24),child:Column(children:[fhrTeamLogo(widget.team.logo,size:80),const SizedBox(height:14),Text(widget.team.fullName,style:const TextStyle(fontSize:22,fontWeight:FontWeight.w800),textAlign:TextAlign.center),const SizedBox(height:16),FilledButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>TeamRosterPage(team:widget.team))),icon:const Icon(Icons.groups_outlined),label:const Text('Состав команды'))])),
+        Container(margin:const EdgeInsets.fromLTRB(12,12,12,8),padding:const EdgeInsets.all(24),
+          decoration:BoxDecoration(gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+            colors:CupUi.heroGradient),borderRadius:BorderRadius.circular(30),
+            border:Border.all(color:CupUi.ice.withValues(alpha:.18))),
+          child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Text('КЛУБ · КУБОК РОССИИ U16',style:TextStyle(color:CupUi.ice,fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1)),
+            const SizedBox(height:25),Center(child:fhrTeamLogo(widget.team.logo,size:94)),
+            const SizedBox(height:23),Text(widget.team.fullName,
+              style:const TextStyle(color:Colors.white,fontSize:27,height:1.08,letterSpacing:-.8,fontWeight:FontWeight.w900)),
+            const SizedBox(height:19),Container(height:1,color:Colors.white.withValues(alpha:.15)),
+            const SizedBox(height:16),Row(children:[
+              if(rank!=null)Expanded(child:Text('${table.indexOf(rank)+1}-Е МЕСТО  ·  ${rank.pts} ОЧКОВ',
+                style:TextStyle(color:CupUi.ice,fontSize:11,fontWeight:FontWeight.w900))),
+              Text('${played.length} МАТЧЕЙ',style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800)),
+            ]),const SizedBox(height:20),SizedBox(width:double.infinity,
+              child:FilledButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>TeamRosterPage(team:widget.team))),
+                icon:const Icon(Icons.groups_outlined),label:const Text('СОСТАВ КОМАНДЫ'))),
+          ])),
         CupSection(title:'ПОСЛЕДНИЕ МАТЧИ'),for(final m in played.take(5))fixture(m),
         CupSection(title:'ЛИДЕРЫ КОМАНДЫ'),
         FutureBuilder<CupStatistics>(future:stats,builder:(context,s){

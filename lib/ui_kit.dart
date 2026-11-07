@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 class CupUi {
   // Shared visual language: graphite rink, cold navy surfaces, clear status colors.
   static bool light=false;
-  static Color get background=>light?const Color(0xFFF3F6FA):const Color(0xFF070B13);
-  static Color get surface=>light?const Color(0xFFFFFFFF):const Color(0xFF101928);
-  static Color get raised=>light?const Color(0xFFEAF0F7):const Color(0xFF19283C);
-  static Color get stroke=>light?const Color(0xFFDCE4EE):const Color(0xFF2C3D54);
-  static const red=Color(0xFFFF4966);
-  static const ice=Color(0xFF80D6FF);
+  static Color get background=>light?const Color(0xFFF4F6F9):const Color(0xFF080A10);
+  static Color get surface=>light?const Color(0xFFFFFFFF):const Color(0xFF151A25);
+  static Color get raised=>light?const Color(0xFFE9EEF5):const Color(0xFF202A39);
+  static Color get stroke=>light?const Color(0xFFD8E1ED):const Color(0xFF2D394A);
+  static const red=Color(0xFFFF4F69);
+  static const ice=Color(0xFF8DDCFB);
   static Color get redMuted=>light?const Color(0xFFFFE7EA):const Color(0xFF40212A);
   static Color get green=>light?const Color(0xFF087D56):const Color(0xFF45D6A0);
   static Color get yellow=>light?const Color(0xFF91600F):const Color(0xFFFFC86B);
-  static Color get white=>light?const Color(0xFF142235):const Color(0xFFF5F8FD);
+  static Color get white=>light?const Color(0xFF142235):const Color(0xFFF9FAFC);
   static Color get soft=>light?const Color(0xFF34435A):const Color(0xFFC7D2E2);
   static Color get muted=>light?const Color(0xFF62738B):const Color(0xFF8795A9);
   static Color get dim=>light?const Color(0xFF8796AA):const Color(0xFF647187);
   static List<Color> get heroGradient=>light
     ?const [Color(0xFF172B4D),Color(0xFF244978)]
-    :const [Color(0xFF1D3655),Color(0xFF101928),Color(0xFF341C2D)];
+    :const [Color(0xFF153B51),Color(0xFF131D2B),Color(0xFF361D30)];
 }
 
 class CupCard extends StatelessWidget {
@@ -33,14 +33,14 @@ class CupCard extends StatelessWidget {
     return AnimatedContainer(duration:const Duration(milliseconds:280),curve:Curves.easeOutCubic,
     margin:margin??EdgeInsets.symmetric(horizontal:12,vertical:6),
     padding:padding,
-    decoration:BoxDecoration(color:color??(CupUi.light?CupUi.surface:null),borderRadius:BorderRadius.circular(22),
+    decoration:BoxDecoration(color:color??(CupUi.light?CupUi.surface:null),borderRadius:BorderRadius.circular(24),
       gradient:color==null&&!CupUi.light?LinearGradient(
         begin:Alignment.topLeft,end:Alignment.bottomRight,
-        colors:[Color.lerp(base,CupUi.raised,.28)!,base]):null,
-      border:Border.all(color:CupUi.stroke.withValues(alpha:CupUi.light ? .9 : .78),width:.8),
+        colors:[Color.lerp(base,CupUi.raised,.12)!,base]):null,
+      border:Border.all(color:CupUi.stroke.withValues(alpha:CupUi.light ? .9 : .60),width:1),
       boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
         blurRadius:18,offset:Offset(0,5))]:[
-          BoxShadow(color:Colors.black.withValues(alpha:.25),blurRadius:28,offset:Offset(0,11)),
+          BoxShadow(color:Colors.black.withValues(alpha:.22),blurRadius:24,offset:Offset(0,9)),
         ]),
     clipBehavior:Clip.antiAlias,
     child:Material(type:MaterialType.transparency,child:child),
@@ -54,14 +54,14 @@ class CupSection extends StatelessWidget {
   const CupSection({super.key,required this.title,this.subtitle,this.trailing});
   @override
   Widget build(BuildContext context)=>Padding(
-    padding:EdgeInsets.fromLTRB(18,20,16,11),
+    padding:EdgeInsets.fromLTRB(18,26,16,12),
     child:Row(children:[
-      Container(height:22,width:4,decoration:BoxDecoration(
-        gradient:LinearGradient(colors:[CupUi.red,CupUi.red.withValues(alpha:.25)]),
-        borderRadius:BorderRadius.circular(4))),
-      SizedBox(width:9),
+      Container(height:29,width:4,decoration:BoxDecoration(
+        gradient:LinearGradient(begin:Alignment.topCenter,end:Alignment.bottomCenter,
+          colors:[CupUi.red,CupUi.ice]),borderRadius:BorderRadius.circular(4))),
+      SizedBox(width:11),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:13,letterSpacing:.7)),
+        Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:15,letterSpacing:-.2)),
         if(subtitle!=null)Padding(padding:EdgeInsets.only(top:4),
           child:Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:11))),
       ])),

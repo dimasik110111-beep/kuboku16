@@ -47,18 +47,21 @@ class _TeamRosterPageState extends State<TeamRosterPage> {
     try{await future;}catch(_){/* Error is rendered by FutureBuilder. */}
   }
 
-  Widget _header(int count)=>CupCard(
+  Widget _header(int count)=>Container(
     margin:EdgeInsets.fromLTRB(12,8,12,12),
     padding:EdgeInsets.fromLTRB(14,25,14,24),
+    decoration:BoxDecoration(gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+      colors:CupUi.heroGradient),borderRadius:BorderRadius.circular(30),
+      border:Border.all(color:CupUi.ice.withValues(alpha:.18))),
     child:Column(children:[
       Container(width:94,height:94,padding:EdgeInsets.all(10),
         decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(22)),
         child:fhrTeamLogo(widget.team.logo,size:74)),
       SizedBox(height:14),
       Text(widget.team.name,textAlign:TextAlign.center,
-        style:TextStyle(fontSize:22,fontWeight:FontWeight.w900,color:CupUi.white)),
+        style:TextStyle(fontSize:26,fontWeight:FontWeight.w900,color:Colors.white,letterSpacing:-.8)),
       SizedBox(height:5),
-      Text(widget.team.city,style:TextStyle(fontSize:12,color:CupUi.muted)),
+      Text(widget.team.city,style:TextStyle(fontSize:12,color:CupUi.soft)),
       SizedBox(height:17),
       Row(mainAxisAlignment:MainAxisAlignment.center,children:[
         CupTag(text:'U16 · 2026/27',color:CupUi.soft,filled:true),

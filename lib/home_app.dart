@@ -323,26 +323,26 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   );
 
   Widget _nav()=>SafeArea(top:false,child:Container(
-    constraints:const BoxConstraints(minHeight:68),
+    margin:const EdgeInsets.fromLTRB(10,0,10,7),
+    constraints:const BoxConstraints(minHeight:70),
     decoration:BoxDecoration(color:CupUi.surface,
-      border:Border(top:BorderSide(color:CupUi.stroke,width:.8)),
-      boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:.18),blurRadius:18,offset:const Offset(0,-5))]),
+      borderRadius:BorderRadius.circular(25),border:Border.all(color:CupUi.stroke),
+      boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:.34),blurRadius:26,offset:const Offset(0,9))]),
     child:Row(children:[
       for(var i=0;i<sections.length;i++)Expanded(child:InkWell(
-        onTap:()=>selectTab(i),borderRadius:BorderRadius.circular(16),
+        onTap:()=>selectTab(i),borderRadius:BorderRadius.circular(20),
         child:AnimatedContainer(duration:const Duration(milliseconds:220),
-          margin:const EdgeInsets.fromLTRB(2,7,2,4),
-          padding:const EdgeInsets.symmetric(vertical:7),
-          decoration:BoxDecoration(color:i==tab?CupUi.red.withValues(alpha:.15):Colors.transparent,
-            borderRadius:BorderRadius.circular(15),
-            border:Border.all(color:i==tab?CupUi.red.withValues(alpha:.33):Colors.transparent)),
+          margin:const EdgeInsets.fromLTRB(2,6,2,6),
+          padding:const EdgeInsets.symmetric(vertical:8),
+          decoration:BoxDecoration(color:i==tab?CupUi.red:Colors.transparent,
+            borderRadius:BorderRadius.circular(19)),
           child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
             AnimatedSwitcher(duration:const Duration(milliseconds:240),
               transitionBuilder:(child,animation)=>ScaleTransition(scale:animation,child:child),
               child:Icon(i==tab?sections[i].$2:sections[i].$1,key:ValueKey(i==tab),
-                size:21,color:i==tab?CupUi.red:CupUi.muted)),
+                size:21,color:i==tab?Colors.white:CupUi.muted)),
             const SizedBox(height:3),
-            Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
+            Text(sections[i].$3,style:TextStyle(color:i==tab?Colors.white:CupUi.muted,
               fontSize:9,fontWeight:i==tab?FontWeight.w900:FontWeight.w600),
               maxLines:1,overflow:TextOverflow.ellipsis),
           ])))),
@@ -518,33 +518,45 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   }
 
   Widget _homeHero()=>Container(
-    margin:const EdgeInsets.fromLTRB(13,13,13,8),
+    margin:const EdgeInsets.fromLTRB(12,15,12,12),
     decoration:BoxDecoration(
       gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,colors:CupUi.heroGradient),
-      borderRadius:BorderRadius.circular(26),border:Border.all(color:CupUi.ice.withValues(alpha:.13)),
-      boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.09),blurRadius:28,offset:const Offset(0,10))]),
+      borderRadius:BorderRadius.circular(30),border:Border.all(color:CupUi.ice.withValues(alpha:.22)),
+      boxShadow:[BoxShadow(color:CupUi.ice.withValues(alpha:.10),blurRadius:35,offset:const Offset(0,13))]),
     clipBehavior:Clip.antiAlias,
     child:Stack(children:[
-      Positioned(right:-24,top:-45,child:Container(width:175,height:175,
-        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(color:CupUi.ice.withValues(alpha:.08),width:25)))),
-      Padding(padding:const EdgeInsets.fromLTRB(18,19,17,17),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Positioned(right:-78,top:22,child:Container(width:230,height:230,
+        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(color:Colors.white.withValues(alpha:.06),width:38)))),
+      Positioned(right:-15,top:64,child:Container(width:110,height:110,
+        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(color:CupUi.ice.withValues(alpha:.12),width:2)))),
+      Padding(padding:const EdgeInsets.fromLTRB(21,20,20,20),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Row(children:[
-          Container(width:29,height:29,decoration:BoxDecoration(color:CupUi.red.withValues(alpha:.18),borderRadius:BorderRadius.circular(10)),
-            child:const Icon(Icons.emoji_events_rounded,color:CupUi.red,size:17)),
-          const SizedBox(width:8),Text('СЕЗОН 2026/27',style:TextStyle(color:CupUi.ice,fontSize:10,letterSpacing:1,fontWeight:FontWeight.w900)),
-          const Spacer(),CupTag(text:'2011 · U16',color:CupUi.soft,filled:true),
+          Container(width:30,height:30,decoration:BoxDecoration(color:Colors.white.withValues(alpha:.12),borderRadius:BorderRadius.circular(10)),
+            child:const Icon(Icons.sports_hockey_rounded,color:Colors.white,size:17)),
+          const SizedBox(width:9),const Text('JUNIOR / 26·27',style:TextStyle(color:CupUi.ice,fontSize:11,letterSpacing:1.1,fontWeight:FontWeight.w900)),
+          const Spacer(),CupTag(text:games.any((m)=>m.isLive)?'● LIVE':'U16 · 2011',
+            color:games.any((m)=>m.isLive)?CupUi.green:CupUi.soft,filled:true),
         ]),
-        const SizedBox(height:16),
-        const Text('Кубок России',style:TextStyle(fontSize:26,height:1,letterSpacing:-.6,fontWeight:FontWeight.w900,color:Colors.white)),
-        const SizedBox(height:7),
-        Text('Все матчи, таблицы и игроки турнира — в одном месте.',style:TextStyle(color:CupUi.soft,fontSize:12,height:1.4)),
-        const SizedBox(height:16),
+        const SizedBox(height:24),
+        const Text('КУБОК\nРОССИИ',style:TextStyle(fontSize:36,height:.92,letterSpacing:-1.5,fontWeight:FontWeight.w900,color:Colors.white)),
+        const SizedBox(height:13),
+        Text('20 команд  /  3 тура  /  один путь к финалу',style:TextStyle(color:CupUi.soft,fontSize:11,fontWeight:FontWeight.w700)),
+        const SizedBox(height:21),
+        Container(height:1,color:Colors.white.withValues(alpha:.14)),
+        const SizedBox(height:15),
+        Row(children:[
+          Text('${games.length}',style:const TextStyle(color:Colors.white,fontSize:20,fontWeight:FontWeight.w900)),
+          const SizedBox(width:6),Text('матчей в календаре',style:TextStyle(color:CupUi.soft,fontSize:10)),
+          const Spacer(),Icon(Icons.arrow_forward_rounded,color:CupUi.ice,size:18),
+        ]),
+        const SizedBox(height:15),
         SizedBox(width:double.infinity,child:FilledButton.icon(
           onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(
             matches:games,teams:clubs.map((t)=>t.fullName).toList(),
             teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
+          style:FilledButton.styleFrom(backgroundColor:Colors.white,foregroundColor:const Color(0xFF122032)),
           icon:const Icon(Icons.auto_awesome_rounded,size:18),
-          label:const Text('Открыть симулятор турнира'))),
+          label:const Text('ПОСТРОИТЬ СВОЙ СЦЕНАРИЙ'))),
       ])),
     ]),
   );
@@ -555,11 +567,14 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
       CupReveal(child:_homeHero()),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
-      Row(children:[
-        Expanded(child:_metric('20','КОМАНД',Icons.shield_outlined)),
-        Expanded(child:_metric('${games.length}','МАТЧЕЙ',Icons.sports_hockey_outlined)),
-        Expanded(child:_metric('${live.length}','LIVE',Icons.radio_button_checked)),
-      ]),
+      CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
+        child:Row(children:[
+          _metric('${games.where((m)=>m.finished).length}','СЫГРАНО',Icons.check_circle_outline_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${games.where((m)=>!m.finished&&!m.isLive).length}','ВПЕРЕДИ',Icons.schedule_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${live.length}','LIVE',Icons.radio_button_checked_rounded),
+        ])),
       if(error!=null)Padding(padding:EdgeInsets.fromLTRB(15,5,15,10),
         child:Text(error!,style:TextStyle(color:CupUi.yellow,fontSize:11))),
       if(live.isNotEmpty)...[
@@ -581,15 +596,11 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     ]));
   }
 
-  Widget _metric(String value,String label,IconData icon)=>CupCard(
-    margin:EdgeInsets.fromLTRB(4,0,4,8),
-    padding:EdgeInsets.symmetric(vertical:12,horizontal:7),
-    child:Column(children:[
-      Icon(icon,color:CupUi.red,size:18),SizedBox(height:7),
-      Text(value,style:TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900)),
-      SizedBox(height:3),
-      Text(label,style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w800)),
-    ]));
+  Widget _metric(String value,String label,IconData icon)=>Expanded(child:Column(children:[
+    Icon(icon,color:label=='LIVE'?CupUi.green:CupUi.ice,size:17),const SizedBox(height:5),
+    Text(value,style:TextStyle(color:CupUi.white,fontSize:20,fontWeight:FontWeight.w900,height:1)),
+    const SizedBox(height:4),Text(label,style:TextStyle(color:CupUi.muted,fontSize:8,fontWeight:FontWeight.w900,letterSpacing:.6)),
+  ]));
 
   Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('matches'),children:[
     CupSection(title:'ВСЕ МАТЧИ',subtitle:'Календарь Кубка России U16'),

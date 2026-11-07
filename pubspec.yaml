@@ -1,7 +1,7 @@
 name: junior_u16
 description: JUNIOR U16 FHR scores app
 publish_to: 'none'
-version: 0.22.0+22
+version: 0.23.0+23
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:

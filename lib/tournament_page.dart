@@ -47,25 +47,37 @@ class _TournamentPageState extends State<TournamentPage>{
 
   Widget _summary(CupTournament cup)=>CupCard(
     margin:EdgeInsets.fromLTRB(12,4,12,12),
-    padding:EdgeInsets.fromLTRB(16,18,16,17),
+    padding:EdgeInsets.fromLTRB(18,20,18,19),
     child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Row(children:[
-        Icon(Icons.emoji_events_outlined,color:CupUi.red,size:21),
+        Icon(Icons.hub_rounded,color:CupUi.ice,size:20),
         SizedBox(width:9),
-        Expanded(child:Text('КУБОК РОССИИ · U16',
-          style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900))),
+        Expanded(child:Text('ТУРНИРНЫЙ ПУЛЬС',
+          style:TextStyle(color:CupUi.white,fontSize:12,letterSpacing:.6,fontWeight:FontWeight.w900))),
         CupTag(text:cup.qualificationComplete?'ОТБОР ЗАВЕРШЁН':'ОТБОР ИДЁТ',
           color:cup.qualificationComplete?CupUi.green:CupUi.yellow,filled:true),
       ]),
-      SizedBox(height:14),
-      Text('${cup.completedQualifyingGames} / $expectedQualifyingGames',
-        style:TextStyle(color:CupUi.white,fontSize:26,fontWeight:FontWeight.w900)),
-      SizedBox(height:4),
-      Text('СЫГРАНО КВАЛИФИКАЦИОННЫХ МАТЧЕЙ',
-        style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w700)),
-      SizedBox(height:12),
-      _progress(cup.completedQualifyingGames,expectedQualifyingGames),
-      SizedBox(height:15),
+      SizedBox(height:19),
+      Row(children:[
+        SizedBox(width:96,height:96,child:Stack(alignment:Alignment.center,children:[
+          SizedBox.expand(child:CircularProgressIndicator(
+            value:(cup.completedQualifyingGames/expectedQualifyingGames).clamp(0.0,1.0),
+            strokeWidth:7,strokeCap:StrokeCap.round,backgroundColor:CupUi.stroke,
+            valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red))),
+          Text('${(cup.completedQualifyingGames*100/expectedQualifyingGames).round()}%',
+            style:TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900)),
+        ])),
+        SizedBox(width:20),
+        Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text('${cup.completedQualifyingGames} / $expectedQualifyingGames',
+            style:TextStyle(color:CupUi.white,fontSize:28,fontWeight:FontWeight.w900,height:1)),
+          SizedBox(height:7),Text('матчей квалификации сыграно',
+            style:TextStyle(color:CupUi.soft,fontSize:11,height:1.4)),
+          SizedBox(height:8),Text('ТРИ ТУРА → ФИНАЛ',
+            style:TextStyle(color:CupUi.ice,fontSize:9,letterSpacing:1.1,fontWeight:FontWeight.w900)),
+        ])),
+      ]),
+      SizedBox(height:18),Container(height:1,color:CupUi.stroke),SizedBox(height:17),
       Row(children:[
         _smallMetric('20','КОМАНД'),
         _smallMetric('3','ОТБОРА'),
