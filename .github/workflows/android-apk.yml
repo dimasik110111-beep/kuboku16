@@ -64,19 +64,19 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JUNIOR-U16-v25-APK
+          name: JUNIOR-U16-v26-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
-      - name: Publish verified v25 APK
+      - name: Publish verified v26 APK
         if: github.ref == 'refs/heads/main' && steps.signing.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v25.apk
-          sha256sum JUNIOR-U16-v25.apk > SHA256SUMS.txt
-          gh release create v25.0.0 JUNIOR-U16-v25.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v25 · LIVE-рассев, предикты и матч-центр" --notes-file RELEASE_NOTES_v25.md
+          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v26.apk
+          sha256sum JUNIOR-U16-v26.apk > SHA256SUMS.txt
+          gh release create v26.0.0 JUNIOR-U16-v26.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v26 · Command Center · 9 модулей" --notes-file RELEASE_NOTES_v26.md
       - name: Explain skipped publication
         if: steps.signing.outputs.ready != 'true'
         run: echo 'APK is for CI validation only. Configure ANDROID_SIGNING_BUNDLE to publish a permanent-signature release.'
