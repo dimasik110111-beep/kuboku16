@@ -45,46 +45,67 @@ class _TournamentPageState extends State<TournamentPage>{
       valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red)));
   }
 
-  Widget _summary(CupTournament cup)=>CupCard(
-    margin:EdgeInsets.fromLTRB(12,4,12,12),
-    padding:EdgeInsets.fromLTRB(18,20,18,19),
-    child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[
-        Icon(Icons.hub_rounded,color:CupUi.ice,size:20),
-        SizedBox(width:9),
-        Expanded(child:Text('ТУРНИРНЫЙ ПУЛЬС',
-          style:TextStyle(color:CupUi.white,fontSize:12,letterSpacing:.6,fontWeight:FontWeight.w900))),
-        CupTag(text:cup.qualificationComplete?'ОТБОР ЗАВЕРШЁН':'ОТБОР ИДЁТ',
-          color:cup.qualificationComplete?CupUi.green:CupUi.yellow,filled:true),
+  Widget _summary(CupTournament cup){
+    final progress=(cup.completedQualifyingGames/expectedQualifyingGames).clamp(0.0,1.0);
+    return CupArena(
+      margin:const EdgeInsets.fromLTRB(12,9,12,12),
+      padding:const EdgeInsets.fromLTRB(19,21,19,21),
+      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Row(children:[
+          Container(height:34,width:34,decoration:BoxDecoration(
+            color:Colors.white.withValues(alpha:.11),
+            borderRadius:BorderRadius.circular(11)),
+            child:const Icon(Icons.hub_rounded,color:CupUi.ice,size:19)),
+          const SizedBox(width:10),
+          const Expanded(child:Text('ПУТЬ К ФИНАЛУ',
+            style:TextStyle(color:Colors.white,fontWeight:FontWeight.w900,
+              fontSize:13,letterSpacing:.5))),
+          CupTag(text:cup.qualificationComplete?'ОТБОР ЗАВЕРШЁН':'ОТБОР ИДЁТ',
+            color:cup.qualificationComplete?CupUi.green:CupUi.yellow,filled:true),
+        ]),
+        const SizedBox(height:22),
+        Row(children:[
+          SizedBox(width:91,height:91,child:Stack(
+            alignment:Alignment.center,children:[
+              SizedBox.expand(child:CircularProgressIndicator(
+                value:progress,strokeWidth:7,strokeCap:StrokeCap.round,
+                backgroundColor:Colors.white.withValues(alpha:.16),
+                valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
+              Text('${(progress*100).round()}%',style:const TextStyle(
+                color:Colors.white,fontSize:24,fontWeight:FontWeight.w900)),
+            ])),
+          const SizedBox(width:19),
+          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            const Text('КВАЛИФИКАЦИЯ',style:TextStyle(
+              color:CupUi.ice,fontSize:10,fontWeight:FontWeight.w900,
+              letterSpacing:1.1)),
+            const SizedBox(height:9),
+            Text('${cup.completedQualifyingGames} / $expectedQualifyingGames',
+              style:const TextStyle(color:Colors.white,fontSize:27,
+                fontWeight:FontWeight.w900,letterSpacing:-1)),
+            const SizedBox(height:6),
+            Text('матчей пройдено',style:TextStyle(
+              color:CupUi.soft,fontSize:11)),
+          ])),
+        ]),
+        const SizedBox(height:22),
+        Container(padding:const EdgeInsets.symmetric(vertical:14,horizontal:6),
+          decoration:BoxDecoration(
+            color:Colors.white.withValues(alpha:.075),
+            borderRadius:BorderRadius.circular(18),
+            border:Border.all(color:Colors.white.withValues(alpha:.10))),
+          child:Row(children:[
+            _smallMetric('20','КОМАНД'),
+            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
+            _smallMetric('3','ОТБОРА'),
+            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
+            _smallMetric('8','ЗОЛОТО'),
+            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
+            _smallMetric('12','СЕРЕБРО'),
+          ])),
       ]),
-      SizedBox(height:19),
-      Row(children:[
-        SizedBox(width:96,height:96,child:Stack(alignment:Alignment.center,children:[
-          SizedBox.expand(child:CircularProgressIndicator(
-            value:(cup.completedQualifyingGames/expectedQualifyingGames).clamp(0.0,1.0),
-            strokeWidth:7,strokeCap:StrokeCap.round,backgroundColor:CupUi.stroke,
-            valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red))),
-          Text('${(cup.completedQualifyingGames*100/expectedQualifyingGames).round()}%',
-            style:TextStyle(color:CupUi.white,fontSize:21,fontWeight:FontWeight.w900)),
-        ])),
-        SizedBox(width:20),
-        Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Text('${cup.completedQualifyingGames} / $expectedQualifyingGames',
-            style:TextStyle(color:CupUi.white,fontSize:28,fontWeight:FontWeight.w900,height:1)),
-          SizedBox(height:7),Text('матчей квалификации сыграно',
-            style:TextStyle(color:CupUi.soft,fontSize:11,height:1.4)),
-          SizedBox(height:8),Text('ТРИ ТУРА → ФИНАЛ',
-            style:TextStyle(color:CupUi.ice,fontSize:9,letterSpacing:1.1,fontWeight:FontWeight.w900)),
-        ])),
-      ]),
-      SizedBox(height:18),Container(height:1,color:CupUi.stroke),SizedBox(height:17),
-      Row(children:[
-        _smallMetric('20','КОМАНД'),
-        _smallMetric('3','ОТБОРА'),
-        _smallMetric('8','ЗОЛОТО'),
-        _smallMetric('12','СЕРЕБРО'),
-      ]),
-    ]));
+    );
+  }
 
   Widget _smallMetric(String value,String label)=>Expanded(child:Column(
     crossAxisAlignment:CrossAxisAlignment.center,children:[
