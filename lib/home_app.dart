@@ -201,7 +201,9 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           indexed[id]=indexed[id]!.withDetail(e);
         }
       }catch(_){/* LIVE is unverified when detail fetch fails, never infer it. */}
-      final rows=indexed.values.toList()
+      final partial=feed.issues.isNotEmpty||
+        (indexed.isEmpty&&games.isNotEmpty);
+      final rows=reconcileCalendar(games,indexed.values.toList(),partial:partial)
         ..sort((a,b){final d=b.date.compareTo(a.date);
           return d!=0?d:b.timeMsk.compareTo(a.timeMsk);});
       if(!mounted)return;
