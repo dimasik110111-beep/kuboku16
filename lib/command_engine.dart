@@ -11,30 +11,38 @@ class RaceEngine {
   RaceEngine(this.matches,Iterable<String> participants,{DateTime? utcNow})
     :teams=participants.toSet().toList(),now=utcNow??DateTime.now().toUtc();
 
-  CupTournament get cup=>CupTournament(matches,teams:teams,utcNow:now);
-  List<Rank> get standings=>cup.table();
+  late final CupTournament _cup=CupTournament(matches,teams:teams,utcNow:now);
+  CupTournament get cup=>_cup;
+  late final List<Rank> _standings=_cup.table();
+  List<Rank> get standings=>_standings;
+  final Map<String,List<Rank>> _whatIfCache={};
+  final Map<String,List<Rank>> _historicCache={};
+  final Map<String,List<List<String>>> _seedingHistoryCache={};
+  final Map<String,List<ImpactScore>> _impactCache={};
+  final Map<String,List<HelpfulOutcome>> _helpCache={};
   List<Match> get upcoming=>matches.where((m)=>
       m.isQualifier&&!m.isResultAt(now)&&!m.isLive).toList()
       ..sort((a,b)=>'${a.date} ${a.timeMsk}'.compareTo('${b.date} ${b.timeMsk}'));
   List<String> get historyDates=>matches.where((m)=>m.isQualifier&&
       m.isResultAt(now)&&m.matchDate!=null).map((m)=>m.date).toSet().toList()..sort();
 
-  List<Rank> standingsAt(String date) => ranking(
-    matches.where((m)=>m.isQualifier&&m.date.compareTo(date)<=0&&m.isResultAt(now)).toList(),
-    utcNow:now,participants:teams,
-  );
-  List<List<String>> seedingAt(String date)=>CupTournament(
-    matches.where((m)=>m.isQualifier&&m.date.compareTo(date)<=0&&m.isResultAt(now)).toList(),
-    teams:teams,utcNow:now).thirdTourProjection();
+  List<Rank> standingsAt(String date)=>_historicCache.putIfAbsent(date,()=>
+    ranking(matches.where((m)=>m.isQualifier&&m.date.compareTo(date)<=0&&
+      m.isResultAt(now)).toList(),utcNow:now,participants:teams));
+  List<List<String>> seedingAt(String date)=>_seedingHistoryCache.putIfAbsent(date,()=>
+    CupTournament(matches.where((m)=>m.isQualifier&&m.date.compareTo(date)<=0&&
+      m.isResultAt(now)).toList(),teams:teams,utcNow:now).thirdTourProjection());
 
-  Map<String,int> get positionChanges{
+  late final Map<String,int> positionChanges=_calculatePositionChanges();
+  Map<String,int> _calculatePositionChanges(){
     final dates=historyDates;
     final previous=dates.length<2?standings:standingsAt(dates[dates.length-2]);
     final prior={for(var i=0;i<previous.length;i++)previous[i].team:i+1};
     return {for(var i=0;i<standings.length;i++)
       standings[i].team:(prior[standings[i].team]??i+1)-(i+1)};
   }
-  Map<String,String> get projectedGroups{
+  late final Map<String,String> projectedGroups=_calculateProjectedGroups();
+  Map<String,String> _calculateProjectedGroups(){
     final data=cup.thirdTourProjection();
     const names=['А','Б','В','Г'];
     return {for(var i=0;i<data.length;i++)for(final name in data[i])name:names[i]};
@@ -46,12 +54,16 @@ class RaceEngine {
 
   List<Rank> hypothetical(Match match,int home,int away,{bool overtime=false}){
     if(match.isResultAt(now)||match.isLive||!match.isQualifier)return standings;
-    final changed=Match(match.date,match.home,match.away,'$home:$away',
-      match.stage,match.arena,status:'FINAL',scoreNote:overtime?'ОТ':'',
-      timeMsk:match.timeMsk,gameId:match.gameId,matchUrl:match.matchUrl);
-    final rows=<Match>[for(final m in matches)if(m.key==match.key)changed else m];
-    if(!matches.any((m)=>m.key==match.key))rows.add(changed);
-    return CupTournament(rows,teams:teams,utcNow:now).table();
+    return _whatIfCache.putIfAbsent('${match.key}:$home:$away:$overtime',(){
+      final changed=Match(match.date,match.home,match.away,'$home:$away',
+        match.stage,match.arena,status:'FINAL',scoreNote:overtime?'ОТ':'',
+        timeMsk:match.timeMsk,gameId:match.gameId,matchUrl:match.matchUrl);
+      final rows=<Match>[
+        for(final m in matches)if(m.key==match.key)changed else m,
+      ];
+      if(!matches.any((m)=>m.key==match.key))rows.add(changed);
+      return CupTournament(rows,teams:teams,utcNow:now).table();
+    });
   }
   ImpactScore impact(Match match,{String? focusedTeam}){
     if(match.isResultAt(now)||match.isLive||!match.isQualifier){
@@ -75,11 +87,15 @@ class RaceEngine {
     return ImpactScore(match,different,cutoff,focus,changes);
   }
   List<ImpactScore> mostImportant({String? focus,int limit=12}){
-    final result=[for(final m in upcoming)impact(m,focusedTeam:focus)]
-      ..sort((a,b)=>b.weight.compareTo(a.weight));
-    return result.take(limit).toList();
+    final ranked=_impactCache.putIfAbsent(focus??'@all',(){
+      return [for(final match in upcoming)impact(match,focusedTeam:focus)]
+        ..sort((a,b)=>b.weight.compareTo(a.weight));
+    });
+    return ranked.take(limit).toList();
   }
-  List<HelpfulOutcome> helpfulOutcomes(String club,{int limit=8}){
+  List<HelpfulOutcome> helpfulOutcomes(String club,{int limit=8})=>
+    _helpCache.putIfAbsent(club,()=>_calculateHelpful(club)).take(limit).toList();
+  List<HelpfulOutcome> _calculateHelpful(String club){
     final current=standings;
     final previous={for(var i=0;i<current.length;i++)current[i].team:i+1};
     final list=<HelpfulOutcome>[];
