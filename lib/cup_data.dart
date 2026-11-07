@@ -80,7 +80,12 @@ class Match {
     final s=stage.toUpperCase().replaceAll('Ё','Е');
     return s.contains('ЗОЛОТОЙ ФИНАЛ') || s.contains('СЕРЕБРЯНЫЙ ФИНАЛ');
   }
-  String get key => gameId?.toString() ?? '$stage|$date|$home|$away';
+  // Synthetic match IDs are only positional slots in a projected bracket.
+  // Include both clubs in the key: a re-seeded pairing must NEVER inherit a
+  // user's forecast intended for two different teams.
+  String get key => gameId!=null&&gameId!<0
+    ? '${gameId!}|$stage|$home|$away'
+    : (gameId?.toString() ?? '$stage|$date|$home|$away');
   DateTime? get matchDate => DateTime.tryParse(date);
   String get dayLabel {
     final dt = matchDate;
