@@ -54,10 +54,11 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
     return 'ФХР · ${local.day.toString().padLeft(2,'0')}.${local.month.toString().padLeft(2,'0')} · ${local.hour.toString().padLeft(2,'0')}:${local.minute.toString().padLeft(2,'0')} МСК';
   }
   Widget sectionButton(String label,bool active,VoidCallback onTap){
-    return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(9),
+    return InkWell(onTap:onTap,borderRadius:BorderRadius.circular(99),
       child:AnimatedContainer(
         duration:Duration(milliseconds:160),padding:EdgeInsets.symmetric(horizontal:13,vertical:12),
-        decoration:BoxDecoration(color:active?CupUi.red:CupUi.raised,borderRadius:BorderRadius.circular(9)),
+        decoration:BoxDecoration(color:active?CupUi.red:CupUi.raised,
+          borderRadius:BorderRadius.circular(99),border:Border.all(color:active?CupUi.red:CupUi.stroke)),
         child:Text(label,maxLines:1,style:TextStyle(color:active?Colors.white:CupUi.soft,
           fontWeight:FontWeight.w900,fontSize:10,letterSpacing:.15)),
       ));
@@ -131,9 +132,12 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
       builder:(_)=>CupPlayerProfilePage(player:player))),
     child:Padding(padding:EdgeInsets.symmetric(horizontal:11,vertical:9),
       child:Row(children:[
-        SizedBox(width:26,child:Text('${index+1}',style:TextStyle(
-          fontWeight:FontWeight.w900,fontSize:12,
-          color:index<3?CupUi.red:CupUi.muted))),
+        Container(width:26,height:26,alignment:Alignment.center,
+          decoration:BoxDecoration(color:index<3?CupUi.redMuted:CupUi.raised,
+            borderRadius:BorderRadius.circular(9)),
+          child:Text('${index+1}',style:TextStyle(
+            fontWeight:FontWeight.w900,fontSize:11,
+            color:index<3?CupUi.red:CupUi.muted))),
         fhrPlayerPhoto(player.photo,size:43),SizedBox(width:9),
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Text(player.name,maxLines:1,overflow:TextOverflow.ellipsis,

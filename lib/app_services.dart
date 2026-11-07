@@ -34,11 +34,17 @@ class LoadingCards extends StatelessWidget {
   const LoadingCards({super.key});
   @override Widget build(BuildContext context)=>ListView.builder(
     itemCount:5,itemBuilder:(_,i)=>Semantics(label:'Загрузка',child:CupCard(
-      padding:const EdgeInsets.all(18),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Container(height:16,width:150,color:CupUi.raised),const SizedBox(height:14),
-        Container(height:12,color:CupUi.raised),const SizedBox(height:10),
-        Container(height:12,width:210,color:CupUi.raised),
+      padding:const EdgeInsets.all(16),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Row(children:[_shape(28,28),const SizedBox(width:10),_shape(120,12),const Spacer(),_shape(38,17)]),
+        const SizedBox(height:15),
+        Row(children:[_shape(30,30),const SizedBox(width:10),Expanded(child:_shape(double.infinity,12)),
+          const SizedBox(width:12),_shape(35,23)]),
+        const SizedBox(height:9),
+        Row(children:[_shape(30,30),const SizedBox(width:10),Expanded(child:_shape(double.infinity,12)),
+          const SizedBox(width:12),_shape(35,23)]),
       ]))));
+  static Widget _shape(double width,double height)=>Container(width:width,height:height,
+    decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(8)));
 }
 Future<void> shareCard(BuildContext context,String title,List<String> lines)async{
   try{

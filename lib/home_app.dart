@@ -75,6 +75,16 @@ class _JuniorAppState extends State<JuniorApp>{
         dialogTheme:DialogThemeData(
           backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(24))),
+        snackBarTheme:SnackBarThemeData(backgroundColor:CupUi.raised,
+          contentTextStyle:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700),
+          behavior:SnackBarBehavior.floating,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15))),
+        progressIndicatorTheme:ProgressIndicatorThemeData(color:CupUi.red,
+          linearTrackColor:CupUi.stroke,circularTrackColor:CupUi.stroke),
+        pageTransitionsTheme:const PageTransitionsTheme(builders:{
+          TargetPlatform.android:ZoomPageTransitionsBuilder(),
+          TargetPlatform.iOS:CupertinoPageTransitionsBuilder(),
+        }),
         tabBarTheme:TabBarThemeData(labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
           indicatorColor:CupUi.red,dividerColor:CupUi.stroke,
           labelStyle:const TextStyle(fontSize:12,fontWeight:FontWeight.w800),
@@ -316,14 +326,14 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     child:Row(children:[
       for(var i=0;i<sections.length;i++)Expanded(child:InkWell(
         onTap:()=>selectTab(i),borderRadius:BorderRadius.circular(16),
-        child:AnimatedContainer(duration:const Duration(milliseconds:180),
+        child:AnimatedContainer(duration:const Duration(milliseconds:220),
           margin:const EdgeInsets.fromLTRB(2,7,2,4),
           padding:const EdgeInsets.symmetric(vertical:7),
-          decoration:BoxDecoration(color:i==tab?CupUi.red.withValues(alpha:.12):Colors.transparent,
+          decoration:BoxDecoration(color:i==tab?CupUi.red.withValues(alpha:.15):Colors.transparent,
             borderRadius:BorderRadius.circular(15),
-            border:Border.all(color:i==tab?CupUi.red.withValues(alpha:.22):Colors.transparent)),
+            border:Border.all(color:i==tab?CupUi.red.withValues(alpha:.33):Colors.transparent)),
           child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
-            Icon(i==tab?sections[i].$2:sections[i].$1,size:20,color:i==tab?CupUi.red:CupUi.muted),
+            Icon(i==tab?sections[i].$2:sections[i].$1,size:21,color:i==tab?CupUi.red:CupUi.muted),
             const SizedBox(height:3),
             Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
               fontSize:9,fontWeight:i==tab?FontWeight.w900:FontWeight.w600),
@@ -339,7 +349,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       padding:EdgeInsets.symmetric(horizontal:15,vertical:10),
       decoration:BoxDecoration(
         color:active?CupUi.red:CupUi.surface,
-        borderRadius:BorderRadius.circular(8),
+        borderRadius:BorderRadius.circular(99),
         border:Border.all(color:active?CupUi.red:CupUi.stroke)),
       child:Text(text,style:TextStyle(fontSize:10,letterSpacing:.3,
         color:active?Colors.white:CupUi.muted,fontWeight:FontWeight.w800))),
@@ -415,29 +425,35 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     final live=game.isLive;
     final played=game.finished;
     return InkWell(onTap:()=>openMatch(game),
-      child:Padding(padding:EdgeInsets.fromLTRB(12,10,6,10),
+      child:Padding(padding:EdgeInsets.fromLTRB(12,11,7,11),
         child:Row(children:[
-          SizedBox(width:50,child:Column(children:[
+          SizedBox(width:49,child:Column(children:[
             Text(live?'LIVE':played?'КОН.':game.timeMsk.isNotEmpty?game.timeMsk:'–',
-              style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,
+              style:TextStyle(fontWeight:FontWeight.w900,fontSize:11,
                 color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow))),
             SizedBox(height:6),
             Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
           ])),
-          Container(height:42,width:2,color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow)),
+          Container(height:43,width:3,decoration:BoxDecoration(
+            color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow),
+            borderRadius:BorderRadius.circular(4))),
           SizedBox(width:10),
           Expanded(child:Column(children:[
             _teamLine(game.home,h?.logo),
-            SizedBox(height:10),
+            SizedBox(height:9),
             _teamLine(game.away,a?.logo),
           ])),
-          SizedBox(width:34,child:Column(children:[
-            Text(goals==null?'–':'${goals[0]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
-              fontWeight:FontWeight.w900,fontSize:16)),
-            SizedBox(height:10),
-            Text(goals==null?'–':'${goals[1]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
-              fontWeight:FontWeight.w900,fontSize:16)),
-          ])),
+          Container(width:43,padding:const EdgeInsets.symmetric(vertical:5),
+            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.12):CupUi.raised,
+              borderRadius:BorderRadius.circular(11),border:Border.all(
+                color:live?CupUi.green.withValues(alpha:.38):CupUi.stroke)),
+            child:Column(children:[
+              Text(goals==null?'–':'${goals[0]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
+                fontWeight:FontWeight.w900,fontSize:17,height:1)),
+              const SizedBox(height:5),Container(height:1,width:19,color:CupUi.stroke),const SizedBox(height:5),
+              Text(goals==null?'–':'${goals[1]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
+                fontWeight:FontWeight.w900,fontSize:17,height:1)),
+            ])),
           IconButton(
             onPressed:()=>toggleFavorite(game),
             tooltip:'Избранное',
@@ -446,9 +462,9 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         ])));
   }
   Widget _teamLine(String name,String? logo)=>Row(children:[
-    fhrTeamLogo(logo,size:23),SizedBox(width:9),
+    fhrTeamLogo(logo,size:25),SizedBox(width:9),
     Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
-      style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700))),
+      style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w800))),
   ]);
 
   Widget _leagueBlock(String label,List<Match> list)=>CupCard(

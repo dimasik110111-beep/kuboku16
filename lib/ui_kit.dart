@@ -33,14 +33,14 @@ class CupCard extends StatelessWidget {
     return Container(
     margin:margin??EdgeInsets.symmetric(horizontal:12,vertical:6),
     padding:padding,
-    decoration:BoxDecoration(color:color??(CupUi.light?CupUi.surface:null),borderRadius:BorderRadius.circular(20),
+    decoration:BoxDecoration(color:color??(CupUi.light?CupUi.surface:null),borderRadius:BorderRadius.circular(22),
       gradient:color==null&&!CupUi.light?LinearGradient(
         begin:Alignment.topLeft,end:Alignment.bottomRight,
         colors:[Color.lerp(base,CupUi.raised,.16)!,base]):null,
-      border:Border.all(color:CupUi.stroke,width:.8),
+      border:Border.all(color:CupUi.stroke.withValues(alpha:CupUi.light ? .9 : .78),width:.8),
       boxShadow:CupUi.light?[BoxShadow(color:const Color(0xFF233552).withValues(alpha:.055),
         blurRadius:18,offset:Offset(0,5))]:[
-          BoxShadow(color:Colors.black.withValues(alpha:.12),blurRadius:22,offset:Offset(0,8)),
+          BoxShadow(color:Colors.black.withValues(alpha:.20),blurRadius:26,offset:Offset(0,10)),
         ]),
     clipBehavior:Clip.antiAlias,
     child:Material(type:MaterialType.transparency,child:child),
@@ -61,7 +61,7 @@ class CupSection extends StatelessWidget {
         borderRadius:BorderRadius.circular(4))),
       SizedBox(width:9),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:13,letterSpacing:.55)),
+        Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:13,letterSpacing:.7)),
         if(subtitle!=null)Padding(padding:EdgeInsets.only(top:4),
           child:Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:11))),
       ])),
@@ -98,15 +98,19 @@ class CupMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context)=>Padding(
     padding:EdgeInsets.symmetric(horizontal:20,vertical:30),
+    child:Container(width:double.infinity,padding:EdgeInsets.symmetric(horizontal:18,vertical:25),
+      decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(22),
+        border:Border.all(color:CupUi.stroke)),
     child:Column(mainAxisSize:MainAxisSize.min,children:[
-      Container(height:52,width:52,decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(15)),
-        child:Icon(icon,color:CupUi.muted,size:26)),
+      Container(height:56,width:56,decoration:BoxDecoration(color:CupUi.redMuted,borderRadius:BorderRadius.circular(18)),
+        child:Icon(icon,color:CupUi.red,size:27)),
       SizedBox(height:13),
       Text(title,textAlign:TextAlign.center,style:TextStyle(color:CupUi.white,fontSize:15,fontWeight:FontWeight.w800)),
       SizedBox(height:7),
       Text(message,textAlign:TextAlign.center,style:TextStyle(color:CupUi.muted,fontSize:12,height:1.45)),
-      if(retry!=null)TextButton(onPressed:retry,child:Text('ПОВТОРИТЬ')),
-    ]),
+      if(retry!=null)Padding(padding:EdgeInsets.only(top:8),child:OutlinedButton.icon(
+        onPressed:retry,icon:Icon(Icons.refresh_rounded,size:16),label:Text('ПОВТОРИТЬ'))),
+    ])),
   );
 }
 

@@ -99,6 +99,10 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
         Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
           Expanded(child:_heroTeam(match.home,homeTeam?.logo??lineups.side('home')?.logo)),
           Container(constraints:BoxConstraints(minWidth:108),alignment:Alignment.center,
+            padding:EdgeInsets.symmetric(horizontal:8,vertical:11),
+            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.10):CupUi.raised,
+              borderRadius:BorderRadius.circular(17),border:Border.all(
+                color:live?CupUi.green.withValues(alpha:.36):CupUi.stroke)),
             child:Column(children:[
               Text(match.score.isEmpty?'–  :  –':match.score.replaceAll(':',' : '),
                 style:TextStyle(color:live?CupUi.green:CupUi.white,
