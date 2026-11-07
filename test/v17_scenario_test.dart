@@ -27,4 +27,17 @@ void main(){
     expect(simulated.applied,1);
     expect(simulated.matches.any((m)=>m.key==first.key&&m.score=='4:1'),isTrue);
   });
+
+  test('second-tour crossovers appear when only one group pair is published',(){
+    final fixtures=<Match>[];
+    for(var i=0;i<5;i++){
+      fixtures.add(Match('2026-11-08','A$i','A${(i+1)%5}','','Группа A-II','',gameId:100+i));
+      fixtures.add(Match('2026-11-08','Б$i','Б${(i+1)%5}','','Группа Б-II','',gameId:200+i));
+    }
+    final generated=scenarioFixtures(fixtures);
+    final crossovers=generated.where((m)=>m.stage=='Стыковые А и Б - II').toList();
+    expect(crossovers.length,5);
+    expect(crossovers.every((m)=>m.gameId!<0&&m.date.isEmpty),isTrue);
+    expect(generated.where((m)=>m.stage.contains(' - II')).length,5);
+  });
 }

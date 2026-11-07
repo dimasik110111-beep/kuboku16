@@ -70,20 +70,23 @@ List<Match> scenarioMatches(List<Match> source,{Map<String,ScenarioScore> scores
   // Round II crossovers: equal places between groups А/Б and В/Г.
   final secondGroups=<String,List<Match>>{};
   for(final m in all.values){final code=groupCode(m.stage);if(code!=null&&!m.isCrossover)secondGroups.putIfAbsent(code,()=>[]).add(m);}
-  if(secondGroups.length>=4){
-    final codes=secondGroups.keys.toList()..sort((a,b)=>groupOrder(a).compareTo(groupOrder(b)));
-    final current=withScores();
-    for(final offset in [0,2]){
-      final left=codes[offset],right=codes[offset+1];
-      final lhs=ranking(current.where((m)=>m.stage.startsWith('ГРУППА ')&&groupCode(m.stage)==left).toList(),utcNow:now);
-      final rhs=ranking(current.where((m)=>m.stage.startsWith('ГРУППА ')&&groupCode(m.stage)==right).toList(),utcNow:now);
-      if(lhs.length<5||rhs.length<5)continue;
-      for(var pos=0;pos<5;pos++){
-        final stage='Стыковые ${letter(groupOrder(left))} и ${letter(groupOrder(right))} - II';
-        if(!containsPair(current,stage,lhs[pos].team,rhs[pos].team)){
-          final id=-2000-offset*10-pos;
-          all['$id']=Match('',lhs[pos].team,rhs[pos].team,'',stage,'',gameId:id);
-        }
+  // Do not make one missing/unpublished group suppress the other pair's
+  // crossovers. FHR publishes the A/B and V/G sections on separate dates.
+  final secondCodes=secondGroups.keys.toSet();
+  final current=withScores();
+  for(final pair in [[0,1],[2,3]]){
+    final left=letter(pair[0]),right=letter(pair[1]);
+    final leftCode=secondCodes.firstWhere((code)=>groupOrder(code)==pair[0],orElse:()=> '');
+    final rightCode=secondCodes.firstWhere((code)=>groupOrder(code)==pair[1],orElse:()=> '');
+    if(leftCode.isEmpty||rightCode.isEmpty)continue;
+    final lhs=ranking(current.where((m)=>groupCode(m.stage)==leftCode).toList(),utcNow:now);
+    final rhs=ranking(current.where((m)=>groupCode(m.stage)==rightCode).toList(),utcNow:now);
+    if(lhs.length<5||rhs.length<5)continue;
+    for(var pos=0;pos<5;pos++){
+      final stage='Стыковые $left и $right - II';
+      if(!containsPair(current,stage,lhs[pos].team,rhs[pos].team)){
+        final id=-2000-pair[0]*10-pos;
+        all['$id']=Match('',lhs[pos].team,rhs[pos].team,'',stage,'',gameId:id);
       }
     }
   }
