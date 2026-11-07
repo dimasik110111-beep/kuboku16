@@ -118,7 +118,7 @@ class RaceEngine {
       final d=b.swing.compareTo(a.swing);
       return d!=0?d:a.match.date.compareTo(b.match.date);
     });
-    return list.take(limit).toList();
+    return list;
   }
   int get confirmed=>matches.where((m)=>m.isQualifier&&m.isResultAt(now)).length;
   int get published=>matches.where((m)=>m.isQualifier).length;
