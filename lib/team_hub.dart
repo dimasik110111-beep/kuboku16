@@ -36,15 +36,13 @@ class _TeamHubPageState extends State<TeamHubPage>{
       IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,widget.team.fullName,[if(rank!=null)'${rank.pts} очков · ${rank.gp} игр','${played.length} завершённых матчей','Кубок России U16'])),
     ],bottom:const TabBar(isScrollable:true,tabs:[Tab(text:'Обзор'),Tab(text:'Матчи'),Tab(text:'Личные встречи'),Tab(text:'Расклады')])),body:SafeArea(child:TabBarView(children:[
       ListView(key:const PageStorageKey('team-overview'),children:[
-        Container(margin:const EdgeInsets.fromLTRB(12,12,12,8),padding:const EdgeInsets.all(24),
-          decoration:BoxDecoration(gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
-            colors:CupUi.heroGradient),borderRadius:BorderRadius.circular(30),
-            border:Border.all(color:CupUi.ice.withValues(alpha:.18))),
+        CupArena(margin:const EdgeInsets.fromLTRB(12,12,12,8),
+          padding:const EdgeInsets.all(24),
           child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
             Text('КЛУБ · КУБОК РОССИИ U16',style:TextStyle(color:CupUi.ice,fontSize:10,fontWeight:FontWeight.w900,letterSpacing:1)),
             const SizedBox(height:25),Center(child:fhrTeamLogo(widget.team.logo,size:94)),
             const SizedBox(height:23),Text(widget.team.fullName,
-              style:const TextStyle(color:Colors.white,fontSize:27,height:1.08,letterSpacing:-.8,fontWeight:FontWeight.w900)),
+              style:const TextStyle(color:Colors.white,fontSize:30,height:1.05,letterSpacing:-1.2,fontWeight:FontWeight.w900)),
             const SizedBox(height:19),Container(height:1,color:Colors.white.withValues(alpha:.15)),
             const SizedBox(height:16),Row(children:[
               if(rank!=null)Expanded(child:Text('${table.indexOf(rank)+1}-Е МЕСТО  ·  ${rank.pts} ОЧКОВ',
