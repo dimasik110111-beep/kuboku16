@@ -8,7 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ui_kit.dart';
 
-const appVersion=26;
+const appVersion=27;
 const releaseRepo='dimasik110111-beep/kuboku16';
 class Diagnostics {
   static final List<String> events=[];
