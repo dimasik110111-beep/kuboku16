@@ -365,6 +365,41 @@ class _CommandCenterPageState extends State<CommandCenterPage>
             ])),
         ])),
         _teamSelector(),
+        if(chosen!=null)CupArena(padding:const EdgeInsets.all(17),
+          child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Row(children:[
+              Icon(Icons.sports_score_rounded,color:CupUi.ice,size:21),
+              const SizedBox(width:9),
+              Expanded(child:Text(chosen!,maxLines:2,
+                overflow:TextOverflow.ellipsis,style:const TextStyle(
+                  color:Colors.white,fontSize:13,fontWeight:FontWeight.w900))),
+              CupTag(text:'МОЙ ПРОГНОЗ',color:CupUi.ice,filled:true),
+            ]),
+            const SizedBox(height:14),
+            Row(children:[
+              Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                const Text('МОДЕЛЬНЫЙ ТОП-8',style:TextStyle(
+                  color:Color(0xFFCDD8ED),fontSize:9,fontWeight:FontWeight.w900)),
+                const SizedBox(height:7),
+                Text('${((report!.topEight[chosen!]??0)*100).toStringAsFixed(1)}%',
+                  style:const TextStyle(color:Colors.white,
+                    fontSize:33,fontWeight:FontWeight.w900)),
+              ])),
+              Container(width:1,height:56,color:Colors.white.withValues(alpha:.18)),
+              const SizedBox(width:15),
+              Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                const Text('СРЕДНЕЕ МЕСТО',style:TextStyle(
+                  color:Color(0xFFCDD8ED),fontSize:9,fontWeight:FontWeight.w900)),
+                const SizedBox(height:7),
+                Text((report!.averagePlace[chosen!]??0).toStringAsFixed(1),
+                  style:const TextStyle(color:Colors.white,
+                    fontSize:33,fontWeight:FontWeight.w900)),
+              ])),
+            ]),
+            const SizedBox(height:11),
+            Text('Не рейтинг ФХР. Оценка модели по ${report!.iterations} сценариям.',
+              style:TextStyle(color:CupUi.soft,fontSize:10,height:1.4)),
+          ])),
         if(chosen!=null)CupCard(padding:const EdgeInsets.all(15),
           child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
             Text('ГРУППА III ТУРА · $chosen',style:TextStyle(
