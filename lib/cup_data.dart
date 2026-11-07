@@ -167,6 +167,19 @@ class FhrFeed {
   };
 }
 
+/// Retain published fixtures when the provider reports an incomplete response.
+/// Incoming matches always win; the old snapshot is only a fallback for gaps.
+/// On a complete response the feed is authoritative, including removals.
+List<Match> reconcileCalendar(List<Match> previous,List<Match> incoming,
+    {required bool partial}){
+  if(!partial)return List<Match>.from(incoming);
+  final indexed=<String,Match>{
+    for(final match in previous)match.key:match,
+    for(final match in incoming)match.key:match,
+  };
+  return indexed.values.toList();
+}
+
 class TeamInfo {
   final int id;
   final String name, city, fullName, url;
