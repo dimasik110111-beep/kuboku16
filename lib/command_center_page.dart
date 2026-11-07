@@ -372,7 +372,7 @@ class _CommandCenterPageState extends State<CommandCenterPage>
   Widget _road(RaceEngine r){
     final name=chosen;
     final matches=games;
-    if(name==null)return const CupMessage(title:'Выбери команду');
+    if(name==null)return const CupMessage(title:'Выбери команду',message:'Загружаю участников ФХР.');
     final current=r.standings.indexWhere((row)=>row.team==name);
     final projectedGroup=r.projectedGroups[name];
     final completed=r.cup.qualificationComplete;
