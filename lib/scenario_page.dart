@@ -90,5 +90,5 @@ class _ScenarioScoreDialogState extends State<ScenarioScoreDialog>{
         final value=ScenarioScore(h,a,overtime:overtime);
         if(!value.valid){setState(()=>error=h==a?'Ничьи в хоккее нет.':overtime?'После ОТ или буллитов разница должна быть в одну шайбу.':'Счёт должен быть от 0 до 99.');return;}
         Navigator.pop(context,value);
-      },child:const Text('Применить'))],;
+      },child:const Text('Применить'))]);
 }
