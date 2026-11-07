@@ -41,18 +41,20 @@ class _ScenarioPageState extends State<ScenarioPage>{
     final table=cup.table();final original=CupTournament(widget.matches,teams:widget.teams).table();
     final originalPlaces={for(var i=0;i<original.length;i++)original[i].team:i+1};
     final originalPoints={for(final r in original)r.team:r.pts};
-    final all=scenarioFixtures(widget.matches);
+    final all=scenarioFixtures(widget.matches,scores:scores);
     final fixtures=all.where((m)=>team==null||m.home==team||m.away==team).toList();
     final names=table.map((r)=>r.team).toList()..sort();
+    final officialCup=CupTournament(widget.matches,teams:widget.teams);
     return Scaffold(appBar:AppBar(title:const Text('Если сыграют так…'),actions:[IconButton(tooltip:'Сбросить сценарий',onPressed:!ready||scores.isEmpty?null:()async{
       final confirm=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(title:const Text('Сбросить предположения?'),content:const Text('Реальные результаты ФХР останутся без изменений.'),actions:[TextButton(onPressed:()=>Navigator.pop(context,false),child:const Text('Отмена')),FilledButton(onPressed:()=>Navigator.pop(context,true),child:const Text('Сбросить'))]));
       if(confirm==true&&mounted){setState(scores.clear);await save();}
     },icon:const Icon(Icons.restart_alt))]),body:SafeArea(child:!ready?const LoadingCards():ListView(children:[
       CupCard(padding:const EdgeInsets.all(18),color:CupUi.raised,child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Text('СЦЕНАРИЙ · ${simulated.applied} результатов',style:const TextStyle(fontWeight:FontWeight.w800,fontSize:18)),const SizedBox(height:8),
-        const Text('Задай счёт будущих опубликованных матчей. Таблица пересчитается только здесь. Это предположение, не прогноз и не данные ФХР.'),const SizedBox(height:8),
-        Text('Выбрано ${simulated.applied} из ${all.length} доступных игр. Квалификация: ${cup.qualifyingFixtureCount} из 140 матчей опубликовано.'),
-        if(cup.qualifyingFixtureCount<140)const Text('Часть расписания ещё отсутствует: окончательный состав финалов определить нельзя.'),
+        const Text('Задавай результаты оставшихся матчей, стыков и III тура. Сетка пересчитывается по ходу сценария. Расчётные пары не являются календарём ФХР.'),const SizedBox(height:8),
+        Text('Учтено ${simulated.applied} предположений · ${all.length} будущих матчей для ввода. В официальном календаре: ${officialCup.qualifyingFixtureCount} из 140 матчей.'),
+        const Text('III тур формируется по «змейке» регламента: 1, 8, 9, 16, 17 · 2, 7, 10, 15, 18 · 3, 6, 11, 14, 19 · 4, 5, 12, 13, 20.'),
+        if(officialCup.qualifyingFixtureCount<140)const Text('Пока ФХР не опубликовала пары и даты, они показаны как расчётные; даты и арены не выдумываются.'),
       ])),
       CupSection(title:'ТАБЛИЦА СЦЕНАРИЯ',subtitle:cup.qualificationComplete?'Все матчи квалификации учтены в сценарии':'Промежуточная таблица · первые 8 мест выделены'),
       CupCard(padding:const EdgeInsets.symmetric(vertical:8),child:Column(children:[
@@ -61,7 +63,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
       CupSection(title:'ЗАДАТЬ РЕЗУЛЬТАТЫ',subtitle:'Завершённые и текущие LIVE-матчи защищены от изменения'),
       Padding(padding:const EdgeInsets.symmetric(horizontal:16),child:DropdownButton<String>(isExpanded:true,value:team??'',items:[const DropdownMenuItem(value:'',child:Text('Все команды')),for(final name in names)DropdownMenuItem(value:name,child:Text(name,overflow:TextOverflow.ellipsis))],onChanged:(v)=>setState(()=>team=v==null||v.isEmpty?null:v))),
       if(fixtures.isEmpty)const CupMessage(title:'Нет доступных матчей',message:'Будущие пары появятся после публикации ФХР. Выбери другую команду или обнови календарь.'),
-      for(final m in fixtures)CupCard(child:ListTile(onTap:()=>edit(m),title:Text('${m.home} — ${m.away}',style:const TextStyle(fontSize:13,fontWeight:FontWeight.w700)),subtitle:Text('${m.dayLabel} · ${m.stage}'),trailing:Row(mainAxisSize:MainAxisSize.min,children:[Text(scores[m.key]==null?'Задать':'${scores[m.key]!.home}:${scores[m.key]!.away}${scores[m.key]!.overtime?' ОТ':''}'),if(scores[m.key]!=null)IconButton(tooltip:'Убрать результат',onPressed:(){setState(()=>scores.remove(m.key));save();},icon:const Icon(Icons.close,size:18))]))),
+      for(final m in fixtures)CupCard(child:ListTile(onTap:()=>edit(m),title:Text('${m.home} — ${m.away}',style:const TextStyle(fontSize:13,fontWeight:FontWeight.w700)),subtitle:Text(m.gameId!=null&&m.gameId!<0?'Расчётная пара · ${m.stage}':'${m.dayLabel} · ${m.stage}'),trailing:Row(mainAxisSize:MainAxisSize.min,children:[Text(scores[m.key]==null?'Задать':'${scores[m.key]!.home}:${scores[m.key]!.away}${scores[m.key]!.overtime?' ОТ':''}'),if(scores[m.key]!=null)IconButton(tooltip:'Убрать результат',onPressed:(){setState(()=>scores.remove(m.key));save();},icon:const Icon(Icons.close,size:18))]))),
       const SizedBox(height:24),
     ])));
   }
