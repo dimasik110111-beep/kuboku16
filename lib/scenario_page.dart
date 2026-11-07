@@ -215,8 +215,8 @@ class _ScenarioPageState extends State<ScenarioPage>{
     const positions=[[1,8,9,16,17],[2,7,10,15,18],[3,6,11,14,19],[4,5,12,13,20]];
     final filled=groups.expand((g)=>g).where((s)=>!s.startsWith('Место ')).length;
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      CupSection(title:'LIVE-СЕТКА III ТУРА',
-        subtitle:'Меняется после каждого введённого результата I–II туров'),
+      CupSection(title:'ПУТЬ В III ТУР',
+        subtitle:'LIVE-сетка меняется после каждого результата I–II туров'),
       CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),
         padding:EdgeInsets.zero,child:Column(children:[
           Padding(padding:const EdgeInsets.fromLTRB(16,17,16,12),child:Row(children:[
