@@ -58,21 +58,95 @@ class _PersonalHqPanelState extends State<PersonalHqPanel>{
     finally{if(mounted)setState(()=>fetching=false);}
   }
   Future<void> chooseTeam()async{
-    final chosen=await showModalBottomSheet<TeamInfo>(context:context,
-      isScrollControlled:true,useSafeArea:true,builder:(context)=>SafeArea(
-        child:ListView(shrinkWrap:true,children:[
-          const ListTile(title:Text('ДОБАВИТЬ КОМАНДУ')),
-          for(final club in widget.clubs)ListTile(
-            leading:fhrTeamLogo(club.logo,size:32),
-            title:Text(club.fullName),
-            trailing:teams.contains(club.fullName)
-              ?Icon(Icons.check_circle,color:CupUi.green):null,
-            onTap:()=>Navigator.pop(context,club)),
-        ])));
+    String search='';
+    final chosen=await showModalBottomSheet<TeamInfo>(
+      context:context,isScrollControlled:true,useSafeArea:true,
+      backgroundColor:CupUi.surface,
+      builder:(context)=>FractionallySizedBox(heightFactor:.84,
+        child:StatefulBuilder(builder:(context,rebuild)=>Column(children:[
+          Padding(padding:const EdgeInsets.fromLTRB(20,20,20,10),
+            child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('ВЫБРАТЬ КОМАНДУ',style:TextStyle(
+                color:CupUi.white,fontSize:16,fontWeight:FontWeight.w900)),
+              const SizedBox(height:13),
+              TextField(autofocus:true,decoration:const InputDecoration(
+                prefixIcon:Icon(Icons.search_rounded),hintText:'Название команды'),
+                onChanged:(value)=>rebuild(()=>search=value.toLowerCase().trim())),
+            ])),
+          Expanded(child:ListView(children:[
+            for(final club in widget.clubs.where((t)=>t.fullName.toLowerCase().contains(search)))
+              ListTile(contentPadding:const EdgeInsets.symmetric(horizontal:22),
+                leading:fhrTeamLogo(club.logo,size:33),
+                title:Text(club.fullName,style:TextStyle(color:CupUi.white,
+                  fontSize:12,fontWeight:FontWeight.w800)),
+                trailing:teams.contains(club.fullName)?
+                  Icon(Icons.star_rounded,color:CupUi.yellow):null,
+                onTap:()=>Navigator.pop(context,club)),
+          ])),
+        ]))));
     if(chosen==null||!mounted)return;
+    if(teams.contains(chosen.fullName)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content:Text('Команда уже в твоём списке.')));
+      return;
+    }
     await FollowStore.toggleTeam(chosen.fullName);
-    final saved=await FollowStore.teams();
-    if(mounted)setState(()=>teams=saved);
+    final updated=await FollowStore.teams();
+    if(mounted)setState(()=>teams=updated);
+  }
+  Future<void> choosePlayer()async{
+    if(stats==null)await loadPlayers();
+    if(!mounted)return;
+    if(stats==null){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content:Text('Статистика ФХР сейчас недоступна.')));
+      return;
+    }
+    String query='';
+    final all=[...stats!.skaters,...stats!.goalies];
+    final picked=await showModalBottomSheet<CupPlayerStats>(
+      context:context,isScrollControlled:true,useSafeArea:true,
+      backgroundColor:CupUi.surface,
+      builder:(context)=>FractionallySizedBox(heightFactor:.84,
+        child:StatefulBuilder(builder:(context,rebuild)=>Column(children:[
+          Padding(padding:const EdgeInsets.fromLTRB(20,20,20,10),
+            child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('МОИ ИГРОКИ',style:TextStyle(
+                color:CupUi.white,fontSize:16,fontWeight:FontWeight.w900)),
+              const SizedBox(height:13),
+              TextField(autofocus:true,decoration:const InputDecoration(
+                prefixIcon:Icon(Icons.search_rounded),
+                hintText:'Фамилия или команда'),
+                onChanged:(value)=>rebuild(()=>query=value.trim().toLowerCase())),
+            ])),
+          Expanded(child:ListView.builder(
+            itemCount:all.where((p)=>p.name.toLowerCase().contains(query)||
+              p.fullClub.toLowerCase().contains(query)).length,
+            itemBuilder:(context,index){
+              final filtered=all.where((p)=>p.name.toLowerCase().contains(query)||
+                p.fullClub.toLowerCase().contains(query)).toList();
+              final player=filtered[index];
+              return ListTile(
+                leading:fhrPlayerPhoto(player.photo,size:40),
+                title:Text(player.name,style:TextStyle(color:CupUi.white,
+                  fontSize:12,fontWeight:FontWeight.w900)),
+                subtitle:Text(player.fullClub,style:TextStyle(
+                  color:CupUi.muted,fontSize:10)),
+                trailing:players.contains(player.id)?
+                  Icon(Icons.star_rounded,color:CupUi.yellow):null,
+                onTap:()=>Navigator.pop(context,player));
+            },
+          )),
+        ]))));
+    if(picked==null||!mounted)return;
+    if(players.contains(picked.id)){
+      await Navigator.push(context,MaterialPageRoute(
+        builder:(_)=>CupPlayerProfilePage(player:picked)));
+    }else{
+      await FollowStore.togglePlayer(picked.id);
+    }
+    final updated=await FollowStore.players();
+    if(mounted)setState(()=>players=updated);
   }
   Future<void> removeTeam(String team)async{
     await FollowStore.toggleTeam(team);
@@ -139,6 +213,10 @@ class _PersonalHqPanelState extends State<PersonalHqPanel>{
               icon:Icon(Icons.close,color:CupUi.muted,size:20)),
           ])),
         CupSection(title:'МОИ ИГРОКИ',subtitle:'Добавляй игроков звёздочкой в их профилях'),
+        Padding(padding:const EdgeInsets.symmetric(horizontal:12),
+          child:OutlinedButton.icon(onPressed:choosePlayer,
+            icon:const Icon(Icons.person_add_alt_rounded),
+            label:const Text('НАЙТИ ИГРОКА'))),
         if(fetching)const Padding(padding:EdgeInsets.all(13),
           child:LinearProgressIndicator()),
         if(players.isEmpty)const CupMessage(
@@ -157,8 +235,13 @@ class _PersonalHqPanelState extends State<PersonalHqPanel>{
               maxLines:2,style:TextStyle(color:CupUi.muted,fontSize:10)),
             trailing:IconButton(tooltip:'Убрать',onPressed:()=>removePlayer(p.id),
               icon:Icon(Icons.star_rounded,color:CupUi.yellow)),
-            onTap:()=>Navigator.push(context,MaterialPageRoute(
-              builder:(_)=>CupPlayerProfilePage(player:p))),
+            onTap:()async{
+              await Navigator.push(context,MaterialPageRoute(
+                builder:(_)=>CupPlayerProfilePage(player:p)));
+              if(mounted)setState((){});
+              final newPlayers=await FollowStore.players();
+              if(mounted)setState(()=>players=newPlayers);
+            },
           )),
         CupSection(title:'БЛИЖАЙШИЕ МАТЧИ',subtitle:'Команды и отмеченные встречи'),
         if(next.isEmpty)const CupMessage(title:'Нет предстоящих матчей',
