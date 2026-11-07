@@ -103,9 +103,9 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
   Widget _formChart(AppearanceHistory history){
     final rows=history.rows.where((m)=>m.stats!=null).toList().reversed.toList();
     if(rows.isEmpty)return const SizedBox.shrink();
-    final best=rows.map((m)=>m.stats!.points).fold<int>(0,(a,b)=>a>b?a:b);
-    final total=rows.fold<int>(0,(n,m)=>n+m.stats!.points);
-    final produced=rows.where((m)=>m.stats!.points>0).length;
+    final best=rows.map((m)=>(m.stats!.points??0)).fold<int>(0,(a,b)=>a>b?a:b);
+    final total=rows.fold<int>(0,(n,m)=>n+(m.stats!.points??0));
+    final produced=rows.where((m)=>(m.stats!.points??0)>0).length;
     return Column(children:[
       CupSection(title:'ФОРМА · ПОСЛЕДНИЕ ИГРЫ',
         subtitle:'Только данные из подтверждённых протоколов ФХР'),
@@ -126,11 +126,11 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
               for(var i=0;i<rows.length;i++)Expanded(child:Padding(
                 padding:const EdgeInsets.symmetric(horizontal:5),
                 child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
-                  Text('${rows[i].stats!.points}',style:const TextStyle(
+                  Text('${rows[i].stats!.points??0}',style:const TextStyle(
                     color:Colors.white,fontSize:11,fontWeight:FontWeight.w900)),
                   const SizedBox(height:6),
                   AnimatedContainer(duration:const Duration(milliseconds:400),
-                    height:10+72*(best==0?0:rows[i].stats!.points/best),
+                    height:10+72*(best==0?0:(rows[i].stats!.points??0)/best),
                     decoration:BoxDecoration(
                       gradient:LinearGradient(begin:Alignment.bottomCenter,
                         end:Alignment.topCenter,colors:[
@@ -139,7 +139,7 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
                   const SizedBox(height:7),
                   Text(rows[i].match.dayLabel,style:TextStyle(
                     color:CupUi.soft,fontSize:8)),
-                ])))),
+                ]))),
             ])),
           const SizedBox(height:14),
           Text('График отражает очки за реально подтверждённые заявки, '
