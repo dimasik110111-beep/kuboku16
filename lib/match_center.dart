@@ -137,7 +137,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
               if(match.scoreNote.isNotEmpty)Padding(
                 padding:const EdgeInsets.only(top:5),
                 child:Text(match.scoreNote,
-                  style:const TextStyle(color:CupUi.yellow,fontSize:10))),
+                  style:TextStyle(color:CupUi.yellow,fontSize:10))),
             ])),
           Expanded(child:_heroTeam(match.away,
             awayTeam?.logo??lineups.side('away')?.logo)),
