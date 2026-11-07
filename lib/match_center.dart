@@ -186,24 +186,115 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
   }
 
   Widget _tabs()=>Container(
-    margin:EdgeInsets.only(top:8),decoration:BoxDecoration(
-      color:CupUi.background,border:Border(bottom:BorderSide(color:CupUi.stroke))),
+    margin:const EdgeInsets.fromLTRB(12,10,12,7),
+    padding:const EdgeInsets.all(4),
+    decoration:BoxDecoration(
+      color:CupUi.surface,borderRadius:BorderRadius.circular(19),
+      border:Border.all(color:CupUi.stroke)),
     child:Row(children:[
       for(var i=0;i<4;i++)Expanded(child:InkWell(
-        onTap:(){
-          setState(()=>tab=i);
-        },
-        child:Container(
-          padding:EdgeInsets.symmetric(vertical:16),
-          decoration:BoxDecoration(border:Border(bottom:BorderSide(
-            color:tab==i?CupUi.red:Colors.transparent,width:2.5))),
+        onTap:()=>setState(()=>tab=i),
+        borderRadius:BorderRadius.circular(15),
+        child:AnimatedContainer(duration:const Duration(milliseconds:250),
+          curve:Curves.easeOutCubic,
+          padding:const EdgeInsets.symmetric(vertical:12,horizontal:1),
+          decoration:BoxDecoration(
+            color:tab==i?CupUi.red:Colors.transparent,
+            borderRadius:BorderRadius.circular(15),
+            boxShadow:tab==i?[BoxShadow(color:CupUi.red.withValues(alpha:.28),
+              blurRadius:14)]:null),
           child:Text(const ['ОБЗОР','СОБЫТИЯ','СОСТАВЫ','СТАТИСТИКА'][i],
             textAlign:TextAlign.center,maxLines:1,
-            style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,
-              color:tab==i?CupUi.white:CupUi.muted,letterSpacing:.1))),
+            style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,
+              color:tab==i?Colors.white:CupUi.muted))),
       )),
     ]),
   );
+
+  Widget _matchPulse(){
+    final goals=events.where((e)=>str(e,'type')=='GOAL').toList();
+    final penalties=events.where((e)=>str(e,'type')=='PENALTY').toList();
+    final hasVerified=data!=null;
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      CupSection(title:'ПУЛЬС МАТЧА',
+        subtitle:'Только события, подтверждённые протоколом ФХР'),
+      CupCard(padding:const EdgeInsets.all(17),
+        child:Column(children:[
+          Row(children:[
+            Expanded(child:_pulseMetric('${goals.length}','ГОЛЫ В ПРОТОКОЛЕ',
+              Icons.sports_hockey_rounded,CupUi.green)),
+            Container(height:40,width:1,color:CupUi.stroke),
+            Expanded(child:_pulseMetric('${penalties.length}','УДАЛЕНИЯ',
+              Icons.timer_outlined,CupUi.yellow)),
+          ]),
+          const SizedBox(height:17),
+          Container(height:1,color:CupUi.stroke),
+          const SizedBox(height:15),
+          if(goals.isNotEmpty)SingleChildScrollView(
+            scrollDirection:Axis.horizontal,
+            child:Row(children:[
+              for(final e in goals)Padding(padding:const EdgeInsets.only(right:9),
+                child:Container(padding:const EdgeInsets.symmetric(
+                  horizontal:12,vertical:10),
+                  decoration:BoxDecoration(color:CupUi.green.withValues(alpha:.10),
+                    borderRadius:BorderRadius.circular(13),
+                    border:Border.all(color:CupUi.green.withValues(alpha:.24))),
+                  child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                    Text(str(e,'elapsed').isEmpty?'ГОЛ':str(e,'elapsed'),
+                      style:TextStyle(color:CupUi.green,fontWeight:FontWeight.w900,
+                        fontSize:12)),
+                    const SizedBox(height:4),
+                    SizedBox(width:105,child:Text(str(e,'player').isEmpty
+                      ?str(e,'team'):str(e,'player'),
+                      maxLines:1,overflow:TextOverflow.ellipsis,
+                      style:TextStyle(color:CupUi.white,fontSize:10,
+                        fontWeight:FontWeight.w800))),
+                    if(str(e,'score').isNotEmpty)Text(str(e,'score'),
+                      style:TextStyle(color:CupUi.soft,fontSize:10)),
+                  ]))),
+            ]))
+          else Text(hasVerified
+            ?'События голов пока не опубликованы в протоколе.'
+            :'Загружаем события матча с ФХР…',
+            style:TextStyle(color:CupUi.muted,fontSize:11)),
+          const SizedBox(height:12),
+          SizedBox(width:double.infinity,child:OutlinedButton.icon(
+            onPressed:()=>setState(()=>tab=1),
+            icon:const Icon(Icons.list_alt_rounded,size:16),
+            label:const Text('ОТКРЫТЬ ВСЮ ХРОНОЛОГИЮ'))),
+        ])),
+      if(homeTeam!=null||awayTeam!=null)CupCard(
+        padding:const EdgeInsets.all(13),
+        child:Column(children:[
+          Text('ЗАЯВКИ И СОСТАВЫ',style:TextStyle(color:CupUi.soft,
+            fontWeight:FontWeight.w900,fontSize:10)),
+          const SizedBox(height:9),
+          Row(children:[
+            if(homeTeam!=null)Expanded(child:OutlinedButton(
+              onPressed:()=>Navigator.push(context,MaterialPageRoute(
+                builder:(_)=>TeamRosterPage(team:homeTeam!))),
+              child:Text(match.home,maxLines:1,overflow:TextOverflow.ellipsis,
+                style:const TextStyle(fontSize:9)))),
+            const SizedBox(width:8),
+            if(awayTeam!=null)Expanded(child:OutlinedButton(
+              onPressed:()=>Navigator.push(context,MaterialPageRoute(
+                builder:(_)=>TeamRosterPage(team:awayTeam!))),
+              child:Text(match.away,maxLines:1,overflow:TextOverflow.ellipsis,
+                style:const TextStyle(fontSize:9)))),
+          ]),
+        ])),
+    ]);
+  }
+  Widget _pulseMetric(String value,String name,IconData icon,Color color)=>
+    Column(children:[
+      Icon(icon,size:20,color:color),
+      const SizedBox(height:7),
+      Text(value,style:TextStyle(color:CupUi.white,fontSize:28,
+        fontWeight:FontWeight.w900)),
+      const SizedBox(height:6),
+      Text(name,textAlign:TextAlign.center,
+        style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w900)),
+    ]);
 
   Widget _goalEntry(Map<String,dynamic> e,{bool compact=false}){
     final type=str(e,'type');
@@ -220,10 +311,10 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final score=str(e,'score');
     final penaltyMinutes=str(e,'penaltyMinutes');
     final photo=e['playerPhoto']?.toString();
-    return Container(margin:EdgeInsets.fromLTRB(12,0,12,7),
-      padding:EdgeInsets.symmetric(horizontal:11,vertical:13),
-      decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(12),
-        border:Border.all(color:CupUi.stroke,width:.7)),
+    return Container(margin:EdgeInsets.fromLTRB(12,0,12,8),
+      padding:EdgeInsets.symmetric(horizontal:12,vertical:15),
+      decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(19),
+        border:Border.all(color:accent.withValues(alpha:.30),width:.8)),
       child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
         SizedBox(width:43,child:Column(children:[
           Text(time.isEmpty?'–':time,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w800,fontSize:11)),
@@ -283,6 +374,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final penalties=events.where((e)=>str(e,'type')=='PENALTY').toList();
     return Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:[
       _periodRow(),
+      _matchPulse(),
       CupSection(title:'ГОЛЫ И ПЕРЕДАЧИ',subtitle:'По официальному протоколу ФХР'),
       if(goals.isEmpty)CupMessage(title:'Шайбы пока не опубликованы',
         message:'Список голов появится после публикации событий ФХР.',icon:Icons.sports_hockey),
