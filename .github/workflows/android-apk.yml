@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 concurrency:
-  group: junior-u16-apk
+  group: junior-u16-v26-apk
   cancel-in-progress: false
 
 permissions:
