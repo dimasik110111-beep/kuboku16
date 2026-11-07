@@ -10,6 +10,8 @@ import 'app_services.dart';
 import 'ui_kit.dart';
 import 'scenario_page.dart';
 import 'tournament.dart';
+import 'follow_store.dart';
+import 'command_center_page.dart';
 
 class TeamHubPage extends StatefulWidget {
   final TeamInfo team;final List<Match> matches;final List<TeamInfo> teams;
@@ -18,8 +20,11 @@ class TeamHubPage extends StatefulWidget {
 }
 class _TeamHubPageState extends State<TeamHubPage>{
   final client=http.Client();late Future<CupStatistics?> stats;String? opponent;
+  bool following=false;
+  Future<void> loadFollowing()async{final all=await FollowStore.teams();if(mounted)setState(()=>following=all.contains(widget.team.fullName));}
+  Future<void> toggleFollowing()async{final next=await FollowStore.toggleTeam(widget.team.fullName);if(mounted)setState(()=>following=next);}
   Future<CupStatistics?> fetchStats()=>CupStatisticsClient(client).fetch().then<CupStatistics?>((value)=>value,onError:(Object error,StackTrace stack){Diagnostics.record('team stats',error);return null;});
-  @override void initState(){super.initState();stats=fetchStats();}
+  @override void initState(){super.initState();stats=fetchStats();loadFollowing();}
   @override void dispose(){client.close();super.dispose();}
   void open(Match m)=>Navigator.push(context,MaterialPageRoute(builder:(_)=>MatchCenterPage(match:m)));
   Widget fixture(Match m)=>CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,4),
@@ -158,6 +163,9 @@ class _TeamHubPageState extends State<TeamHubPage>{
     int wins=0,gf=0,ga=0;
     for(final m in h2h){final g=m.goals!;final home=sameClub(m.home,widget.team.fullName);gf+=g[home?0:1];ga+=g[home?1:0];if(g[home?0:1]>g[home?1:0])wins++;}
     return DefaultTabController(length:4,child:Scaffold(appBar:AppBar(title:Text(widget.team.name),actions:[
+      IconButton(tooltip:following?'Убрать из Personal HQ':'Отслеживать в Personal HQ',
+        onPressed:toggleFollowing,icon:Icon(following?Icons.star_rounded:Icons.star_outline_rounded,
+          color:following?CupUi.yellow:CupUi.soft)),
       IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,widget.team.fullName,[if(rank!=null)'${rank.pts} очков · ${rank.gp} игр','${played.length} завершённых матчей','Кубок России U16'])),
     ],bottom:const TabBar(isScrollable:true,tabs:[Tab(text:'Обзор'),Tab(text:'Матчи'),Tab(text:'Личные встречи'),Tab(text:'Расклады')])),body:SafeArea(child:TabBarView(children:[
       ListView(key:const PageStorageKey('team-overview'),children:[
@@ -189,7 +197,29 @@ class _TeamHubPageState extends State<TeamHubPage>{
       ]),
       ListView(key:const PageStorageKey('team-matches'),children:[CupSection(title:'РАСПИСАНИЕ'),if(upcoming.isEmpty)const CupMessage(title:'Новых матчей пока нет',message:'Расписание появится после публикации ФХР.'),for(final m in upcoming)fixture(m),CupSection(title:'РЕЗУЛЬТАТЫ'),for(final m in played)fixture(m)]),
       ListView(children:[CupSection(title:'ЛИЧНЫЕ ВСТРЕЧИ',subtitle:'Все опубликованные этапы этого Кубка'),Padding(padding:const EdgeInsets.all(16),child:DropdownButton<String>(isExpanded:true,value:opponent,hint:const Text('Выбери соперника'),items:[for(final t in widget.teams.where((t)=>t.id!=widget.team.id))DropdownMenuItem(value:t.fullName,child:Text(t.fullName,overflow:TextOverflow.ellipsis))],onChanged:(v)=>setState(()=>opponent=v))),if(opponent!=null)...[CupCard(padding:const EdgeInsets.all(20),child:Text('${h2h.length} матчей · Победы $wins : ${h2h.length-wins}\nШайбы $gf : $ga',style:const TextStyle(fontSize:20,fontWeight:FontWeight.w700))),for(final m in h2h)fixture(m),if(h2h.isEmpty)const CupMessage(title:'Встреч пока нет',message:'Завершённые матчи этих команд не опубликованы.')]],),
-      ListView(children:[Padding(padding:const EdgeInsets.all(12),child:FilledButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:widget.teams.map((t)=>t.fullName).toList(),teamLogos:{for(final t in widget.teams)t.fullName:t.logo},initialTeam:widget.team.fullName))),icon:const Icon(Icons.auto_awesome_rounded),label:const Text('Открыть симулятор'))),CupSection(title:'ПУТЬ В ЗОЛОТОЙ ФИНАЛ',subtitle:'Первые 8 мест общей квалификации'),if(rank!=null&&bounds!=null)...[
+      ListView(children:[
+        CupCard(padding:const EdgeInsets.all(14),child:Column(children:[
+          Text('COMMAND CENTER · 2026/27',
+            style:TextStyle(color:CupUi.ice,fontSize:12,fontWeight:FontWeight.w900)),
+          const SizedBox(height:9),
+          Text('Расчёт шансов, полезные для клуба исходы, путь в финал и влияние матчей',
+            style:TextStyle(color:CupUi.soft,fontSize:11,height:1.5)),
+          const SizedBox(height:12),
+          SizedBox(width:double.infinity,child:FilledButton.icon(
+            icon:const Icon(Icons.radar_rounded),
+            label:const Text('АНАЛИТИКА МОЕЙ КОМАНДЫ'),
+            onPressed:()=>Navigator.push(context,MaterialPageRoute(
+              builder:(_)=>CommandCenterPage(matches:widget.matches,
+                clubs:widget.teams,initialTeam:widget.team.fullName,
+                onTeam:(name){
+                  final found=widget.teams.where((t)=>sameClub(t.fullName,name)).toList();
+                  if(found.isNotEmpty)Navigator.push(context,MaterialPageRoute(
+                    builder:(_)=>TeamHubPage(team:found.first,matches:widget.matches,teams:widget.teams)));
+                },
+                onMatch:open))),
+          )),
+        ])),
+        Padding(padding:const EdgeInsets.all(12),child:FilledButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:widget.teams.map((t)=>t.fullName).toList(),teamLogos:{for(final t in widget.teams)t.fullName:t.logo},initialTeam:widget.team.fullName))),icon:const Icon(Icons.auto_awesome_rounded),label:const Text('Открыть симулятор'))),CupSection(title:'ПУТЬ В ЗОЛОТОЙ ФИНАЛ',subtitle:'Первые 8 мест общей квалификации'),if(rank!=null&&bounds!=null)...[
         CupCard(padding:const EdgeInsets.all(20),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('Сейчас: ${table.indexOf(rank)+1}-е место',style:const TextStyle(fontSize:24,fontWeight:FontWeight.bold)),Text('${rank.pts} очков · осталось ${bounds.remaining} из 14 игр'),const SizedBox(height:14),Text('Диапазон очков: ${bounds.minPoints}–${bounds.maxPoints}'),Text('Границы места по очкам: ${bounds.bestBound}–${bounds.worstBound}'),const SizedBox(height:14),Text(table.length!=20?'Список участников неполный: вывод о проходе пока недоступен.':bounds.worstBound<=8?'Место в восьмёрке обеспечено по очкам.':bounds.bestBound>8?'Войти в восьмёрку по очкам уже невозможно.':'Борьба за восьмёрку продолжается: результат зависит от своих матчей и соперников.'),if(table.length>=8)Text('Текущая граница восьмёрки: ${table[7].pts} очков. Это не итоговый проходной балл.') ])),
         const Padding(padding:EdgeInsets.all(18),child:Text('Границы консервативные: учитывают максимум 2 очка за победу и оставшиеся игры каждого клуба. Не все места внутри диапазона обязательно достижимы. При равенстве очков действуют дополнительные критерии ФХР; будущий рассев и ещё не опубликованные пары здесь не угадываются.')),
       ]else const CupMessage(title:'Недостаточно данных',message:'Нужна таблица квалификации. Потяни календарь на главной вниз для обновления.')]),
