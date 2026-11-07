@@ -668,7 +668,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
               borderRadius:BorderRadius.circular(16)),
             child:const Icon(Icons.radar_rounded,color:Colors.white,size:26)),
           const SizedBox(width:13),
-          const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
             Text('COMMAND CENTER v26',style:TextStyle(
               fontSize:13,fontWeight:FontWeight.w900)),
             SizedBox(height:5),
