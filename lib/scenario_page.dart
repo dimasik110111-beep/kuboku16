@@ -17,7 +17,9 @@ class ScenarioPage extends StatefulWidget {
 }
 class _ScenarioPageState extends State<ScenarioPage>{
   final Map<String,ScenarioScore> scores={};final Map<String,bool> stageOpen={};
+  final Map<String,Map<String,ScenarioScore>> savedScenarios={};
   String? team;bool ready=false,fullTable=false;int filter=0;
+  String scenarioLeft='@current',scenarioRight='@current';
   static const filters=['ВСЕ','ОСТАЛОСЬ','СТЫКИ','III ТУР'];
   @override void initState(){super.initState();restore();}
   Future<void> restore()async{
@@ -27,6 +29,20 @@ class _ScenarioPageState extends State<ScenarioPage>{
       if(!mounted)return;
       final eligible=scenarioFixtures(widget.matches).map((m)=>m.key).toSet();
       if(parsed is Map){for(final e in parsed.entries){final score=ScenarioScore.parse(e.value);if(score!=null&&eligible.contains(e.key))scores[e.key.toString()]=score;}}
+      final savedRaw=(await SharedPreferences.getInstance()).getString('junior_saved_scenarios_2026_27');
+      final saved=savedRaw==null?null:jsonDecode(savedRaw);
+      if(saved is Map){
+        for(final entry in saved.entries){
+          if(entry.value is! Map)continue;
+          final snapshot=<String,ScenarioScore>{};
+          for(final scoreEntry in (entry.value as Map).entries){
+            final score=ScenarioScore.parse(scoreEntry.value);
+            if(score!=null&&eligible.contains(scoreEntry.key.toString()))snapshot[scoreEntry.key.toString()]=score;
+          }
+          savedScenarios[entry.key.toString()]=snapshot;
+        }
+      }
+      if(savedScenarios.isNotEmpty)scenarioRight=savedScenarios.keys.first;
     }catch(e){Diagnostics.record('scenario restore',e);}
     if(mounted)setState(()=>ready=true);
   }
@@ -35,9 +51,42 @@ class _ScenarioPageState extends State<ScenarioPage>{
     try{await (await SharedPreferences.getInstance()).setString('junior_scenario_2026_27',encoded);}
     catch(e){Diagnostics.record('scenario save',e);if(mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Сценарий работает, но сохранить его не удалось.')));}
   }
+  Future<void> saveScenarioLibrary()async{
+    final encoded=jsonEncode(savedScenarios.map((name,scenario)=>MapEntry(name,
+      scenario.map((key,value)=>MapEntry(key,value.toJson())))));
+    try{await (await SharedPreferences.getInstance()).setString('junior_saved_scenarios_2026_27',encoded);}
+    catch(e){Diagnostics.record('scenario library save',e);if(mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Не удалось сохранить копию сценария.')));}
+  }
+  Future<void> saveSnapshot()async{
+    final controller=TextEditingController(text:'Сценарий ${savedScenarios.length+1}');
+    final name=await showDialog<String>(context:context,builder:(context)=>AlertDialog(
+      title:const Text('Сохранить вариант'),
+      content:TextField(controller:controller,maxLength:32,autofocus:true,
+        decoration:const InputDecoration(labelText:'Название сценария',border:OutlineInputBorder())),
+      actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Отмена')),
+        FilledButton(onPressed:()=>Navigator.pop(context,controller.text.trim()),child:const Text('Сохранить'))]));
+    controller.dispose();
+    if(name==null||name.isEmpty||!mounted)return;
+    setState((){savedScenarios[name]=Map<String,ScenarioScore>.from(scores);scenarioRight=name;});
+    await saveScenarioLibrary();
+  }
+  Map<String,String> _secondCrossoverPairs(Map<String,ScenarioScore> values){
+    return {for(final m in scenarioFixtures(widget.matches,scores:values))
+      if(m.isCrossover&&tourOf(m.stage)==CupTour.second&&m.gameId!=null&&m.gameId!<0)
+        m.key:'${m.home} — ${m.away}'};
+  }
   Future<void> edit(Match match)async{
     final result=await showDialog<ScenarioScore>(context:context,builder:(_)=>ScenarioScoreDialog(match:match,initial:scores[match.key]));
-    if(result!=null&&mounted){setState(()=>scores[match.key]=result);await save();}
+    if(result!=null&&mounted){
+      final before=_secondCrossoverPairs(scores);
+      final next=Map<String,ScenarioScore>.from(scores)..[match.key]=result;
+      final after=_secondCrossoverPairs(next);
+      final changed=before.keys.where((key)=>before[key]!=after[key]).length;
+      setState(()=>scores[match.key]=result);await save();
+      if(changed>0&&mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:Text('$changed расчётных стыков II тура изменились по текущей таблице.'),
+        action:SnackBarAction(label:'Понятно',onPressed:(){})));
+    }
   }
   Future<void> reset()async{
     final yes=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(
@@ -93,6 +142,9 @@ class _ScenarioPageState extends State<ScenarioPage>{
           Expanded(child:Text('Предикты сохраняются на устройстве',style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w600))),
           CupTag(text:'ФХР · 2026/27',color:CupUi.soft),
         ]),
+        const SizedBox(height:10),
+        SizedBox(width:double.infinity,child:OutlinedButton.icon(onPressed:ready?saveSnapshot:null,
+          icon:const Icon(Icons.bookmark_add_outlined,size:16),label:const Text('СОХРАНИТЬ ВАРИАНТ'))),
       ])),
     ]));
   Widget _heroMetric(String value,String label,IconData icon)=>Expanded(child:Row(children:[
@@ -124,6 +176,83 @@ class _ScenarioPageState extends State<ScenarioPage>{
           Text('${delta>=0?'+':''}$delta',style:TextStyle(color:delta>=0?CupUi.green:CupUi.red,fontSize:8)),
         ])),
       ]));
+  }
+  Widget _thirdTourMap(List<List<String>> groups){
+    const groupLabels=['А','Б','В','Г'];
+    const seedLabels=['1 · 8 · 9 · 16 · 17','2 · 7 · 10 · 15 · 18','3 · 6 · 11 · 14 · 19','4 · 5 · 12 · 13 · 20'];
+    final width=(MediaQuery.of(context).size.width-56)/2;
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      CupSection(title:'ПУТЬ В III ТУР',subtitle:'Предварительное распределение по общей таблице и змейке регламента'),
+      CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),padding:const EdgeInsets.all(11),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Wrap(spacing:8,runSpacing:8,children:[
+          for(var g=0;g<groups.length;g++)Container(width:width,padding:const EdgeInsets.fromLTRB(10,10,9,8),
+            decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(15),border:Border.all(color:CupUi.stroke)),
+            child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('ГРУППА ${groupLabels[g]}',style:TextStyle(color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900)),
+              const SizedBox(height:2),Text('Места по змейке: ${seedLabels[g]}',maxLines:1,overflow:TextOverflow.ellipsis,
+                style:TextStyle(color:CupUi.muted,fontSize:6.5,fontWeight:FontWeight.w700)),
+              const SizedBox(height:7),
+              for(var p=0;p<groups[g].length;p++)InkWell(onTap:groups[g][p].startsWith('Место ')?null:()=>setState(()=>team=groups[g][p]),
+                child:Padding(padding:const EdgeInsets.symmetric(vertical:3),child:Row(children:[
+                  SizedBox(width:16,child:Text('${p+1}',style:TextStyle(color:CupUi.dim,fontSize:8,fontWeight:FontWeight.w800))),
+                  fhrTeamLogo(widget.teamLogos[groups[g][p]],size:19),const SizedBox(width:5),
+                  Expanded(child:Text(groups[g][p],maxLines:1,overflow:TextOverflow.ellipsis,
+                    style:TextStyle(color:CupUi.white,fontSize:8,fontWeight:FontWeight.w700))),
+                ]))),
+            ])),
+        ]),
+        const SizedBox(height:9),Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Icon(Icons.route_rounded,color:CupUi.yellow,size:14),const SizedBox(width:6),
+          Expanded(child:Text('Маршрут пересчитывается по текущим результатам и твоим предиктам I–II туров. Нажми на команду, чтобы отфильтровать её матчи ниже.',
+            style:TextStyle(color:CupUi.soft,fontSize:8,height:1.4))),
+        ]),
+      ])),
+    ]);
+  }
+  List<Rank> _tableForScenario(String id){
+    final selected=id=='@current'?scores:(savedScenarios[id]??const <String,ScenarioScore>{});
+    return CupTournament(applyScenario(widget.matches,selected).matches,teams:widget.teams).table();
+  }
+  Widget _scenarioCompare(){
+    final names=<String,String>{'@current':'Текущий вариант',
+      for(final name in savedScenarios.keys)if(name!='@current')name:name};
+    if(savedScenarios.isEmpty)return const SizedBox.shrink();
+    if(!names.containsKey(scenarioLeft))scenarioLeft='@current';
+    if(!names.containsKey(scenarioRight))scenarioRight=savedScenarios.keys.first;
+    final left=_tableForScenario(scenarioLeft),right=_tableForScenario(scenarioRight);
+    final leftPlaces={for(var i=0;i<left.length;i++)left[i].team:i+1};
+    final rightPlaces={for(var i=0;i<right.length;i++)right[i].team:i+1};
+    final teams={...leftPlaces.keys,...rightPlaces.keys}.toList()..sort((a,b){
+      final movementA=((leftPlaces[a]??0)-(rightPlaces[a]??0)).abs();
+      final movementB=((leftPlaces[b]??0)-(rightPlaces[b]??0)).abs();
+      return movementB.compareTo(movementA);
+    });
+    final moved=teams.where((name)=>leftPlaces[name]!=rightPlaces[name]).take(8).toList();
+    return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+      CupSection(title:'МАШИНА ВРЕМЕНИ',subtitle:'Сравни, как разные прогнозы меняют турнирную таблицу'),
+      CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),padding:const EdgeInsets.all(12),child:Column(children:[
+        Row(children:[
+          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('left:$scenarioLeft'),initialValue:scenarioLeft,
+            isExpanded:true,decoration:const InputDecoration(labelText:'Вариант A',contentPadding:EdgeInsets.symmetric(horizontal:9,vertical:4)),
+            items:[for(final e in names.entries)DropdownMenuItem(value:e.key,child:Text(e.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:9))),],
+            onChanged:(value)=>setState(()=>scenarioLeft=value??'@current'))),
+          const SizedBox(width:8),
+          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('right:$scenarioRight'),initialValue:scenarioRight,
+            isExpanded:true,decoration:const InputDecoration(labelText:'Вариант B',contentPadding:EdgeInsets.symmetric(horizontal:9,vertical:4)),
+            items:[for(final e in names.entries)DropdownMenuItem(value:e.key,child:Text(e.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:9))),],
+            onChanged:(value)=>setState(()=>scenarioRight=value??'@current'))),
+        ]),
+        const SizedBox(height:10),
+        if(moved.isEmpty)Text('В этих вариантах места команд совпадают.',style:TextStyle(color:CupUi.muted,fontSize:9)),
+        for(final name in moved)Padding(padding:const EdgeInsets.symmetric(vertical:4),child:Row(children:[
+          fhrTeamLogo(widget.teamLogos[name],size:20),const SizedBox(width:7),
+          Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(color:CupUi.white,fontSize:9,fontWeight:FontWeight.w700))),
+          Text('${leftPlaces[name]??'—'} → ${rightPlaces[name]??'—'}',style:TextStyle(
+            color:((leftPlaces[name]??99)>(rightPlaces[name]??99))?CupUi.green:CupUi.red,fontSize:10,fontWeight:FontWeight.w900)),
+        ])),
+        if(teams.length>moved.length)Padding(padding:const EdgeInsets.only(top:5),child:Text('Показаны самые заметные изменения мест',style:TextStyle(color:CupUi.dim,fontSize:8))),
+      ])),
+    ]);
   }
   Widget _filterChip(int i)=>Padding(padding:const EdgeInsets.only(right:7),child:InkWell(
     onTap:()=>setState(()=>filter=i),borderRadius:BorderRadius.circular(99),
@@ -195,7 +324,8 @@ class _ScenarioPageState extends State<ScenarioPage>{
   @override Widget build(BuildContext context){
     final simulated=applyScenario(widget.matches,scores);
     final cup=CupTournament(simulated.matches,teams:widget.teams);
-    final table=cup.table();final original=CupTournament(widget.matches,teams:widget.teams).table();
+    final table=cup.table();final thirdTourGroups=cup.thirdTourProjection();
+    final original=CupTournament(widget.matches,teams:widget.teams).table();
     final originalPlaces={for(var i=0;i<original.length;i++)original[i].team:i+1};
     final originalPoints={for(final r in original)r.team:r.pts};
     final all=scenarioFixtures(widget.matches,scores:scores);
@@ -241,6 +371,8 @@ class _ScenarioPageState extends State<ScenarioPage>{
               label:Text(fullTable?'Свернуть таблицу':'Показать всю таблицу'),
               style:TextButton.styleFrom(foregroundColor:CupUi.ice,textStyle:const TextStyle(fontSize:10,fontWeight:FontWeight.w800))),
           ])),
+        _thirdTourMap(thirdTourGroups),
+        _scenarioCompare(),
         Container(margin:const EdgeInsets.fromLTRB(13,4,13,7),padding:const EdgeInsets.all(12),
           decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(16),border:Border.all(color:CupUi.stroke)),
           child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[

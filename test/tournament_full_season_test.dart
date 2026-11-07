@@ -76,4 +76,15 @@ void main(){
     expect(cup.silverFixturesPublished,false);
     expect(cup.thirdTourPreview()[0][0],'Место 1');
   });
+
+  test('Third-tour snake forecast is visible before round two finishes',(){
+    final cup=CupTournament(games(CupTour.first),teams:participants,
+      utcNow:DateTime.utc(2026,10,20));
+    expect(cup.firstTwoComplete,false);
+    final projection=cup.thirdTourProjection();
+    expect(projection.length,4);
+    expect(projection.every((group)=>group.length==5),true);
+    expect(projection.expand((group)=>group).toSet().length,20);
+    expect(projection.expand((group)=>group).every((team)=>!team.startsWith('Место ')),true);
+  });
 }

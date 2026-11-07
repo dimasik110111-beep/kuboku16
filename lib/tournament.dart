@@ -166,6 +166,20 @@ class CupTournament {
     ];
   }
 
+  /// Live third-tour forecast, even while rounds I or II are still underway.
+  /// Uses the current combined standings and the regulation snake, rather than
+  /// waiting for every game to be final.
+  List<List<String>> thirdTourProjection(){
+    final ranked=ranking(matches.where((m)=>
+      tourOf(m.stage)==CupTour.first||tourOf(m.stage)==CupTour.second).toList(),
+      utcNow:now,participants:participants);
+    return [
+      for(final indexes in thirdTourSnake)
+        [for(final pos in indexes)
+          ranked.length>=pos?ranked[pos-1].team:'Место $pos']
+    ];
+  }
+
   List<Rank> get goldQualifiers=>
     qualificationComplete?qualificationRanking.take(8).toList():[];
   List<Rank> get silverQualifiers=>
