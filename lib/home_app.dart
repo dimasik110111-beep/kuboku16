@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 8185)
+Total output lines: 663
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -46,12 +49,50 @@ class _JuniorAppState extends State<JuniorApp>{
       theme:ThemeData(
         useMaterial3:true,brightness:brightness,
         scaffoldBackgroundColor:CupUi.background,
-        colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness),
-        appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
-          foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent),
+        colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness).copyWith(
+          primary:CupUi.red,secondary:CupUi.ice,surface:CupUi.surface,
+          onSurface:CupUi.white,error:const Color(0xFFFF6978)),
+        appBarTheme:AppBarTheme(
+          backgroundColor:CupUi.background,foregroundColor:CupUi.white,
+          surfaceTintColor:Colors.transparent,centerTitle:false,toolbarHeight:62,
+          titleTextStyle:TextStyle(color:CupUi.white,fontSize:17,fontWeight:FontWeight.w900)),
         dividerColor:CupUi.stroke,
-        textTheme:TextTheme(bodyMedium:TextStyle(color:CupUi.white),
-          bodySmall:TextStyle(color:CupUi.muted)),
+        splashColor:CupUi.ice.withValues(alpha:.08),
+        highlightColor:CupUi.ice.withValues(alpha:.05),
+        textTheme:ThemeData(brightness:brightness).textTheme.apply(
+          bodyColor:CupUi.white,displayColor:CupUi.white),
+        inputDecorationTheme:InputDecorationTheme(
+          filled:true,fillColor:CupUi.raised,
+          hintStyle:TextStyle(color:CupUi.dim,fontSize:13),
+          labelStyle:TextStyle(color:CupUi.muted,fontSize:13),
+          contentPadding:const EdgeInsets.symmetric(horizontal:15,vertical:14),
+          border:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.stroke)),
+          enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.stroke)),
+          focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.red,width:1.5))),
+        cardTheme:CardThemeData(color:CupUi.surface,elevation:0,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20),
+            side:BorderSide(color:CupUi.stroke))),
+        dialogTheme:DialogThemeData(
+          backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(24))),
+        tabBarTheme:TabBarThemeData(
+          labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
+          indicatorColor:CupUi.red,dividerColor:CupUi.stroke,
+          labelStyle:const TextStyle(fontSize:12,fontWeight:FontWeight.w800),
+          indicatorSize:TabBarIndicatorSize.label),
+        filledButtonTheme:FilledButtonThemeData(style:FilledButton.styleFrom(
+          backgroundColor:CupUi.red,foregroundColor:Colors.white,
+          textStyle:const TextStyle(fontWeight:FontWeight.w800),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          padding:const EdgeInsets.symmetric(horizontal:18,vertical:13))),
+        outlinedButtonTheme:OutlinedButtonThemeData(style:OutlinedButton.styleFrom(
+          foregroundColor:CupUi.white,side:BorderSide(color:CupUi.stroke),
+          textStyle:const TextStyle(fontWeight:FontWeight.w800),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          padding:const EdgeInsets.symmetric(horizontal:18,vertical:12))),
       ),
       home:ScoresHome(light:light,onSwitchTheme:switchTheme),
     );
@@ -208,168 +249,23 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   }
 
   Widget _header()=>SafeArea(bottom:false,child:Container(
-    padding:EdgeInsets.fromLTRB(15,10,7,10),
+    padding:const EdgeInsets.fromLTRB(14,7,8,8),
     decoration:BoxDecoration(color:CupUi.background,
       border:Border(bottom:BorderSide(color:CupUi.stroke,width:.8))),
     child:Row(children:[
-      ClipRRect(borderRadius:BorderRadius.circular(9),
-        child:Container(color:CupUi.raised,width:40,height:40,
-          child:Image.network(fhrCupLogo,fit:BoxFit.contain,errorBuilder:(_,__,___)=>
-            Icon(Icons.sports_hockey,color:CupUi.red)))),
-      SizedBox(width:11),
+      Container(width:42,height:42,padding:const EdgeInsets.all(4),
+        decoration:BoxDecoration(
+          gradient:LinearGradient(colors:[CupUi.raised,CupUi.surface]),
+          borderRadius:BorderRadius.circular(14),border:Border.all(color:CupUi.stroke)),
+        child:Image.network(fhrCupLogo,fit:BoxFit.contain,
+          errorBuilder:(_,__,___)=>Icon(Icons.sports_hockey,color:CupUi.red))),
+      const SizedBox(width:10),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text('JUNIOR U16',style:TextStyle(color:CupUi.white,letterSpacing:.65,
-          fontWeight:FontWeight.w900,fontSize:20,height:1.05)),
-        SizedBox(height:4),
-        Text('КУБОК РОССИИ · 2026/27',style:TextStyle(color:CupUi.muted,
-          fontWeight:FontWeight.w700,letterSpacing:.45,fontSize:9)),
-      ])),
-      if(games.any((m)=>m.isLive))Padding(padding:EdgeInsets.only(right:6),
-        child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
-      IconButton(tooltip:'Приложение',icon:Icon(Icons.tune_rounded,color:CupUi.soft),onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()))),
-      IconButton(
-        tooltip:widget.light?'Тёмная тема':'Светлая тема',
-        onPressed:widget.onSwitchTheme,
-        icon:Icon(widget.light?Icons.dark_mode_outlined:Icons.light_mode_outlined,
-          color:CupUi.soft,size:21)),
-      IconButton(onPressed:loading?null:refresh,tooltip:'Обновить ФХР',
-        icon:loading?SizedBox(height:19,width:19,
-          child:CircularProgressIndicator(strokeWidth:2)):
-          Icon(Icons.refresh_rounded,color:CupUi.soft)),
-    ]),
-  ));
-
-  Widget _syncBar()=>Container(
-    color:CupUi.surface,padding:EdgeInsets.symmetric(horizontal:16,vertical:9),
-    child:Row(children:[
-      Container(width:6,height:6,decoration:BoxDecoration(shape:BoxShape.circle,
-        color:cached?CupUi.yellow:(error==null?CupUi.green:CupUi.yellow))),
-      SizedBox(width:7),
-      Expanded(child:Text(cached?'Сохранено · ${refreshTime()}':refreshTime(),
-        style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w600))),
-      Text('${games.length} матчей · ${clubs.length} клубов',
-        style:TextStyle(color:CupUi.muted,fontSize:10)),
-    ]),
-  );
-
-  Widget _nav()=>SafeArea(top:false,child:Container(
-    constraints:const BoxConstraints(minHeight:72),decoration:BoxDecoration(color:CupUi.surface,
-      border:Border(top:BorderSide(color:CupUi.stroke,width:.7))),
-    child:Row(children:[
-      for(var i=0;i<sections.length;i++)Expanded(child:InkWell(
-        onTap:()=>selectTab(i),
-        child:Padding(padding:const EdgeInsets.symmetric(vertical:12),child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
-          Icon(i==tab?sections[i].$2:sections[i].$1,size:22,
-            color:i==tab?CupUi.red:CupUi.muted),
-          SizedBox(height:4),
-          Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
-            fontSize:10,fontWeight:i==tab?FontWeight.w800:FontWeight.w600),maxLines:1,overflow:TextOverflow.ellipsis),
-        ])))),
-    ]),
-  ));
-
-  Widget _filterChip(String text,bool active,VoidCallback tap)=>InkWell(
-    onTap:tap,borderRadius:BorderRadius.circular(8),
-    child:AnimatedContainer(duration:Duration(milliseconds:150),
-      margin:EdgeInsets.only(right:8),
-      padding:EdgeInsets.symmetric(horizontal:12,vertical:10),
-      decoration:BoxDecoration(
-        color:active?CupUi.red:CupUi.surface,
-        borderRadius:BorderRadius.circular(8),
-        border:Border.all(color:active?CupUi.red:CupUi.stroke)),
-      child:Text(text,style:TextStyle(fontSize:10,letterSpacing:.3,
-        color:active?Colors.white:CupUi.muted,fontWeight:FontWeight.w800))),
-  );
-
-  Widget _dateSelector(){
-    final now=DateTime.now().toUtc().add(Duration(hours:3));
-    return Container(color:CupUi.background,
-      child:Column(children:[
-        Padding(padding:EdgeInsets.fromLTRB(13,10,10,10),
-          child:Row(children:[
-            Icon(Icons.calendar_month_outlined,color:CupUi.muted,size:18),
-            SizedBox(width:8),
-            Expanded(child:Text(dateFilter?'ВЫБРАННАЯ ДАТА: ${shortDate(date)}':'ВЫБЕРИ ДЕНЬ МАТЧА',
-              style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800,letterSpacing:.5))),
-            InkWell(onTap:()=>setState(()=>dateFilter=false),
-              child:Padding(padding:EdgeInsets.all(6),
-                child:Text('ВСЕ ДАТЫ',style:TextStyle(color:dateFilter?CupUi.red:CupUi.muted,
-                  fontSize:10,fontWeight:FontWeight.w800)))),
-            SizedBox(width:4),
-            IconButton(icon:Icon(Icons.calendar_today_rounded,size:17,color:CupUi.soft),
-              onPressed:()async{
-                final selected=await showDatePicker(context:context,
-                  firstDate:DateTime(2026,8,1),lastDate:DateTime(2027,12,31),
-                  initialDate:date.isBefore(DateTime(2026,8,1))?DateTime(2026,9,10):date);
-                if(selected!=null&&mounted)setState((){date=selected;dateFilter=true;});
-              }),
-          ])),
-        SizedBox(height:57,child:ListView.builder(
-          padding:EdgeInsets.symmetric(horizontal:9),scrollDirection:Axis.horizontal,
-          itemCount:11,itemBuilder:(context,i){
-            final current=now.add(Duration(days:i-5));
-            final active=dateFilter&&current.year==date.year&&current.month==date.month&&current.day==date.day;
-            return InkWell(onTap:()=>setState((){date=current;dateFilter=true;}),
-              borderRadius:BorderRadius.circular(8),
-              child:Container(width:59,margin:EdgeInsets.symmetric(horizontal:2),
-                decoration:BoxDecoration(color:active?CupUi.raised:Colors.transparent,
-                  borderRadius:BorderRadius.circular(8),
-                  border:Border(bottom:BorderSide(width:2.5,
-                    color:active?CupUi.red:Colors.transparent))),
-                child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
-                  Text(i==5?'СЕГОДНЯ':weekday(current),
-                    style:TextStyle(fontSize:i==5?9:10,color:active?CupUi.red:CupUi.muted,
-                      fontWeight:FontWeight.w800)),
-                  SizedBox(height:5),
-                  Text(shortDate(current),style:TextStyle(color:active?CupUi.white:CupUi.soft,
-                    fontSize:11,fontWeight:FontWeight.w800)),
-                ])),
-            );
-          },
-        )),
-        SizedBox(height:5),
-      ]));
-  }
-
-  List<Match> filtered({bool onlyFavorites=false}){
-    return games.where((m){
-      if(onlyFavorites&&!favorites.contains(m.key))return false;
-      if(filter==1&&!m.isLive)return false;
-      if(filter==2&&!m.finished)return false;
-      if(filter==3&&(m.finished||m.isLive))return false;
-      if(dateFilter){
-        final parsed=m.matchDate;
-        if(parsed==null||parsed.year!=date.year||parsed.month!=date.month||parsed.day!=date.day)return false;
-      }
-      return true;
-    }).toList();
-  }
-
-  Widget _matchLine(Match game){
-    final h=findClub(game.home),a=findClub(game.away);
-    final goals=game.goals;
-    final live=game.isLive;
-    final played=game.finished;
-    return InkWell(onTap:()=>openMatch(game),
-      child:Padding(padding:EdgeInsets.fromLTRB(12,10,6,10),
-        child:Row(children:[
-          SizedBox(width:50,child:Column(children:[
-            Text(live?'LIVE':played?'КОН.':game.timeMsk.isNotEmpty?game.timeMsk:'–',
-              style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,
-                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow))),
-            SizedBox(height:6),
-            Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
-          ])),
-          Container(height:42,width:2,color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow)),
-          SizedBox(width:10),
-          Expanded(child:Column(children:[
-            _teamLine(game.home,h?.logo),
-            SizedBox(height:10),
-            _teamLine(game.away,a?.logo),
-          ])),
-          SizedBox(width:34,child:Column(children:[
-            Text(goals==null?'–':'${goals[0]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
-              fontWeight:FontWeight.w900,fontSize:16)),
+        Text('JUNIOR U16',style:TextStyle(color:CupUi.white,letterSpacing:.8,
+          fontWeight:FontWeight.w900,fontSize:18,height:1)),
+        const SizedBox(height:5),
+        Row(children:[
+          Container(width:5,…2185 tokens truncated…Weight.w900,fontSize:16)),
             SizedBox(height:10),
             Text(goals==null?'–':'${goals[1]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
               fontWeight:FontWeight.w900,fontSize:16)),
@@ -424,18 +320,55 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     return [for(final group in groups.entries)_leagueBlock(group.key,group.value)];
   }
 
+  Widget _homeHero()=>Container(
+    margin:const EdgeInsets.fromLTRB(13,13,13,8),
+    decoration:BoxDecoration(
+      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+        colors:CupUi.heroGradient),
+      borderRadius:BorderRadius.circular(26),
+      border:Border.all(color:CupUi.ice.withValues(alpha:.13)),
+      boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.09),blurRadius:28,offset:const Offset(0,10))]),
+    clipBehavior:Clip.antiAlias,
+    child:Stack(children:[
+      Positioned(right:-24,top:-45,child:Container(width:175,height:175,
+        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(
+          color:CupUi.ice.withValues(alpha:.08),width:25)))),
+      Padding(padding:const EdgeInsets.fromLTRB(18,19,17,17),
+        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Row(children:[
+            Container(width:29,height:29,decoration:BoxDecoration(
+              color:CupUi.red.withValues(alpha:.18),borderRadius:BorderRadius.circular(10)),
+              child:const Icon(Icons.emoji_events_rounded,color:CupUi.red,size:17)),
+            const SizedBox(width:8),
+            Text('СЕЗОН 2026/27',style:TextStyle(color:CupUi.ice.withValues(alpha:.9),
+              fontSize:10,letterSpacing:1,fontWeight:FontWeight.w900)),
+            const Spacer(),
+            CupTag(text:'2011 · U16',color:CupUi.soft,filled:true),
+          ]),
+          const SizedBox(height:16),
+          const Text('Кубок России',style:TextStyle(fontSize:26,height:1,
+            letterSpacing:-.6,fontWeight:FontWeight.w900,color:Colors.white)),
+          const SizedBox(height:7),
+          Text('Все матчи, таблицы и игроки турнира — в одном месте.',
+            style:TextStyle(color:CupUi.soft,fontSize:12,height:1.4)),
+          const SizedBox(height:16),
+          SizedBox(width:double.infinity,child:FilledButton.icon(
+            onPressed:()=>Navigator.push(context,MaterialPageRoute(
+              builder:(_)=>ScenarioPage(matches:games,teams:clubs.map((t)=>t.fullName).toList(),
+                teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
+            icon:const Icon(Icons.auto_awesome_rounded,size:18),
+            label:const Text('Открыть симулятор турнира')),
+          )),
+        ])),
+    ]),
+  );
+
   Widget _homePage(){
     final recent=filtered();
     final live=games.where((m)=>m.isLive).toList();
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
-      Padding(padding:EdgeInsets.fromLTRB(16,20,16,4),
-        child:Text('КУБОК РОССИИ U16',style:TextStyle(
-          color:CupUi.white,fontSize:22,fontWeight:FontWeight.w900,letterSpacing:-.5))),
-      Padding(padding:EdgeInsets.fromLTRB(16,0,16,15),
-        child:Text('Сезон 2026/27  ·  результаты ФХР Джуниор',
-          style:TextStyle(color:CupUi.muted,fontSize:12))),
+      _homeHero(),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
-      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:games,teams:clubs.map((t)=>t.fullName).toList()))),icon:const Icon(Icons.tune),label:const Text('Рассчитать свой сценарий'))),
       Row(children:[
         Expanded(child:_metric('20','КОМАНД',Icons.shield_outlined)),
         Expanded(child:_metric('${games.length}','МАТЧЕЙ',Icons.sports_hockey_outlined)),
