@@ -10,7 +10,6 @@ import 'scenario_page.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
 import 'app_services.dart';
-import 'insights.dart';
 
 class CommandCenterPage extends StatefulWidget {
   final List<Match> matches;
@@ -115,12 +114,6 @@ class _CommandCenterPageState extends State<CommandCenterPage>
   }
   Widget _tag(String text,{Color? color})=>
     CupTag(text:text,color:color??CupUi.ice,filled:true);
-  Widget _clubName(String name,{double size=12})=>Row(children:[
-    fhrTeamLogo(logo(name),size:28),
-    const SizedBox(width:9),
-    Expanded(child:Text(name,maxLines:2,overflow:TextOverflow.ellipsis,
-      style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w800,fontSize:size))),
-  ]);
   Widget _teamSelector()=>CupCard(padding:const EdgeInsets.fromLTRB(15,4,15,4),
     child:Row(children:[
       Icon(Icons.travel_explore_rounded,color:CupUi.ice,size:21),
