@@ -180,7 +180,7 @@ class _TeamHubPageState extends State<TeamHubPage>{
         teamPulse(fixtures,rank,table),
         CupSection(title:'ПОСЛЕДНИЕ МАТЧИ'),for(final m in played.take(5))fixture(m),
         CupSection(title:'ЛИДЕРЫ КОМАНДЫ'),
-        FutureBuilder<CupStatistics>(future:stats,builder:(context,s){
+        FutureBuilder<CupStatistics?>(future:stats,builder:(context,s){
           if(s.connectionState!=ConnectionState.done)return const Padding(padding:EdgeInsets.all(20),child:LinearProgressIndicator());
           if(s.data==null)return CupMessage(title:'Лидеры не загружены',message:'Статистика ФХР сейчас недоступна. Попробуй обновить.',retry:()=>setState(()=>stats=fetchStats()));
           final leaders=sortCupPlayers(s.data!.skaters.where((p)=>sameClub('${p.team} ${p.city}',widget.team.fullName)||((p.city.isEmpty||widget.team.city.isEmpty)&&sameClub(p.team,widget.team.name))),PlayerStatSort.points).take(5);
