@@ -311,6 +311,88 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
 class CupPlayerProfilePage extends StatelessWidget{
   final CupPlayerStats player;
   const CupPlayerProfilePage({super.key,required this.player});
+
+  Widget _impactProfile(){
+    if(player.goalie){
+      final pct=double.tryParse(player.savePercentText.replaceAll('%',''))??0;
+      return Column(children:[
+        CupSection(title:'ВРАТАРСКИЙ ПРОФИЛЬ',subtitle:'Показатели по официальной статистике ФХР'),
+        CupCard(padding:const EdgeInsets.all(18),
+          child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Row(children:[
+              Icon(Icons.shield_rounded,color:CupUi.ice,size:19),
+              const SizedBox(width:9),
+              const Expanded(child:Text('ПРОЦЕНТ ОТРАЖЁННЫХ',
+                style:TextStyle(fontSize:10,fontWeight:FontWeight.w900))),
+              Text(player.savePercentText,style:TextStyle(
+                color:CupUi.ice,fontSize:17,fontWeight:FontWeight.w900)),
+            ]),
+            const SizedBox(height:12),
+            ClipRRect(borderRadius:BorderRadius.circular(9),
+              child:LinearProgressIndicator(value:(pct/100).clamp(0.0,1.0),
+                minHeight:10,backgroundColor:CupUi.raised,
+                valueColor:AlwaysStoppedAnimation<Color>(CupUi.ice))),
+            const SizedBox(height:13),
+            Text('${player.saves} сейвов · ${player.shotsAgainst} бросков · ${player.shutouts} сухих матчей',
+              style:TextStyle(color:CupUi.soft,fontSize:11,height:1.5)),
+          ])),
+      ]);
+    }
+    final total=player.goals+player.assists;
+    final share=total==0?0.0:player.goals/total;
+    return Column(children:[
+      CupSection(title:'ПРОФИЛЬ РЕЗУЛЬТАТИВНОСТИ',
+        subtitle:'Распределение голов и передач в очках игрока'),
+      CupCard(padding:const EdgeInsets.all(18),child:Column(
+        crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Row(children:[
+            Icon(Icons.sports_hockey_rounded,color:CupUi.ice,size:19),
+            const SizedBox(width:10),
+            const Expanded(child:Text('АТАКУЮЩИЙ ВКЛАД',
+              style:TextStyle(fontSize:11,fontWeight:FontWeight.w900))),
+            CupTag(text:'${player.points} ОЧКОВ',color:CupUi.ice,filled:true),
+          ]),
+          const SizedBox(height:18),
+          ClipRRect(borderRadius:BorderRadius.circular(10),
+            child:Row(children:[
+              Expanded(flex:total==0?1:player.goals>0?player.goals:0,
+                child:Container(height:12,color:CupUi.ice)),
+              Expanded(flex:total==0?1:player.assists>0?player.assists:0,
+                child:Container(height:12,color:CupUi.red)),
+            ])),
+          const SizedBox(height:12),
+          Row(children:[
+            _legend('ГОЛЫ',player.goals,CupUi.ice),
+            const SizedBox(width:16),
+            _legend('ПЕРЕДАЧИ',player.assists,CupUi.red),
+          ]),
+          const SizedBox(height:14),
+          Text('Доля голов среди голов и передач: ${(share*100).round()}%. Очков за игру: ${player.pointsPerGame?.toStringAsFixed(2)??'—'}.',
+            style:TextStyle(color:CupUi.soft,fontSize:11,height:1.5)),
+        ])),
+    ]);
+  }
+  Widget _legend(String title,int value,Color color)=>Row(mainAxisSize:MainAxisSize.min,children:[
+    Container(width:8,height:8,decoration:BoxDecoration(
+      color:color,borderRadius:BorderRadius.circular(3))),
+    const SizedBox(width:6),
+    Text('$title $value',style:TextStyle(
+      color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w900)),
+  ]);
+  Future<void> _compare(BuildContext context)async{
+    final client=http.Client();
+    try{
+      final data=await CupStatisticsClient(client).fetch();
+      if(!context.mounted)return;
+      await Navigator.push(context,MaterialPageRoute(
+        builder:(_)=>PlayerComparisonPage(data:data,initial:player)));
+    }catch(e){
+      Diagnostics.record('player comparison',e);
+      if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content:Text('Не удалось загрузить статистику для сравнения.')));
+    }finally{client.close();}
+  }
+
   @override Widget build(BuildContext context){
     final stats=player.goalie
       ?<({String label,String value})>[
@@ -332,8 +414,8 @@ class CupPlayerProfilePage extends StatelessWidget{
       appBar:AppBar(title:Text('ИГРОК · КУБОК РОССИИ U16',
         style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900)),actions:[IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,player.name,[player.fullClub,'${player.games} игр',if(!player.goalie)'${player.goals} голов · ${player.assists} передач · ${player.points} очков',if(player.goalie)'Отражено ${player.savePercentText} · КН ${player.gaaText}']))]),
       body:ListView(children:[
-        CupCard(margin:EdgeInsets.fromLTRB(12,10,12,8),
-          padding:EdgeInsets.fromLTRB(15,22,15,20),
+        CupArena(margin:const EdgeInsets.fromLTRB(12,10,12,8),
+          padding:const EdgeInsets.fromLTRB(15,22,15,20),
           child:Column(children:[
             fhrPlayerPhoto(player.photo,size:122),
             SizedBox(height:15),
@@ -369,6 +451,12 @@ class CupPlayerProfilePage extends StatelessWidget{
               ]),
             ),
           )),
+        _impactProfile(),
+        Padding(padding:const EdgeInsets.fromLTRB(12,6,12,5),
+          child:FilledButton.icon(
+            icon:const Icon(Icons.compare_arrows_rounded),
+            onPressed:()=>_compare(context),
+            label:const Text('СРАВНИТЬ С ДРУГИМ ИГРОКОМ'))),
         RecentPlayerGames(player:player),
         if(trusted)Padding(padding:EdgeInsets.fromLTRB(12,13,12,2),
           child:FilledButton.icon(
