@@ -17,19 +17,16 @@ void main(){
     }
     await tester.pumpWidget(MaterialApp(home:ScenarioPage(matches:matches,teams:teams)));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('ПУТЬ В III ТУР'),240,
-      scrollable:find.byType(Scrollable).first);
-    await tester.pumpAndSettle();
-    expect(find.text('ПУТЬ В III ТУР'),findsOneWidget);
-    expect(find.text('ГРУППА А'),findsOneWidget);
-
-    await tester.scrollUntilVisible(find.text('СОХРАНИТЬ ВАРИАНТ'),240,
-      scrollable:find.byType(Scrollable).first);
     await tester.tap(find.text('СОХРАНИТЬ ВАРИАНТ'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).last,'Мой вариант');
     await tester.tap(find.text('Сохранить'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('ПУТЬ В III ТУР'),240,
+      scrollable:find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
+    expect(find.text('ПУТЬ В III ТУР'),findsOneWidget);
+    expect(find.text('ГРУППА А'),findsOneWidget);
     await tester.scrollUntilVisible(find.text('МАШИНА ВРЕМЕНИ'),240,
       scrollable:find.byType(Scrollable).first);
     await tester.pumpAndSettle();
