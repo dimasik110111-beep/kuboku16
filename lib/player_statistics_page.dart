@@ -6,6 +6,7 @@ import 'team_pages.dart';
 import 'ui_kit.dart';
 import 'player_insights.dart';
 import 'app_services.dart';
+import 'follow_store.dart';
 
 class PlayerStatisticsPage extends StatefulWidget{
   final http.Client? client;
@@ -308,9 +309,23 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
   }
 }
 
-class CupPlayerProfilePage extends StatelessWidget{
+class CupPlayerProfilePage extends StatefulWidget{
   final CupPlayerStats player;
   const CupPlayerProfilePage({super.key,required this.player});
+  @override State<CupPlayerProfilePage> createState()=>_CupPlayerProfilePageState();
+}
+class _CupPlayerProfilePageState extends State<CupPlayerProfilePage>{
+  CupPlayerStats get player=>widget.player;
+  bool following=false;
+  @override void initState(){super.initState();restoreFollow();}
+  Future<void> restoreFollow()async{
+    final set=await FollowStore.players();
+    if(mounted)setState(()=>following=set.contains(player.id));
+  }
+  Future<void> toggleFollow()async{
+    final result=await FollowStore.togglePlayer(player.id);
+    if(mounted)setState(()=>following=result);
+  }
 
   Widget _impactProfile(){
     if(player.goalie){
@@ -415,8 +430,14 @@ class CupPlayerProfilePage extends StatelessWidget{
     final trusted=uri!=null && uri.scheme=='https' && uri.host=='junior.fhr.ru';
     return Scaffold(backgroundColor:CupUi.background,
       appBar:AppBar(title:Text('ИГРОК · КУБОК РОССИИ U16',
-        style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900)),actions:[IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,player.name,[player.fullClub,'${player.games} игр',if(!player.goalie)'${player.goals} голов · ${player.assists} передач · ${player.points} очков',if(player.goalie)'Отражено ${player.savePercentText} · КН ${player.gaaText}']))]),
+        style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900)),actions:[
+        IconButton(tooltip:following?'Убрать из Personal HQ':'Добавить в Personal HQ',
+          icon:Icon(following?Icons.star_rounded:Icons.star_outline_rounded,
+            color:following?CupUi.yellow:CupUi.soft),
+          onPressed:toggleFollow),
+        IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,player.name,[player.fullClub,'${player.games} игр',if(!player.goalie)'${player.goals} голов · ${player.assists} передач · ${player.points} очков',if(player.goalie)'Отражено ${player.savePercentText} · КН ${player.gaaText}']))]),
       body:ListView(children:[
+        CupSection(title:'SCOUT CENTER',subtitle:'Официальная статистика ФХР · аналитический профиль'),
         CupArena(margin:const EdgeInsets.fromLTRB(12,10,12,8),
           padding:const EdgeInsets.fromLTRB(15,22,15,20),
           child:Column(children:[
