@@ -74,7 +74,9 @@ void main(){
     await tester.pumpWidget(MaterialApp(home:Scaffold(body:PlayerStatisticsPage(client:client))));
     await tester.pumpAndSettle();
     expect(find.text('СТАТИСТИКА ИГРОКОВ'),findsOneWidget);
-    expect(find.textContaining('3 полевых'),findsOneWidget);
+    expect(find.text('ПОЛЕВЫХ'),findsOneWidget);
+    expect(find.text('ВРАТАРЕЙ'),findsOneWidget);
+    expect(find.text('3'),findsWidgets);
     await tester.drag(find.byType(CustomScrollView),const Offset(0,-400));
     await tester.pumpAndSettle();
     expect(find.text('Иван Первый'),findsWidgets);
