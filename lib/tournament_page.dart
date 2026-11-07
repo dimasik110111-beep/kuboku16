@@ -3,6 +3,7 @@ import 'cup_data.dart';
 import 'tournament.dart';
 import 'team_pages.dart';
 import 'ui_kit.dart';
+import 'scenario_page.dart';
 
 class TournamentPage extends StatefulWidget {
   final List<Match> matches;
@@ -450,6 +451,7 @@ class _TournamentPageState extends State<TournamentPage>{
       CupSection(title:'ТУРНИРНАЯ СИСТЕМА',
         subtitle:'ФХР · сезон 2026/27 · 20 команд · 5 туров'),
       _summary(cup),
+      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:cup.participants))),icon:const Icon(Icons.tune),label:const Text('Интерактивные расклады'))),
       SingleChildScrollView(scrollDirection:Axis.horizontal,
         padding:EdgeInsets.fromLTRB(12,0,12,7),
         child:Row(children:[
@@ -463,3 +465,4 @@ class _TournamentPageState extends State<TournamentPage>{
     ]);
   }
 }
+

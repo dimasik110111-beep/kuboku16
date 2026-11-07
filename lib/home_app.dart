@@ -11,6 +11,8 @@ import 'tournament_page.dart';
 import 'player_statistics_page.dart';
 import 'team_hub.dart';
 import 'app_services.dart';
+import 'my_team.dart';
+import 'scenario_page.dart';
 
 const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
 
@@ -432,6 +434,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       Padding(padding:EdgeInsets.fromLTRB(16,0,16,15),
         child:Text('Сезон 2026/27  ·  результаты ФХР Джуниор',
           style:TextStyle(color:CupUi.muted,fontSize:12))),
+      MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
+      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:games,teams:clubs.map((t)=>t.fullName).toList()))),icon:const Icon(Icons.tune),label:const Text('Рассчитать свой сценарий'))),
       Row(children:[
         Expanded(child:_metric('20','КОМАНД',Icons.shield_outlined)),
         Expanded(child:_metric('${games.length}','МАТЧЕЙ',Icons.sports_hockey_outlined)),
