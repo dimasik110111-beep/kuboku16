@@ -152,7 +152,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
           const SizedBox(height:5),Text(synthetic?'РАСЧЁТНАЯ ПАРА · ДАТЫ НЕТ':'${m.dayLabel} · ${m.stage}',
             style:TextStyle(color:synthetic?CupUi.ice:CupUi.muted,fontSize:8,fontWeight:FontWeight.w700)),
         ])),const SizedBox(width:7),
-        Container(minWidth:50,padding:const EdgeInsets.symmetric(horizontal:6,vertical:9),
+        Container(constraints:const BoxConstraints(minWidth:50),padding:const EdgeInsets.symmetric(horizontal:6,vertical:9),
           decoration:BoxDecoration(color:score==null?CupUi.raised:CupUi.red.withValues(alpha:.13),
             borderRadius:BorderRadius.circular(10),border:Border.all(color:score==null?CupUi.stroke:CupUi.red.withValues(alpha:.2))),
           child:Text(score==null?'Задать':'${score.home}:${score.away}${score.overtime?' ОТ':''}',

@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 6211)
-Total output lines: 468
-
 import 'package:flutter/material.dart';
 import 'cup_data.dart';
 import 'tournament.dart';
@@ -30,11 +27,11 @@ class _TournamentPageState extends State<TournamentPage>{
 
   Widget _chip(String text,bool active,VoidCallback tap,{bool small=false})=>Padding(
     padding:EdgeInsets.only(right:7),
-    child:InkWell(onTap:tap,borderRadius:BorderRadius.circular(99),
+    child:InkWell(onTap:tap,borderRadius:BorderRadius.circular(9),
       child:Container(
         padding:EdgeInsets.symmetric(horizontal:small?11:15,vertical:small?10:13),
         decoration:BoxDecoration(color:active?CupUi.red:CupUi.surface,
-          borderRadius:BorderRadius.circular(99),
+          borderRadius:BorderRadius.circular(9),
           border:Border.all(color:active?CupUi.red:CupUi.stroke)),
         child:Text(text,style:TextStyle(color:active?Colors.white:CupUi.muted,
           fontSize:10,fontWeight:FontWeight.w900,letterSpacing:.25)),
@@ -239,7 +236,27 @@ class _TournamentPageState extends State<TournamentPage>{
                   ])),
                   SizedBox(width:7),
                   Expanded(child:Column(children:[
-                    _teamLine(…211 tokens truncated… ]);
+                    _teamLine(games[i].home),
+                    SizedBox(height:9),
+                    _teamLine(games[i].away),
+                  ])),
+                  SizedBox(width:45,child:Text(
+                    games[i].hasScore?games[i].score:'—',
+                    textAlign:TextAlign.center,
+                    style:TextStyle(color:CupUi.white,fontSize:14,fontWeight:FontWeight.w900))),
+                  Icon(Icons.chevron_right_rounded,color:CupUi.dim,size:17),
+                ]))),
+            if(i+1<games.length)CupDiv(indent:13),
+          ],
+        ]),
+      ),
+    ]);
+  }
+  Widget _teamLine(String name)=>Row(children:[
+    fhrTeamLogo(widget.teamLogo(name),size:19),SizedBox(width:7),
+    Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
+      style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w700,fontSize:11))),
+  ]);
 
   Widget _groupTables(CupTournament cup){
     final names=cup.groupNames(round:selectedTour);
@@ -434,7 +451,7 @@ class _TournamentPageState extends State<TournamentPage>{
       CupSection(title:'ТУРНИРНАЯ СИСТЕМА',
         subtitle:'ФХР · сезон 2026/27 · 20 команд · 5 туров'),
       _summary(cup),
-      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:cup.participants.toList(),teamLogos:{for(final name in cup.participants)name:widget.teamLogo(name)}))),icon:const Icon(Icons.auto_awesome_rounded),label:const Text('Симулятор турнира'))),
+      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:cup.participants.toList(),teamLogos:{for(final name in cup.participants)name:widget.teamLogo(name)}))),icon:const Icon(Icons.tune),label:const Text('Интерактивные расклады'))),
       SingleChildScrollView(scrollDirection:Axis.horizontal,
         padding:EdgeInsets.fromLTRB(12,0,12,7),
         child:Row(children:[
@@ -448,4 +465,5 @@ class _TournamentPageState extends State<TournamentPage>{
     ]);
   }
 }
+
 
