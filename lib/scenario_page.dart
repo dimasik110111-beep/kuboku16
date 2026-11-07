@@ -12,7 +12,8 @@ import 'team_pages.dart';
 class ScenarioPage extends StatefulWidget {
   final List<Match> matches;final List<String> teams;
   final Map<String,String?> teamLogos;
-  const ScenarioPage({super.key,required this.matches,required this.teams,this.teamLogos=const {}});
+  final String? initialTeam;
+  const ScenarioPage({super.key,required this.matches,required this.teams,this.teamLogos=const {},this.initialTeam});
   @override State<ScenarioPage> createState()=>_ScenarioPageState();
 }
 class _ScenarioPageState extends State<ScenarioPage>{
@@ -21,7 +22,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
   String? team;bool ready=false,fullTable=false;int filter=0;
   String scenarioLeft='@current',scenarioRight='@current';
   static const filters=['ВСЕ','ОСТАЛОСЬ','СТЫКИ','III ТУР'];
-  @override void initState(){super.initState();restore();}
+  @override void initState(){super.initState();team=widget.initialTeam;restore();}
   Future<void> restore()async{
     try{
       final raw=(await SharedPreferences.getInstance()).getString('junior_scenario_2026_27');
@@ -210,37 +211,93 @@ class _ScenarioPageState extends State<ScenarioPage>{
       ]));
   }
   Widget _thirdTourMap(List<List<String>> groups){
-    const groupLabels=['А','Б','В','Г'];
-    const seedLabels=['1 · 8 · 9 · 16 · 17','2 · 7 · 10 · 15 · 18','3 · 6 · 11 · 14 · 19','4 · 5 · 12 · 13 · 20'];
-    final width=(MediaQuery.of(context).size.width-56)/2;
+    const letters=['А','Б','В','Г'];
+    const positions=[[1,8,9,16,17],[2,7,10,15,18],[3,6,11,14,19],[4,5,12,13,20]];
+    final filled=groups.expand((g)=>g).where((s)=>!s.startsWith('Место ')).length;
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      CupSection(title:'ПУТЬ В III ТУР',subtitle:'Предварительное распределение по общей таблице и змейке регламента'),
-      CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),padding:const EdgeInsets.all(11),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Wrap(spacing:8,runSpacing:8,children:[
-          for(var g=0;g<groups.length;g++)Container(width:width,padding:const EdgeInsets.fromLTRB(10,10,9,8),
-            decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(15),border:Border.all(color:CupUi.stroke)),
-            child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-              Text('ГРУППА ${groupLabels[g]}',style:TextStyle(color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900)),
-              const SizedBox(height:2),Text('Места по змейке: ${seedLabels[g]}',maxLines:1,overflow:TextOverflow.ellipsis,
-                style:TextStyle(color:CupUi.muted,fontSize:6.5,fontWeight:FontWeight.w700)),
-              const SizedBox(height:7),
-              for(var p=0;p<groups[g].length;p++)InkWell(onTap:groups[g][p].startsWith('Место ')?null:()=>setState(()=>team=groups[g][p]),
-                child:Padding(padding:const EdgeInsets.symmetric(vertical:3),child:Row(children:[
-                  SizedBox(width:16,child:Text('${p+1}',style:TextStyle(color:CupUi.dim,fontSize:8,fontWeight:FontWeight.w800))),
-                  fhrTeamLogo(widget.teamLogos[groups[g][p]],size:19),const SizedBox(width:5),
-                  Expanded(child:Text(groups[g][p],maxLines:1,overflow:TextOverflow.ellipsis,
-                    style:TextStyle(color:CupUi.white,fontSize:8,fontWeight:FontWeight.w700))),
-                ]))),
-            ])),
-        ]),
-        const SizedBox(height:9),Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Icon(Icons.route_rounded,color:CupUi.yellow,size:14),const SizedBox(width:6),
-          Expanded(child:Text('Маршрут пересчитывается по текущим результатам и твоим предиктам I–II туров. Нажми на команду, чтобы отфильтровать её матчи ниже.',
-            style:TextStyle(color:CupUi.soft,fontSize:8,height:1.4))),
-        ]),
-      ])),
+      CupSection(title:'LIVE-СЕТКА III ТУРА',
+        subtitle:'Меняется после каждого введённого результата I–II туров'),
+      CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),
+        padding:EdgeInsets.zero,child:Column(children:[
+          Padding(padding:const EdgeInsets.fromLTRB(16,17,16,12),child:Row(children:[
+            Icon(Icons.account_tree_rounded,color:CupUi.ice,size:22),
+            const SizedBox(width:10),
+            const Expanded(child:Text('РАСПРЕДЕЛЕНИЕ ПО ЗМЕЙКЕ',
+              style:TextStyle(fontSize:11,fontWeight:FontWeight.w900))),
+            CupTag(text:'$filled / 20',color:CupUi.green,filled:true),
+          ])),
+          Padding(padding:const EdgeInsets.symmetric(horizontal:14),
+            child:Text('Нажми на команду, чтобы выбрать её матчи. Группы — прогноз по I–II турам, не официально подтверждённая жеребьёвка.',
+              style:TextStyle(color:CupUi.muted,fontSize:10,height:1.5))),
+          for(var g=0;g<groups.length;g++)...[
+            Padding(padding:const EdgeInsets.fromLTRB(13,15,13,9),
+              child:Row(children:[
+                Container(height:35,width:35,alignment:Alignment.center,
+                  decoration:BoxDecoration(
+                    gradient:LinearGradient(colors:[CupUi.red,CupUi.raised]),
+                    borderRadius:BorderRadius.circular(12)),
+                  child:Text(letters[g],style:const TextStyle(
+                    color:Colors.white,fontSize:18,fontWeight:FontWeight.w900))),
+                const SizedBox(width:10),
+                Expanded(child:Text('ГРУППА ${letters[g]}',
+                  style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900))),
+                Text(positions[g].join(' · '),style:TextStyle(
+                  color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800)),
+              ])),
+            for(var p=0;p<groups[g].length;p++)
+              Material(color:team==groups[g][p]
+                ?CupUi.red.withValues(alpha:.16):Colors.transparent,
+                child:InkWell(
+                  onTap:groups[g][p].startsWith('Место ')?null:
+                    ()=>setState(()=>team=team==groups[g][p]?null:groups[g][p]),
+                  child:Padding(padding:const EdgeInsets.fromLTRB(17,7,16,7),
+                    child:Row(children:[
+                      SizedBox(width:27,child:Text('${positions[g][p]}',
+                        style:TextStyle(color:CupUi.ice,fontSize:12,fontWeight:FontWeight.w900))),
+                      fhrTeamLogo(widget.teamLogos[groups[g][p]],size:26),
+                      const SizedBox(width:11),
+                      Expanded(child:Text(groups[g][p],maxLines:1,
+                        overflow:TextOverflow.ellipsis,style:TextStyle(
+                        color:CupUi.white,fontSize:11,fontWeight:FontWeight.w800))),
+                      if(team==groups[g][p])Icon(Icons.check_circle_rounded,
+                        color:CupUi.green,size:17),
+                    ])))),
+            if(g<groups.length-1)Padding(
+              padding:const EdgeInsets.fromLTRB(13,10,13,0),child:CupDiv()),
+          ],
+          const SizedBox(height:14),
+        ])),
     ]);
   }
+
+  Future<void> _quickSeries(bool win) async {
+    if(team==null)return;
+    // Avoid synthetic/unpublished match IDs: this action only edits real FHR fixtures.
+    final rows=scenarioFixtures(widget.matches,scores:scores)
+      .where((m)=>m.gameId!=null&&m.gameId!>0 &&
+        (m.home==team||m.away==team)).toList();
+    if(rows.isEmpty){
+      if(mounted)ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content:Text('Нет доступных опубликованных матчей для этой команды.')));
+      return;
+    }
+    final confirm=await showDialog<bool>(context:context,builder:(context)=>AlertDialog(
+      title:Text(win?'Серия побед':'Серия поражений'),
+      content:Text('Применить прогноз ${win?'побед':'поражений'} для ${rows.length} незавершённых опубликованных матчей команды $team? Уже заданные прогнозы этих матчей изменятся.'),
+      actions:[TextButton(onPressed:()=>Navigator.pop(context,false),
+        child:const Text('Отмена')),
+        FilledButton(onPressed:()=>Navigator.pop(context,true),
+          child:const Text('Применить'))]));
+    if(confirm!=true||!mounted)return;
+    setState((){
+      for(final m in rows){
+        final homeWins=(m.home==team)==win;
+        scores[m.key]=ScenarioScore(homeWins?3:1,homeWins?1:3);
+      }
+    });
+    await save();
+  }
+
   List<Rank> _tableForScenario(String id){
     final selected=id=='@current'?scores:(savedScenarios[id]??const <String,ScenarioScore>{});
     return CupTournament(applyScenario(widget.matches,selected).matches,teams:widget.teams).table();
@@ -404,6 +461,33 @@ class _ScenarioPageState extends State<ScenarioPage>{
               style:TextButton.styleFrom(foregroundColor:CupUi.ice,textStyle:const TextStyle(fontSize:10,fontWeight:FontWeight.w800))),
           ])),
         CupReveal(child:_thirdTourMap(thirdTourGroups)),
+        CupSection(title:'СЦЕНАРНЫЙ ПУЛЬТ',subtitle:'Проверь влияние серии результатов на расклады'),
+        CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,9),padding:const EdgeInsets.all(15),
+          child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Row(children:[
+              Icon(Icons.bolt_rounded,color:CupUi.yellow,size:20),
+              const SizedBox(width:8),
+              Expanded(child:Text(team==null?'ВЫБЕРИ КОМАНДУ В СЕТКЕ':'КОМАНДА: $team',
+                maxLines:1,overflow:TextOverflow.ellipsis,
+                style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,fontSize:11))),
+              if(team!=null)TextButton(onPressed:()=>setState(()=>team=null),
+                child:const Text('Сбросить')),
+            ]),
+            const SizedBox(height:7),
+            Text('Быстро задай победы или поражения в оставшихся опубликованных играх выбранной команды. Стыки и группы III тура пересчитаются.',
+              style:TextStyle(color:CupUi.muted,fontSize:10,height:1.5)),
+            const SizedBox(height:12),
+            Row(children:[
+              Expanded(child:FilledButton.icon(onPressed:team==null?null:()=>_quickSeries(true),
+                icon:const Icon(Icons.trending_up_rounded,size:17),
+                label:const Text('ВСЕ ПОБЕДЫ',style:TextStyle(fontSize:10)))),
+              const SizedBox(width:8),
+              Expanded(child:OutlinedButton.icon(onPressed:team==null?null:()=>_quickSeries(false),
+                icon:const Icon(Icons.trending_down_rounded,size:17),
+                label:const Text('ВСЕ ПОРАЖЕНИЯ',style:TextStyle(fontSize:10)))),
+            ]),
+          ])),
+
         _scenarioCompare(),
         Container(margin:const EdgeInsets.fromLTRB(13,4,13,7),padding:const EdgeInsets.all(12),
           decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(16),border:Border.all(color:CupUi.stroke)),
