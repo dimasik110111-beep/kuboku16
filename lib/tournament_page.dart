@@ -552,10 +552,12 @@ class _TournamentPageState extends State<TournamentPage>{
           _chip('ЭТАПЫ',section==0,()=>setState(()=>section=0)),
           _chip('ТАБЛИЦЫ',section==1,()=>setState(()=>section=1)),
           _chip('ФИНАЛЫ',section==2,()=>setState(()=>section=2)),
+          _chip('РАССЕВ III',section==3,()=>setState(()=>section=3)),
         ])),
       if(section==0)_stages(cup),
       if(section==1)_groupTables(cup),
       if(section==2)_finals(cup),
+      if(section==3)_snakePreview(cup),
     ]);
   }
 }
