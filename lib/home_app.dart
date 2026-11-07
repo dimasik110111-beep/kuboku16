@@ -83,7 +83,7 @@ class _JuniorAppState extends State<JuniorApp>{
           linearTrackColor:CupUi.stroke,circularTrackColor:CupUi.stroke),
         pageTransitionsTheme:const PageTransitionsTheme(builders:{
           TargetPlatform.android:ZoomPageTransitionsBuilder(),
-          TargetPlatform.iOS:CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS:ZoomPageTransitionsBuilder(),
         }),
         tabBarTheme:TabBarThemeData(labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
           indicatorColor:CupUi.red,dividerColor:CupUi.stroke,
