@@ -100,6 +100,55 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
     }
     return AppearanceHistory(rows,missing);
   }
+  Widget _formChart(AppearanceHistory history){
+    final rows=history.rows.where((m)=>m.stats!=null).toList().reversed.toList();
+    if(rows.isEmpty)return const SizedBox.shrink();
+    final best=rows.map((m)=>m.stats!.points).fold<int>(0,(a,b)=>a>b?a:b);
+    final total=rows.fold<int>(0,(n,m)=>n+m.stats!.points);
+    final produced=rows.where((m)=>m.stats!.points>0).length;
+    return Column(children:[
+      CupSection(title:'ФОРМА · ПОСЛЕДНИЕ ИГРЫ',
+        subtitle:'Только данные из подтверждённых протоколов ФХР'),
+      CupArena(padding:const EdgeInsets.all(18),child:Column(
+        crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Row(children:[
+            Icon(Icons.insights_rounded,color:CupUi.ice,size:20),
+            const SizedBox(width:9),
+            Expanded(child:Text('$total ОЧКОВ ЗА ${rows.length} ИГР',
+              style:TextStyle(color:Colors.white,
+                fontSize:12,fontWeight:FontWeight.w900))),
+            CupTag(text:'$produced / ${rows.length} С ОЧКАМИ',
+              color:CupUi.green,filled:true),
+          ]),
+          const SizedBox(height:19),
+          SizedBox(height:118,child:Row(crossAxisAlignment:CrossAxisAlignment.end,
+            children:[
+              for(var i=0;i<rows.length;i++)Expanded(child:Padding(
+                padding:const EdgeInsets.symmetric(horizontal:5),
+                child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
+                  Text('${rows[i].stats!.points}',style:const TextStyle(
+                    color:Colors.white,fontSize:11,fontWeight:FontWeight.w900)),
+                  const SizedBox(height:6),
+                  AnimatedContainer(duration:const Duration(milliseconds:400),
+                    height:10+72*(best==0?0:rows[i].stats!.points/best),
+                    decoration:BoxDecoration(
+                      gradient:LinearGradient(begin:Alignment.bottomCenter,
+                        end:Alignment.topCenter,colors:[
+                          CupUi.red,CupUi.ice.withValues(alpha:.95)]),
+                      borderRadius:BorderRadius.circular(7))),
+                  const SizedBox(height:7),
+                  Text(rows[i].match.dayLabel,style:TextStyle(
+                    color:CupUi.soft,fontSize:8)),
+                ])))),
+            ])),
+          const SizedBox(height:14),
+          Text('График отражает очки за реально подтверждённые заявки, '
+            'а не оценку качества игры или выход на лёд при отсутствии протокола.',
+            style:TextStyle(color:CupUi.muted,fontSize:10,height:1.5)),
+        ])),
+    ]);
+  }
+
   @override Widget build(BuildContext context)=>FutureBuilder<AppearanceHistory>(future:future,builder:(context,s){
     if(s.hasError)return CupMessage(title:'История не загрузилась',message:'Проверь соединение с интернетом.',retry:()=>setState(()=>future=load()));
     if(!s.hasData)return const Padding(padding:EdgeInsets.all(20),child:Column(children:[LinearProgressIndicator(),SizedBox(height:12),Text('Проверяю последние заявки ФХР…')]));
@@ -108,6 +157,7 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
       CupSection(title:'ПОСЛЕДНИЕ 5 МАТЧЕЙ',subtitle:'Подтверждённые заявки · текущая команда'),
       if(data.unavailable>0)Padding(padding:const EdgeInsets.all(16),child:Text('${data.unavailable} протоколов недоступно или неполно: история может содержать пропуски.')),
       if(data.rows.isEmpty)const CupMessage(title:'Нет подтверждённых заявок',message:'ФХР ещё не опубликовала подходящие полные протоколы.'),
+      if(data.rows.any((entry)=>entry.stats!=null))_formChart(data),
       for(final row in data.rows)CupCard(child:ListTile(
         onTap:()=>Navigator.push(context,MaterialPageRoute(
           builder:(_)=>MatchCenterPage(match:row.match))),
