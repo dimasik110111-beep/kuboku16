@@ -17,6 +17,9 @@ void main(){
     await tester.pumpAndSettle();
     expect(find.text('ПРЕДИКТЫ'),findsOneWidget);
     expect(find.text('ТАБЛИЦА СЦЕНАРИЯ'),findsOneWidget);
+    await tester.scrollUntilVisible(find.text('СТЫКИ'),280,
+      scrollable:find.byType(Scrollable).first);
+    await tester.pumpAndSettle();
     expect(find.text('СТЫКИ'),findsOneWidget);
     expect(find.text('III ТУР'),findsOneWidget);
     await tester.tap(find.text('СТЫКИ'));

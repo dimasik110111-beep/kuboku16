@@ -249,15 +249,15 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     decoration:BoxDecoration(color:CupUi.background,
       border:Border(bottom:BorderSide(color:CupUi.stroke,width:.8))),
     child:Row(children:[
-      Container(width:42,height:42,padding:const EdgeInsets.all(4),
+      Container(width:38,height:38,padding:const EdgeInsets.all(4),
         decoration:BoxDecoration(gradient:LinearGradient(colors:[CupUi.raised,CupUi.surface]),
           borderRadius:BorderRadius.circular(14),border:Border.all(color:CupUi.stroke)),
         child:Image.network(fhrCupLogo,fit:BoxFit.contain,
           errorBuilder:(_,__,___)=>Icon(Icons.sports_hockey,color:CupUi.red))),
       const SizedBox(width:10),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text('JUNIOR U16',style:TextStyle(color:CupUi.white,letterSpacing:.8,
-          fontWeight:FontWeight.w900,fontSize:18,height:1)),
+        Text('JUNIOR U16',style:TextStyle(color:CupUi.white,letterSpacing:.6,
+          fontWeight:FontWeight.w900,fontSize:16,height:1)),
         const SizedBox(height:5),
         Row(children:[
           Container(width:5,height:5,decoration:BoxDecoration(
@@ -279,6 +279,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   ));
   Widget _headerAction({required IconData icon,required String tooltip,VoidCallback? onTap})=>
     IconButton(tooltip:tooltip,onPressed:onTap,visualDensity:VisualDensity.compact,
+      constraints:const BoxConstraints.tightFor(width:34,height:34),padding:EdgeInsets.zero,
       style:IconButton.styleFrom(backgroundColor:CupUi.surface,foregroundColor:CupUi.soft,
         side:BorderSide(color:CupUi.stroke),shape:RoundedRectangleBorder(
           borderRadius:BorderRadius.circular(12))),
