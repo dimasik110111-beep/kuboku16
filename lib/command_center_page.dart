@@ -26,18 +26,28 @@ class _CommandCenterPageState extends State<CommandCenterPage>
   final api=FhrApiClient(http.Client());
   Timer? timer;
   late List<Match> games;
+  late RaceEngine _engine;
+  String _feedSignature='';
+  bool _simulationStale=false;
   bool fetching=false,simulating=false;
   String? syncError,focus;
   int screen=0,samples=500,historicalIndex=-1;
   String? expandedMatch;
   SimulationReport? report;
   DateTime? updated;
-  static const tabs=['LIVE RACE','PREDICT AI','ROAD TO GOLD',
-    'TIME MACHINE','MATCH IMPACT','PERSONAL HQ'];
+  static const tabs=['LIVE RACE','ПРОГНОЗЫ','ПУТЬ К ФИНАЛУ',
+    'МАШИНА ВРЕМЕНИ','ВЛИЯНИЕ МАТЧЕЙ','МОЁ'];
+  static const tabIcons=[
+    Icons.leaderboard_rounded,Icons.auto_graph_rounded,
+    Icons.account_tree_rounded,Icons.history_toggle_off_rounded,
+    Icons.hub_rounded,Icons.person_rounded,
+  ];
   @override void initState(){
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     games=widget.matches;
+    _engine=RaceEngine(games,_participants(games));
+    _feedSignature=_signature(games);
     focus=widget.initialTeam;
     refresh();
     timer=Timer.periodic(const Duration(seconds:25),(_){
@@ -53,15 +63,20 @@ class _CommandCenterPageState extends State<CommandCenterPage>
     api.client.close();
     super.dispose();
   }
-  List<String> get teamNames{
+  List<String> _participants(List<Match> matches){
     final names=<String>{
       ...widget.clubs.map((c)=>c.fullName).where((s)=>s.isNotEmpty),
-      ...games.where((m)=>m.isQualifier).expand((m)=>[m.home,m.away])
+      ...matches.where((m)=>m.isQualifier).expand((m)=>[m.home,m.away])
         .where((s)=>s.isNotEmpty),
     }.toList()..sort();
     return names;
   }
-  RaceEngine get engine=>RaceEngine(games,teamNames);
+  String _signature(List<Match> source){
+    final fixtures=[...source]..sort((a,b)=>a.key.compareTo(b.key));
+    return fixtures.map((m)=>'${m.key}:${m.status}:${m.score}:${m.scoreNote}').join(';');
+  }
+  List<String> get teamNames=>_engine.teams;
+  RaceEngine get engine=>_engine;
   String? get chosen=>teamNames.contains(focus)?focus:
     teamNames.isEmpty?null:teamNames.first;
   String? logo(String name){
@@ -84,11 +99,17 @@ class _CommandCenterPageState extends State<CommandCenterPage>
         }
       }catch(e){Diagnostics.record('command live details',e);}
       if(!mounted)return;
+      final nextGames=rows.values.toList();
+      final nextSignature=_signature(nextGames);
       setState((){
-        games=rows.values.toList();updated=feed.updatedAt;
+        if(nextSignature!=_feedSignature){
+          games=nextGames;
+          _feedSignature=nextSignature;
+          _engine=RaceEngine(games,_participants(games));
+          _simulationStale=report!=null;
+        }
+        updated=feed.updatedAt;
         syncError=feed.issues.isEmpty?null:'Часть данных ФХР не загружена';
-        // A report is tied to the feed that was sampled.
-        report=null;
       });
     }catch(e){
       Diagnostics.record('command live feed',e);
@@ -97,12 +118,16 @@ class _CommandCenterPageState extends State<CommandCenterPage>
   }
   Future<void> simulate()async{
     if(simulating||teamNames.isEmpty)return;
+    final signatureAtStart=_feedSignature;
     setState(()=>simulating=true);
     try{
-      final input=SimulationInput(List<Match>.from(games),teamNames,
+      final input=SimulationInput(List<Match>.from(games),List<String>.from(teamNames),
         samples,20261107+samples,DateTime.now().toUtc());
       final value=await compute(simulateCup,input);
-      if(mounted)setState(()=>report=value);
+      if(mounted)setState((){
+        report=value;
+        _simulationStale=signatureAtStart!=_feedSignature;
+      });
     }catch(e){
       Diagnostics.record('simulation',e);
       if(mounted)ScaffoldMessenger.of(context).showSnackBar(
@@ -308,6 +333,14 @@ class _CommandCenterPageState extends State<CommandCenterPage>
         title:'Симуляция не запускалась',
         message:'Выбери количество прогонов и нажми запуск. Результат будет рассчитан на устройстве.'),
       if(report!=null)...[
+        if(_simulationStale)CupCard(padding:const EdgeInsets.all(13),
+          child:Row(children:[
+            Icon(Icons.info_outline_rounded,color:CupUi.yellow,size:20),
+            const SizedBox(width:10),
+            Expanded(child:Text('Данные ФХР изменились после расчёта. '
+              'Это сохранённый прогноз; запусти симуляцию заново.',
+              style:TextStyle(color:CupUi.soft,fontSize:11,height:1.4))),
+          ])),
         CupSection(title:'МОДЕЛЬНЫЕ ШАНСЫ НА ТОП-8',
           subtitle:'Доля прогонов, в которых клуб закончил в первой восьмёрке'),
         CupCard(padding:const EdgeInsets.all(13),child:Column(children:[
@@ -597,21 +630,48 @@ class _CommandCenterPageState extends State<CommandCenterPage>
             child:CircularProgressIndicator(strokeWidth:2)):
             const Icon(Icons.refresh_rounded))]),
       body:Column(children:[
-        SingleChildScrollView(scrollDirection:Axis.horizontal,
-          padding:const EdgeInsets.fromLTRB(12,10,12,10),
-          child:Row(children:[
-            for(var i=0;i<tabs.length;i++)Padding(
-              padding:const EdgeInsets.only(right:7),
-              child:ChoiceChip(
-                label:Text(tabs[i],style:const TextStyle(fontSize:10,
-                  fontWeight:FontWeight.w900)),
-                selected:screen==i,
-                onSelected:(_)=>select(i),
-              )),
-          ])),
-        if(syncError!=null)Padding(padding:const EdgeInsets.symmetric(
-          horizontal:13,vertical:6),
-          child:Text(syncError!,style:TextStyle(color:CupUi.yellow,fontSize:10))),
+        Padding(padding:const EdgeInsets.fromLTRB(12,9,12,8),
+          child:LayoutBuilder(builder:(context,constraints){
+            final gap=7.0;
+            final buttonWidth=(constraints.maxWidth-gap*2)/3;
+            return Wrap(spacing:gap,runSpacing:7,children:[
+              for(var i=0;i<tabs.length;i++)SizedBox(width:buttonWidth,
+                child:Semantics(button:true,selected:screen==i,label:tabs[i],
+                  child:Material(color:Colors.transparent,child:InkWell(
+                    key:ValueKey('command-tab-$i'),
+                    onTap:()=>select(i),
+                    borderRadius:BorderRadius.circular(14),
+                    child:AnimatedContainer(duration:const Duration(milliseconds:220),
+                      curve:Curves.easeOutCubic,
+                      padding:const EdgeInsets.symmetric(horizontal:4,vertical:11),
+                      decoration:BoxDecoration(
+                        color:screen==i?CupUi.red:CupUi.surface,
+                        borderRadius:BorderRadius.circular(14),
+                        border:Border.all(color:screen==i?CupUi.ice.withValues(alpha:.45):CupUi.stroke),
+                      ),
+                      child:Column(mainAxisSize:MainAxisSize.min,children:[
+                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.ice),
+                        const SizedBox(height:6),
+                        Text(tabs[i],textAlign:TextAlign.center,maxLines:1,
+                          overflow:TextOverflow.ellipsis,
+                          style:TextStyle(color:screen==i?Colors.white:CupUi.soft,
+                            fontSize:9,fontWeight:FontWeight.w900)),
+                      ]),
+                    )))),
+              ),
+            ]);
+          })),
+        if(syncError!=null)Padding(padding:const EdgeInsets.fromLTRB(13,4,13,9),
+          child:Container(padding:const EdgeInsets.symmetric(horizontal:11,vertical:9),
+            decoration:BoxDecoration(color:CupUi.yellow.withValues(alpha:.10),
+              borderRadius:BorderRadius.circular(12)),
+            child:Row(children:[
+              Icon(Icons.wifi_off_rounded,color:CupUi.yellow,size:17),
+              const SizedBox(width:9),
+              Expanded(child:Text(syncError!,style:TextStyle(color:CupUi.yellow,fontSize:10))),
+              TextButton(onPressed:fetching?null:refresh,
+                child:const Text('ПОВТОРИТЬ',style:TextStyle(fontSize:9))),
+            ]))),
         Expanded(child:screen==5
           ?PersonalHqPanel(matches:games,clubs:widget.clubs,
             onTeam:widget.onTeam,onMatch:widget.onMatch)
