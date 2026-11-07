@@ -6,14 +6,21 @@ import 'match_lineups.dart';
 import 'insights.dart';
 import 'app_services.dart';
 import 'ui_kit.dart';
+import 'match_center.dart';
 
 class PlayerComparisonPage extends StatefulWidget{
   final CupStatistics data;
-  const PlayerComparisonPage({super.key,required this.data});
+  final CupPlayerStats? initial;
+  const PlayerComparisonPage({super.key,required this.data,this.initial});
   @override State<PlayerComparisonPage> createState()=>_PlayerComparisonPageState();
 }
 class _PlayerComparisonPageState extends State<PlayerComparisonPage>{
   CupPlayerStats? first,second;bool goalies=false;
+  @override void initState(){super.initState();
+    goalies=widget.initial?.goalie??false;
+    final list=goalies?widget.data.goalies:widget.data.skaters;
+    for(final player in list){if(player.id==widget.initial?.id&&player.fullClub==widget.initial?.fullClub){first=player;break;}}
+  }
   List<CupPlayerStats> get players=>goalies?widget.data.goalies:widget.data.skaters;
   Future<void> choose(bool left)async{
     final p=await showSearch<CupPlayerStats?>(context:context,delegate:_PlayerSearch(players));
@@ -101,7 +108,14 @@ class _RecentPlayerGamesState extends State<RecentPlayerGames>{
       CupSection(title:'ПОСЛЕДНИЕ 5 МАТЧЕЙ',subtitle:'Подтверждённые заявки · текущая команда'),
       if(data.unavailable>0)Padding(padding:const EdgeInsets.all(16),child:Text('${data.unavailable} протоколов недоступно или неполно: история может содержать пропуски.')),
       if(data.rows.isEmpty)const CupMessage(title:'Нет подтверждённых заявок',message:'ФХР ещё не опубликовала подходящие полные протоколы.'),
-      for(final row in data.rows)CupCard(child:ListTile(title:Text('${row.match.home} — ${row.match.away}',style:const TextStyle(fontSize:12)),subtitle:Text('${row.match.dayLabel} · ${row.match.score}\nГ ${row.stats?.goals??'—'} · П ${row.stats?.assists??'—'} · О ${row.stats?.points??'—'} · Штр ${row.stats?.penaltyMinutes??'—'}'))),
+      for(final row in data.rows)CupCard(child:ListTile(
+        onTap:()=>Navigator.push(context,MaterialPageRoute(
+          builder:(_)=>MatchCenterPage(match:row.match))),
+        leading:Icon(Icons.play_circle_outline_rounded,color:CupUi.ice),
+        title:Text('${row.match.home} — ${row.match.away}',
+          style:const TextStyle(fontSize:12,fontWeight:FontWeight.w800)),
+        subtitle:Text('${row.match.dayLabel} · ${row.match.score}\nГ ${row.stats?.goals??'—'} · П ${row.stats?.assists??'—'} · О ${row.stats?.points??'—'} · Штр ${row.stats?.penaltyMinutes??'—'}'),
+        trailing:Icon(Icons.chevron_right_rounded,color:CupUi.muted))),
       const Padding(padding:EdgeInsets.all(16),child:Text('«—» означает, что показатель не опубликован. Попадание в заявку само по себе не подтверждает выход на лёд.')),
     ]);
   });
