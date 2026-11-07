@@ -658,28 +658,39 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     final live=games.where((m)=>m.isLive).toList();
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
       CupReveal(child:_homeHero()),
-      CupCard(margin:const EdgeInsets.fromLTRB(12,2,12,11),
-        padding:EdgeInsets.zero,child:InkWell(
-        onTap:openCommandCenter,borderRadius:BorderRadius.circular(22),
-        child:Padding(padding:const EdgeInsets.all(17),child:Row(children:[
-          Container(width:48,height:48,
-            decoration:BoxDecoration(gradient:const LinearGradient(colors:[
-              Color(0xFF536DFA),Color(0xFF182A5B)]),
-              borderRadius:BorderRadius.circular(16)),
-            child:const Icon(Icons.radar_rounded,color:Colors.white,size:26)),
-          const SizedBox(width:13),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            Text('COMMAND CENTER v26',style:TextStyle(
-              fontSize:13,fontWeight:FontWeight.w900)),
-            SizedBox(height:5),
-            Text('LIVE RACE · AI PREDICT · TIME MACHINE',
-              style:TextStyle(fontSize:9,color:CupUi.ice,fontWeight:FontWeight.w800)),
-            SizedBox(height:4),
-            Text('Все расклады Кубка на одном экране',
-              style:TextStyle(fontSize:10,color:CupUi.muted)),
-          ])),
-          Icon(Icons.arrow_forward_ios_rounded,color:CupUi.soft,size:18),
-        ])))),
+      CupArena(margin:const EdgeInsets.fromLTRB(12,4,12,11),
+        padding:EdgeInsets.zero,child:Material(color:Colors.transparent,
+          child:InkWell(onTap:openCommandCenter,
+            borderRadius:BorderRadius.circular(22),
+            child:Padding(padding:const EdgeInsets.fromLTRB(18,18,17,19),
+              child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                Row(children:[
+                  Icon(Icons.radar_rounded,color:CupUi.ice,size:24),
+                  const SizedBox(width:10),
+                  const Expanded(child:Text('COMMAND CENTER',style:TextStyle(
+                    color:Colors.white,fontSize:13,fontWeight:FontWeight.w900,
+                    letterSpacing:1))),
+                  CupTag(text:'v27',color:CupUi.ice,filled:true),
+                ]),
+                const SizedBox(height:14),
+                const Text('ВСЁ О КУБКЕ.\nНА ОДНОМ ЭКРАНЕ.',
+                  style:TextStyle(color:Colors.white,fontSize:21,
+                    fontWeight:FontWeight.w900,height:1.1)),
+                const SizedBox(height:11),
+                Text('Прогнозы · Рассев · Аналитика · Мои команды',
+                  style:TextStyle(color:CupUi.soft,fontSize:11)),
+                const SizedBox(height:16),
+                Row(children:[
+                  Expanded(child:Container(height:1,
+                    color:CupUi.ice.withValues(alpha:.35))),
+                  const SizedBox(width:13),
+                  const Text('ОТКРЫТЬ АНАЛИТИКУ',style:TextStyle(
+                    color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)),
+                  const SizedBox(width:7),
+                  const Icon(Icons.arrow_forward_rounded,
+                    color:Colors.white,size:17),
+                ]),
+              ]))))),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
       CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
         child:Row(children:[
@@ -689,8 +700,6 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           Container(width:1,height:37,color:CupUi.stroke),
           _metric('${live.length}','LIVE',Icons.radio_button_checked_rounded),
         ])),
-      if(error!=null)Padding(padding:EdgeInsets.fromLTRB(15,5,15,10),
-        child:Text(error!,style:TextStyle(color:CupUi.yellow,fontSize:11))),
       if(live.isNotEmpty)...[
         CupSection(title:'ПРЯМО СЕЙЧАС'),
         for(final block in _gamesGrouped(live))block,
