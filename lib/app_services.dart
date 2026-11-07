@@ -53,7 +53,7 @@ Future<void> shareCard(BuildContext context,String title,List<String> lines)asyn
     canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(48,48,984,984),const Radius.circular(36)),Paint()..color=const Color(0xFF162338));
     canvas.drawRect(const Rect.fromLTWH(90,105,7,62),Paint()..color=CupUi.red);
     void text(String value,double y,double size,Color color,{int maxLines=2}){
-      final p=TextPainter(text:TextSpan(text:value,style:TextStyle(fontFamily:'Roboto',fontSize:size,color:color,fontWeight:FontWeight.w700)),textDirection:TextDirection.ltr,maxLines:maxLines,ellipsis:'…')..layout(maxWidth:880);
+      final p=TextPainter(text:TextSpan(text:value,style:TextStyle(fontFamily:'Manrope',fontSize:size,color:color,fontWeight:FontWeight.w700)),textDirection:TextDirection.ltr,maxLines:maxLines,ellipsis:'…')..layout(maxWidth:880);
       p.paint(canvas,Offset(110,y));
     }
     text('JUNIOR U16',110,44,Colors.white);

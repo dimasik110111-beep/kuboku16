@@ -104,9 +104,13 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
               borderRadius:BorderRadius.circular(17),border:Border.all(
                 color:live?CupUi.green.withValues(alpha:.36):CupUi.stroke)),
             child:Column(children:[
-              Text(match.score.isEmpty?'–  :  –':match.score.replaceAll(':',' : '),
-                style:TextStyle(color:live?CupUi.green:CupUi.white,
-                  fontSize:31,fontWeight:FontWeight.w900,letterSpacing:-1.5)),
+              AnimatedSwitcher(duration:const Duration(milliseconds:380),
+                switchInCurve:Curves.easeOutCubic,
+                transitionBuilder:(child,animation)=>FadeTransition(opacity:animation,
+                  child:ScaleTransition(scale:Tween<double>(begin:.87,end:1).animate(animation),child:child)),
+                child:Text(match.score.isEmpty?'–  :  –':match.score.replaceAll(':',' : '),
+                  key:ValueKey(match.score),style:TextStyle(color:live?CupUi.green:CupUi.white,
+                    fontSize:31,fontWeight:FontWeight.w900,letterSpacing:-1.5))),
               if(match.scoreNote.isNotEmpty)Text(match.scoreNote,
                 style:TextStyle(color:CupUi.yellow,fontSize:11)),
             ])),
@@ -409,7 +413,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       ],
     ),
     body:RefreshIndicator(onRefresh:refresh,child:ListView(children:[
-      _hero(),
+      CupReveal(child:_hero()),
       if(error!=null)Padding(padding:EdgeInsets.symmetric(horizontal:17,vertical:6),
         child:Text(error!,style:TextStyle(color:CupUi.yellow,fontSize:11))),
       _tabs(),

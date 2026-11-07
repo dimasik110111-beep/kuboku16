@@ -152,7 +152,8 @@ class _ScenarioPageState extends State<ScenarioPage>{
     final movement=(oldPlaces[rank.team]??index+1)-(index+1);
     final delta=rank.pts-(oldPoints[rank.team]??rank.pts);
     final top=index<8;
-    return Container(color:top?CupUi.green.withValues(alpha:.035):Colors.transparent,
+    return AnimatedContainer(duration:const Duration(milliseconds:320),curve:Curves.easeOutCubic,
+      color:top?CupUi.green.withValues(alpha:.045):Colors.transparent,
       padding:const EdgeInsets.symmetric(horizontal:12,vertical:8),child:Row(children:[
         SizedBox(width:25,child:Text('${index+1}'.padLeft(2,'0'),style:TextStyle(
           color:top?CupUi.green:CupUi.muted,fontSize:10,fontWeight:FontWeight.w900))),
@@ -166,7 +167,9 @@ class _ScenarioPageState extends State<ScenarioPage>{
           Text('${movement>0?'↑':'↓'}${movement.abs()}',style:TextStyle(
             color:movement>0?CupUi.green:CupUi.red,fontSize:9,fontWeight:FontWeight.w900)))),
         SizedBox(width:42,child:Column(crossAxisAlignment:CrossAxisAlignment.end,children:[
-          Text('${rank.pts}',style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900)),
+          AnimatedSwitcher(duration:const Duration(milliseconds:300),
+            child:Text('${rank.pts}',key:ValueKey('${rank.team}:${rank.pts}'),
+              style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900))),
           Text('${delta>=0?'+':''}$delta',style:TextStyle(color:delta>=0?CupUi.green:CupUi.red,fontSize:8)),
         ])),
       ]));
@@ -338,7 +341,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
       appBar:AppBar(title:const Text('ПРЕДИКТЫ'),
         actions:[IconButton(tooltip:'Сбросить',onPressed:!ready||scores.isEmpty?null:reset,icon:const Icon(Icons.restart_alt_rounded))]),
       body:SafeArea(child:!ready?const LoadingCards():ListView(children:[
-        _hero(all.length,moved),
+        CupReveal(child:_hero(all.length,moved)),
         CupSection(title:'ТУРНИРНАЯ ПРОЕКЦИЯ',subtitle:'Первые 8 мест — зона Золотого финала'),
         CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),padding:EdgeInsets.zero,
           child:Column(children:[
@@ -365,7 +368,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
               label:Text(fullTable?'Свернуть таблицу':'Показать всю таблицу'),
               style:TextButton.styleFrom(foregroundColor:CupUi.ice,textStyle:const TextStyle(fontSize:10,fontWeight:FontWeight.w800))),
           ])),
-        _thirdTourMap(thirdTourGroups),
+        CupReveal(child:_thirdTourMap(thirdTourGroups)),
         _scenarioCompare(),
         Container(margin:const EdgeInsets.fromLTRB(13,4,13,7),padding:const EdgeInsets.all(12),
           decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(16),border:Border.all(color:CupUi.stroke)),

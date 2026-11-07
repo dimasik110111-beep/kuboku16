@@ -43,8 +43,10 @@ class _JuniorAppState extends State<JuniorApp>{
     final brightness=light?Brightness.light:Brightness.dark;
     return MaterialApp(
       debugShowCheckedModeBanner:false,title:'JUNIOR U16 · Кубок России',
+      themeAnimationDuration:const Duration(milliseconds:420),
+      themeAnimationCurve:Curves.easeOutCubic,
       theme:ThemeData(
-        useMaterial3:true,brightness:brightness,
+        useMaterial3:true,brightness:brightness,fontFamily:'Manrope',
         scaffoldBackgroundColor:CupUi.background,
         colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness).copyWith(
           primary:CupUi.red,secondary:CupUi.ice,surface:CupUi.surface,
@@ -52,12 +54,12 @@ class _JuniorAppState extends State<JuniorApp>{
         appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
           foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent,
           centerTitle:false,toolbarHeight:62,
-          titleTextStyle:TextStyle(color:CupUi.white,fontSize:17,fontWeight:FontWeight.w900)),
+          titleTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.white,fontSize:17,fontWeight:FontWeight.w800,letterSpacing:-.3)),
         dividerColor:CupUi.stroke,
         splashColor:CupUi.ice.withValues(alpha:.08),
         highlightColor:CupUi.ice.withValues(alpha:.05),
         textTheme:ThemeData(brightness:brightness).textTheme.apply(
-          bodyColor:CupUi.white,displayColor:CupUi.white),
+          fontFamily:'Manrope',bodyColor:CupUi.white,displayColor:CupUi.white),
         inputDecorationTheme:InputDecorationTheme(
           filled:true,fillColor:CupUi.raised,
           hintStyle:TextStyle(color:CupUi.dim,fontSize:13),
@@ -99,6 +101,8 @@ class _JuniorAppState extends State<JuniorApp>{
           textStyle:const TextStyle(fontWeight:FontWeight.w800),
           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
           padding:const EdgeInsets.symmetric(horizontal:18,vertical:12))),
+        iconButtonTheme:IconButtonThemeData(style:IconButton.styleFrom(
+          foregroundColor:CupUi.soft,highlightColor:CupUi.ice.withValues(alpha:.12))),
       ),
       home:ScoresHome(light:light,onSwitchTheme:switchTheme),
     );
@@ -333,7 +337,10 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             borderRadius:BorderRadius.circular(15),
             border:Border.all(color:i==tab?CupUi.red.withValues(alpha:.33):Colors.transparent)),
           child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
-            Icon(i==tab?sections[i].$2:sections[i].$1,size:21,color:i==tab?CupUi.red:CupUi.muted),
+            AnimatedSwitcher(duration:const Duration(milliseconds:240),
+              transitionBuilder:(child,animation)=>ScaleTransition(scale:animation,child:child),
+              child:Icon(i==tab?sections[i].$2:sections[i].$1,key:ValueKey(i==tab),
+                size:21,color:i==tab?CupUi.red:CupUi.muted)),
             const SizedBox(height:3),
             Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
               fontSize:9,fontWeight:i==tab?FontWeight.w900:FontWeight.w600),
@@ -428,9 +435,11 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       child:Padding(padding:EdgeInsets.fromLTRB(12,11,7,11),
         child:Row(children:[
           SizedBox(width:49,child:Column(children:[
+            Row(mainAxisAlignment:MainAxisAlignment.center,children:[
+              if(live)...[const CupLivePulse(),const SizedBox(width:3)],
             Text(live?'LIVE':played?'КОН.':game.timeMsk.isNotEmpty?game.timeMsk:'–',
               style:TextStyle(fontWeight:FontWeight.w900,fontSize:11,
-                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow))),
+                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow)))]),
             SizedBox(height:6),
             Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
           ])),
@@ -448,11 +457,9 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
               borderRadius:BorderRadius.circular(11),border:Border.all(
                 color:live?CupUi.green.withValues(alpha:.38):CupUi.stroke)),
             child:Column(children:[
-              Text(goals==null?'–':'${goals[0]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
-                fontWeight:FontWeight.w900,fontSize:17,height:1)),
+              _animatedGoal(goals==null?'–':'${goals[0]}',played||live),
               const SizedBox(height:5),Container(height:1,width:19,color:CupUi.stroke),const SizedBox(height:5),
-              Text(goals==null?'–':'${goals[1]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
-                fontWeight:FontWeight.w900,fontSize:17,height:1)),
+              _animatedGoal(goals==null?'–':'${goals[1]}',played||live),
             ])),
           IconButton(
             onPressed:()=>toggleFavorite(game),
@@ -461,6 +468,12 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
               color:favorites.contains(game.key)?CupUi.yellow:CupUi.dim,size:21)),
         ])));
   }
+  Widget _animatedGoal(String value,bool active)=>AnimatedSwitcher(
+    duration:const Duration(milliseconds:360),switchInCurve:Curves.easeOutCubic,
+    transitionBuilder:(child,animation)=>FadeTransition(opacity:animation,
+      child:SlideTransition(position:Tween<Offset>(begin:const Offset(0,.25),end:Offset.zero).animate(animation),child:child)),
+    child:Text(value,key:ValueKey(value),style:TextStyle(color:active?CupUi.white:CupUi.soft,
+      fontWeight:FontWeight.w900,fontSize:17,height:1)));
   Widget _teamLine(String name,String? logo)=>Row(children:[
     fhrTeamLogo(logo,size:25),SizedBox(width:9),
     Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
@@ -540,7 +553,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     final recent=filtered();
     final live=games.where((m)=>m.isLive).toList();
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
-      _homeHero(),
+      CupReveal(child:_homeHero()),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
       Row(children:[
         Expanded(child:_metric('20','КОМАНД',Icons.shield_outlined)),
