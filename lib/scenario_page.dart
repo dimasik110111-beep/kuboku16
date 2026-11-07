@@ -91,7 +91,7 @@ class _ScenarioPageState extends State<ScenarioPage>{
         const SizedBox(height:13),
         Row(children:[Icon(Icons.cloud_done_outlined,color:CupUi.green,size:14),const SizedBox(width:6),
           Expanded(child:Text('Предикты сохраняются на устройстве',style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w600))),
-          const CupTag(text:'ФХР · 2026/27',color:CupUi.soft),
+          CupTag(text:'ФХР · 2026/27',color:CupUi.soft),
         ]),
       ])),
     ]));

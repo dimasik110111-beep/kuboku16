@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 8185)
-Total output lines: 663
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -52,9 +49,9 @@ class _JuniorAppState extends State<JuniorApp>{
         colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness).copyWith(
           primary:CupUi.red,secondary:CupUi.ice,surface:CupUi.surface,
           onSurface:CupUi.white,error:const Color(0xFFFF6978)),
-        appBarTheme:AppBarTheme(
-          backgroundColor:CupUi.background,foregroundColor:CupUi.white,
-          surfaceTintColor:Colors.transparent,centerTitle:false,toolbarHeight:62,
+        appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
+          foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent,
+          centerTitle:false,toolbarHeight:62,
           titleTextStyle:TextStyle(color:CupUi.white,fontSize:17,fontWeight:FontWeight.w900)),
         dividerColor:CupUi.stroke,
         splashColor:CupUi.ice.withValues(alpha:.08),
@@ -78,8 +75,7 @@ class _JuniorAppState extends State<JuniorApp>{
         dialogTheme:DialogThemeData(
           backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
           shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(24))),
-        tabBarTheme:TabBarThemeData(
-          labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
+        tabBarTheme:TabBarThemeData(labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
           indicatorColor:CupUi.red,dividerColor:CupUi.stroke,
           labelStyle:const TextStyle(fontSize:12,fontWeight:FontWeight.w800),
           indicatorSize:TabBarIndicatorSize.label),
@@ -254,8 +250,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       border:Border(bottom:BorderSide(color:CupUi.stroke,width:.8))),
     child:Row(children:[
       Container(width:42,height:42,padding:const EdgeInsets.all(4),
-        decoration:BoxDecoration(
-          gradient:LinearGradient(colors:[CupUi.raised,CupUi.surface]),
+        decoration:BoxDecoration(gradient:LinearGradient(colors:[CupUi.raised,CupUi.surface]),
           borderRadius:BorderRadius.circular(14),border:Border.all(color:CupUi.stroke)),
         child:Image.network(fhrCupLogo,fit:BoxFit.contain,
           errorBuilder:(_,__,___)=>Icon(Icons.sports_hockey,color:CupUi.red))),
@@ -265,7 +260,169 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           fontWeight:FontWeight.w900,fontSize:18,height:1)),
         const SizedBox(height:5),
         Row(children:[
-          Container(width:5,…2185 tokens truncated…Weight.w900,fontSize:16)),
+          Container(width:5,height:5,decoration:BoxDecoration(
+            color:error==null?CupUi.green:CupUi.yellow,shape:BoxShape.circle)),
+          const SizedBox(width:5),
+          Text('КУБОК РОССИИ · 2026/27',style:TextStyle(color:CupUi.muted,
+            fontWeight:FontWeight.w800,letterSpacing:.4,fontSize:8)),
+        ]),
+      ])),
+      if(games.any((m)=>m.isLive))Padding(padding:const EdgeInsets.only(right:2),
+        child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
+      _headerAction(icon:Icons.tune_rounded,tooltip:'Настройки',
+        onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()))),
+      _headerAction(icon:widget.light?Icons.dark_mode_outlined:Icons.light_mode_outlined,
+        tooltip:widget.light?'Тёмная тема':'Светлая тема',onTap:widget.onSwitchTheme),
+      _headerAction(icon:loading?Icons.hourglass_top_rounded:Icons.refresh_rounded,
+        tooltip:'Обновить данные ФХР',onTap:loading?null:refresh),
+    ]),
+  ));
+  Widget _headerAction({required IconData icon,required String tooltip,VoidCallback? onTap})=>
+    IconButton(tooltip:tooltip,onPressed:onTap,visualDensity:VisualDensity.compact,
+      style:IconButton.styleFrom(backgroundColor:CupUi.surface,foregroundColor:CupUi.soft,
+        side:BorderSide(color:CupUi.stroke),shape:RoundedRectangleBorder(
+          borderRadius:BorderRadius.circular(12))),
+      icon:Icon(icon,size:18));
+
+  Widget _syncBar()=>Container(
+    color:CupUi.surface,padding:EdgeInsets.symmetric(horizontal:16,vertical:9),
+    child:Row(children:[
+      Container(width:6,height:6,decoration:BoxDecoration(shape:BoxShape.circle,
+        color:cached?CupUi.yellow:(error==null?CupUi.green:CupUi.yellow))),
+      SizedBox(width:7),
+      Expanded(child:Text(cached?'Сохранено · ${refreshTime()}':refreshTime(),
+        style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w600))),
+      Text('${games.length} матчей · ${clubs.length} клубов',
+        style:TextStyle(color:CupUi.muted,fontSize:10)),
+    ]),
+  );
+
+  Widget _nav()=>SafeArea(top:false,child:Container(
+    constraints:const BoxConstraints(minHeight:68),
+    decoration:BoxDecoration(color:CupUi.surface,
+      border:Border(top:BorderSide(color:CupUi.stroke,width:.8)),
+      boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:.18),blurRadius:18,offset:const Offset(0,-5))]),
+    child:Row(children:[
+      for(var i=0;i<sections.length;i++)Expanded(child:InkWell(
+        onTap:()=>selectTab(i),borderRadius:BorderRadius.circular(16),
+        child:AnimatedContainer(duration:const Duration(milliseconds:180),
+          margin:const EdgeInsets.fromLTRB(2,7,2,4),
+          padding:const EdgeInsets.symmetric(vertical:7),
+          decoration:BoxDecoration(color:i==tab?CupUi.red.withValues(alpha:.12):Colors.transparent,
+            borderRadius:BorderRadius.circular(15),
+            border:Border.all(color:i==tab?CupUi.red.withValues(alpha:.22):Colors.transparent)),
+          child:Column(mainAxisSize:MainAxisSize.min,mainAxisAlignment:MainAxisAlignment.center,children:[
+            Icon(i==tab?sections[i].$2:sections[i].$1,size:20,color:i==tab?CupUi.red:CupUi.muted),
+            const SizedBox(height:3),
+            Text(sections[i].$3,style:TextStyle(color:i==tab?CupUi.white:CupUi.muted,
+              fontSize:9,fontWeight:i==tab?FontWeight.w900:FontWeight.w600),
+              maxLines:1,overflow:TextOverflow.ellipsis),
+          ])))),
+    ]),
+  ));
+
+  Widget _filterChip(String text,bool active,VoidCallback tap)=>InkWell(
+    onTap:tap,borderRadius:BorderRadius.circular(99),
+    child:AnimatedContainer(duration:Duration(milliseconds:150),
+      margin:EdgeInsets.only(right:8),
+      padding:EdgeInsets.symmetric(horizontal:15,vertical:10),
+      decoration:BoxDecoration(
+        color:active?CupUi.red:CupUi.surface,
+        borderRadius:BorderRadius.circular(8),
+        border:Border.all(color:active?CupUi.red:CupUi.stroke)),
+      child:Text(text,style:TextStyle(fontSize:10,letterSpacing:.3,
+        color:active?Colors.white:CupUi.muted,fontWeight:FontWeight.w800))),
+  );
+
+  Widget _dateSelector(){
+    final now=DateTime.now().toUtc().add(Duration(hours:3));
+    return Container(color:CupUi.background,
+      child:Column(children:[
+        Padding(padding:EdgeInsets.fromLTRB(13,10,10,10),
+          child:Row(children:[
+            Icon(Icons.calendar_month_outlined,color:CupUi.muted,size:18),
+            SizedBox(width:8),
+            Expanded(child:Text(dateFilter?'ВЫБРАННАЯ ДАТА: ${shortDate(date)}':'ВЫБЕРИ ДЕНЬ МАТЧА',
+              style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800,letterSpacing:.5))),
+            InkWell(onTap:()=>setState(()=>dateFilter=false),
+              child:Padding(padding:EdgeInsets.all(6),
+                child:Text('ВСЕ ДАТЫ',style:TextStyle(color:dateFilter?CupUi.red:CupUi.muted,
+                  fontSize:10,fontWeight:FontWeight.w800)))),
+            SizedBox(width:4),
+            IconButton(icon:Icon(Icons.calendar_today_rounded,size:17,color:CupUi.soft),
+              onPressed:()async{
+                final selected=await showDatePicker(context:context,
+                  firstDate:DateTime(2026,8,1),lastDate:DateTime(2027,12,31),
+                  initialDate:date.isBefore(DateTime(2026,8,1))?DateTime(2026,9,10):date);
+                if(selected!=null&&mounted)setState((){date=selected;dateFilter=true;});
+              }),
+          ])),
+        SizedBox(height:57,child:ListView.builder(
+          padding:EdgeInsets.symmetric(horizontal:9),scrollDirection:Axis.horizontal,
+          itemCount:11,itemBuilder:(context,i){
+            final current=now.add(Duration(days:i-5));
+            final active=dateFilter&&current.year==date.year&&current.month==date.month&&current.day==date.day;
+            return InkWell(onTap:()=>setState((){date=current;dateFilter=true;}),
+              borderRadius:BorderRadius.circular(8),
+              child:Container(width:59,margin:EdgeInsets.symmetric(horizontal:2),
+                decoration:BoxDecoration(color:active?CupUi.raised:Colors.transparent,
+                  borderRadius:BorderRadius.circular(8),
+                  border:Border(bottom:BorderSide(width:2.5,
+                    color:active?CupUi.red:Colors.transparent))),
+                child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+                  Text(i==5?'СЕГОДНЯ':weekday(current),
+                    style:TextStyle(fontSize:i==5?9:10,color:active?CupUi.red:CupUi.muted,
+                      fontWeight:FontWeight.w800)),
+                  SizedBox(height:5),
+                  Text(shortDate(current),style:TextStyle(color:active?CupUi.white:CupUi.soft,
+                    fontSize:11,fontWeight:FontWeight.w800)),
+                ])),
+            );
+          },
+        )),
+        SizedBox(height:5),
+      ]));
+  }
+
+  List<Match> filtered({bool onlyFavorites=false}){
+    return games.where((m){
+      if(onlyFavorites&&!favorites.contains(m.key))return false;
+      if(filter==1&&!m.isLive)return false;
+      if(filter==2&&!m.finished)return false;
+      if(filter==3&&(m.finished||m.isLive))return false;
+      if(dateFilter){
+        final parsed=m.matchDate;
+        if(parsed==null||parsed.year!=date.year||parsed.month!=date.month||parsed.day!=date.day)return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  Widget _matchLine(Match game){
+    final h=findClub(game.home),a=findClub(game.away);
+    final goals=game.goals;
+    final live=game.isLive;
+    final played=game.finished;
+    return InkWell(onTap:()=>openMatch(game),
+      child:Padding(padding:EdgeInsets.fromLTRB(12,10,6,10),
+        child:Row(children:[
+          SizedBox(width:50,child:Column(children:[
+            Text(live?'LIVE':played?'КОН.':game.timeMsk.isNotEmpty?game.timeMsk:'–',
+              style:TextStyle(fontWeight:FontWeight.w800,fontSize:10,
+                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow))),
+            SizedBox(height:6),
+            Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
+          ])),
+          Container(height:42,width:2,color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow)),
+          SizedBox(width:10),
+          Expanded(child:Column(children:[
+            _teamLine(game.home,h?.logo),
+            SizedBox(height:10),
+            _teamLine(game.away,a?.logo),
+          ])),
+          SizedBox(width:34,child:Column(children:[
+            Text(goals==null?'–':'${goals[0]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
+              fontWeight:FontWeight.w900,fontSize:16)),
             SizedBox(height:10),
             Text(goals==null?'–':'${goals[1]}',style:TextStyle(color:played||live?CupUi.white:CupUi.soft,
               fontWeight:FontWeight.w900,fontSize:16)),
@@ -323,43 +480,32 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   Widget _homeHero()=>Container(
     margin:const EdgeInsets.fromLTRB(13,13,13,8),
     decoration:BoxDecoration(
-      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
-        colors:CupUi.heroGradient),
-      borderRadius:BorderRadius.circular(26),
-      border:Border.all(color:CupUi.ice.withValues(alpha:.13)),
+      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,colors:CupUi.heroGradient),
+      borderRadius:BorderRadius.circular(26),border:Border.all(color:CupUi.ice.withValues(alpha:.13)),
       boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.09),blurRadius:28,offset:const Offset(0,10))]),
     clipBehavior:Clip.antiAlias,
     child:Stack(children:[
       Positioned(right:-24,top:-45,child:Container(width:175,height:175,
-        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(
-          color:CupUi.ice.withValues(alpha:.08),width:25)))),
-      Padding(padding:const EdgeInsets.fromLTRB(18,19,17,17),
-        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Row(children:[
-            Container(width:29,height:29,decoration:BoxDecoration(
-              color:CupUi.red.withValues(alpha:.18),borderRadius:BorderRadius.circular(10)),
-              child:const Icon(Icons.emoji_events_rounded,color:CupUi.red,size:17)),
-            const SizedBox(width:8),
-            Text('СЕЗОН 2026/27',style:TextStyle(color:CupUi.ice.withValues(alpha:.9),
-              fontSize:10,letterSpacing:1,fontWeight:FontWeight.w900)),
-            const Spacer(),
-            CupTag(text:'2011 · U16',color:CupUi.soft,filled:true),
-          ]),
-          const SizedBox(height:16),
-          const Text('Кубок России',style:TextStyle(fontSize:26,height:1,
-            letterSpacing:-.6,fontWeight:FontWeight.w900,color:Colors.white)),
-          const SizedBox(height:7),
-          Text('Все матчи, таблицы и игроки турнира — в одном месте.',
-            style:TextStyle(color:CupUi.soft,fontSize:12,height:1.4)),
-          const SizedBox(height:16),
-          SizedBox(width:double.infinity,child:FilledButton.icon(
-            onPressed:()=>Navigator.push(context,MaterialPageRoute(
-              builder:(_)=>ScenarioPage(matches:games,teams:clubs.map((t)=>t.fullName).toList(),
-                teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
-            icon:const Icon(Icons.auto_awesome_rounded,size:18),
-            label:const Text('Открыть симулятор турнира')),
-          )),
-        ])),
+        decoration:BoxDecoration(shape:BoxShape.circle,border:Border.all(color:CupUi.ice.withValues(alpha:.08),width:25)))),
+      Padding(padding:const EdgeInsets.fromLTRB(18,19,17,17),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Row(children:[
+          Container(width:29,height:29,decoration:BoxDecoration(color:CupUi.red.withValues(alpha:.18),borderRadius:BorderRadius.circular(10)),
+            child:const Icon(Icons.emoji_events_rounded,color:CupUi.red,size:17)),
+          const SizedBox(width:8),Text('СЕЗОН 2026/27',style:TextStyle(color:CupUi.ice,fontSize:10,letterSpacing:1,fontWeight:FontWeight.w900)),
+          const Spacer(),CupTag(text:'2011 · U16',color:CupUi.soft,filled:true),
+        ]),
+        const SizedBox(height:16),
+        const Text('Кубок России',style:TextStyle(fontSize:26,height:1,letterSpacing:-.6,fontWeight:FontWeight.w900,color:Colors.white)),
+        const SizedBox(height:7),
+        Text('Все матчи, таблицы и игроки турнира — в одном месте.',style:TextStyle(color:CupUi.soft,fontSize:12,height:1.4)),
+        const SizedBox(height:16),
+        SizedBox(width:double.infinity,child:FilledButton.icon(
+          onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(
+            matches:games,teams:clubs.map((t)=>t.fullName).toList(),
+            teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
+          icon:const Icon(Icons.auto_awesome_rounded,size:18),
+          label:const Text('Открыть симулятор турнира'))),
+      ])),
     ]),
   );
 
@@ -497,4 +643,5 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     bottomNavigationBar:_nav(),
   );
 }
+
 
