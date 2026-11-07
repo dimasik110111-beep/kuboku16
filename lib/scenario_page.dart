@@ -58,14 +58,8 @@ class _ScenarioPageState extends State<ScenarioPage>{
     catch(e){Diagnostics.record('scenario library save',e);if(mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Не удалось сохранить копию сценария.')));}
   }
   Future<void> saveSnapshot()async{
-    final controller=TextEditingController(text:'Сценарий ${savedScenarios.length+1}');
-    final name=await showDialog<String>(context:context,builder:(context)=>AlertDialog(
-      title:const Text('Сохранить вариант'),
-      content:TextField(controller:controller,maxLength:32,autofocus:true,
-        decoration:const InputDecoration(labelText:'Название сценария',border:OutlineInputBorder())),
-      actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Отмена')),
-        FilledButton(onPressed:()=>Navigator.pop(context,controller.text.trim()),child:const Text('Сохранить'))]));
-    controller.dispose();
+    final name=await showDialog<String>(context:context,builder:(context)=>
+      ScenarioNameDialog(initial:'Сценарий ${savedScenarios.length+1}'));
     if(name==null||name.isEmpty||!mounted)return;
     setState((){savedScenarios[name]=Map<String,ScenarioScore>.from(scores);scenarioRight=name;});
     await saveScenarioLibrary();
@@ -396,6 +390,22 @@ class _ScenarioPageState extends State<ScenarioPage>{
       ])),
     );
   }
+}
+
+class ScenarioNameDialog extends StatefulWidget {
+  final String initial;
+  const ScenarioNameDialog({super.key,required this.initial});
+  @override State<ScenarioNameDialog> createState()=>_ScenarioNameDialogState();
+}
+class _ScenarioNameDialogState extends State<ScenarioNameDialog>{
+  late final controller=TextEditingController(text:widget.initial);
+  @override void dispose(){controller.dispose();super.dispose();}
+  @override Widget build(BuildContext context)=>AlertDialog(
+    title:const Text('Сохранить вариант'),
+    content:TextField(controller:controller,maxLength:32,autofocus:true,
+      decoration:const InputDecoration(labelText:'Название сценария',border:OutlineInputBorder())),
+    actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Отмена')),
+      FilledButton(onPressed:()=>Navigator.pop(context,controller.text.trim()),child:const Text('Сохранить'))]);
 }
 
 class ScenarioScoreDialog extends StatefulWidget {
