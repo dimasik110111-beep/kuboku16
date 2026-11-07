@@ -23,16 +23,19 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
       - name: Create Android platform
         run: |
           flutter create --platforms=android --project-name=junior_u16 --org=ru.junioru16 .
-          # Flutter template creates a MyApp test which does not apply to JUNIOR U16
           rm -f test/widget_test.dart
+      - name: Configure permanent release signing
+        id: signing
+        env:
+          ANDROID_SIGNING_BUNDLE: ${{ secrets.ANDROID_SIGNING_BUNDLE }}
+        run: python3 tools/configure_signing.py
       - name: Use official FHR Cup logo as Android launcher icon
         run: |
           python3 -m pip -q install Pillow
@@ -55,25 +58,25 @@ jobs:
         run: flutter test
       - name: Build release APK
         run: flutter build apk --release
+      - name: Verify permanent signature
+        if: steps.signing.outputs.ready == 'true'
+        run: python3 tools/verify_signing.py build/app/outputs/flutter-apk/app-release.apk "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner"
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JUNIOR-U16-APK
+          name: JUNIOR-U16-v16-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
-
-      - name: Publish verified v15 APK
-        if: github.ref == 'refs/heads/main'
+      - name: Publish verified v16 APK
+        if: github.ref == 'refs/heads/main' && steps.signing.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v15.apk
-          sha256sum JUNIOR-U16-v15.apk > SHA256SUMS.txt
-          if gh release view v15.0.0 >/dev/null 2>&1; then
-            gh release upload v15.0.0 JUNIOR-U16-v15.apk SHA256SUMS.txt --clobber
-            gh release edit v15.0.0 --notes-file RELEASE_NOTES_v15.md
-          else
-            gh release create v15.0.0 JUNIOR-U16-v15.apk SHA256SUMS.txt --target "$GITHUB_SHA" --prerelease --title "JUNIOR U16 v15 · Большое обновление" --notes-file RELEASE_NOTES_v15.md
-          fi
+          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v16.apk
+          sha256sum JUNIOR-U16-v16.apk > SHA256SUMS.txt
+          gh release create v16.0.0 JUNIOR-U16-v16.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v16 · Моя команда и сценарии" --notes-file RELEASE_NOTES_v16.md
+      - name: Explain skipped publication
+        if: steps.signing.outputs.ready != 'true'
+        run: echo 'APK is for CI validation only. Configure ANDROID_SIGNING_BUNDLE to publish a permanent-signature release.'
