@@ -73,6 +73,11 @@ class _ScenarioPageState extends State<ScenarioPage>{
   Future<void> edit(Match match)async{
     final result=await showDialog<ScenarioScore>(context:context,builder:(_)=>ScenarioScoreDialog(match:match,initial:scores[match.key]));
     if(result!=null&&mounted){
+      if(result.home<0){
+        setState(()=>scores.remove(match.key));
+        await save();
+        return;
+      }
       final before=_secondCrossoverPairs(scores);
       final next=Map<String,ScenarioScore>.from(scores)..[match.key]=result;
       final after=_secondCrossoverPairs(next);
@@ -418,6 +423,14 @@ class _ScenarioPageState extends State<ScenarioPage>{
     final originalPlaces={for(var i=0;i<original.length;i++)original[i].team:i+1};
     final originalPoints={for(final r in original)r.team:r.pts};
     final all=scenarioFixtures(widget.matches,scores:scores);
+    final activeKeys=all.map((m)=>m.key).toSet();
+    // A synthetic slot is not the fixture identity: obsolete pairs
+    // must not survive when a projected bracket re-seeds.
+    final stale=scores.keys.where((k)=>k.startsWith('-')&&!activeKeys.contains(k)).toList();
+    if(stale.isNotEmpty){
+      for(final key in stale){scores.remove(key);}
+      WidgetsBinding.instance.addPostFrameCallback((_){if(mounted)save();});
+    }
     final fixtures=all.where((m)=>_matchesFilter(m)&&(team==null||m.home==team||m.away==team)).toList();
     final names=table.map((r)=>r.team).toList()..sort();
     final officialCup=CupTournament(widget.matches,teams:widget.teams);
@@ -547,7 +560,12 @@ class _ScenarioScoreDialogState extends State<ScenarioScoreDialog>{
         Row(children:[Expanded(child:TextField(key:const ValueKey('scenario-home-score'),controller:home,keyboardType:TextInputType.number,inputFormatters:[FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter(2)],decoration:const InputDecoration(labelText:'Хозяева',border:OutlineInputBorder()))),const Padding(padding:EdgeInsets.all(12),child:Text(':')),Expanded(child:TextField(key:const ValueKey('scenario-away-score'),controller:away,keyboardType:TextInputType.number,inputFormatters:[FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter(2)],decoration:const InputDecoration(labelText:'Гости',border:OutlineInputBorder())))]),
         SwitchListTile(contentPadding:EdgeInsets.zero,title:const Text('Овертайм / буллиты'),subtitle:const Text('Проигравшей команде — 1 очко'),value:overtime,onChanged:(v)=>setState(()=>overtime=v)),
         if(error!=null)Text(error!,style:TextStyle(color:Theme.of(context).colorScheme.error)),
-      ])),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Отмена')),FilledButton(onPressed:(){
+      ])),actions:[
+        if(widget.initial!=null)TextButton(
+          onPressed:()=>Navigator.pop(context,const ScenarioScore(-1,-1)),
+          child:const Text('Удалить прогноз')),
+        TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Отмена')),
+        FilledButton(onPressed:(){
         final h=int.tryParse(home.text),a=int.tryParse(away.text);
         if(h==null||a==null){setState(()=>error='Укажи оба числа.');return;}
         final value=ScenarioScore(h,a,overtime:overtime);
