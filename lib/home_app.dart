@@ -269,12 +269,22 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
       ])),
       if(games.any((m)=>m.isLive))Padding(padding:const EdgeInsets.only(right:2),
         child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
-      _headerAction(icon:Icons.tune_rounded,tooltip:'Настройки',
-        onTap:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()))),
       _headerAction(icon:widget.light?Icons.dark_mode_outlined:Icons.light_mode_outlined,
         tooltip:widget.light?'Тёмная тема':'Светлая тема',onTap:widget.onSwitchTheme),
-      _headerAction(icon:loading?Icons.hourglass_top_rounded:Icons.refresh_rounded,
-        tooltip:'Обновить данные ФХР',onTap:loading?null:refresh),
+      PopupMenuButton<String>(
+        tooltip:'Ещё',icon:Icon(Icons.more_vert_rounded,color:CupUi.soft,size:19),
+        color:CupUi.surface,
+        onSelected:(value){
+          if(value=='settings')Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()));
+          if(value=='refresh')refresh();
+        },
+        itemBuilder:(_)=>[
+          const PopupMenuItem(value:'settings',child:Row(children:[
+            Icon(Icons.tune_rounded),SizedBox(width:12),Text('Настройки')])),
+          PopupMenuItem(value:'refresh',child:Row(children:[
+            loading?const SizedBox(width:24,height:24,child:CircularProgressIndicator(strokeWidth:2)):
+              const Icon(Icons.refresh_rounded),const SizedBox(width:12),const Text('Обновить ФХР')])),
+        ]),
     ]),
   ));
   Widget _headerAction({required IconData icon,required String tooltip,VoidCallback? onTap})=>
