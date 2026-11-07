@@ -22,6 +22,21 @@ void main(){
       gameId:7345,status:'FINAL');
     expect(real.key,finished.key);
   });
+  test('Partial FHR feed preserves old games but updates newly published scores',(){
+    final first=Match('2026-10-10',teams[0],teams[1],'3:1',
+      'Группа А-I','',status:'FINAL',gameId:1201);
+    final second=Match('2026-11-01',teams[2],teams[3],'',
+      'Группа Б-II','',status:'SCHEDULED',gameId:1202);
+    final updated=Match('2026-11-01',teams[2],teams[3],'2:1',
+      'Группа Б-II','',status:'FINAL',gameId:1202);
+    final partial=reconcileCalendar([first,second],[updated],partial:true);
+    expect(partial.length,2);
+    expect(partial.singleWhere((m)=>m.gameId==1202).score,'2:1');
+    expect(partial.singleWhere((m)=>m.gameId==1201).score,'3:1');
+    final complete=reconcileCalendar([first,second],[updated],partial:false);
+    expect(complete.length,1);
+    expect(complete.single.gameId,1202);
+  });
   test('Race engine caches immutable snapshots between redraws',(){
     final played=Match('2026-11-05',teams[0],teams[1],'3:1',
       'Группа А-II','',status:'FINAL',gameId:41);
