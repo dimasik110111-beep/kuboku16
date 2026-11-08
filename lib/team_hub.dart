@@ -32,7 +32,7 @@ class _TeamHubPageState extends State<TeamHubPage>{
       if(mounted)setState(()=>stats=Future.value(fresh));
       return fresh;
     }
-    catch(error,stack){
+    catch(error){
       Diagnostics.record('team stats',error);
       return saved;
     }
