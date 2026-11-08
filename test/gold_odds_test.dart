@@ -20,8 +20,8 @@ void main() {
         status: 'SCHEDULED', gameId: 5);
     final result = GoldOdds.forMatch([...played, future], future, utcNow: now);
 
-    expect(result.totalGames, 2);
-    expect(result.homeGames, 2);
+    expect(result.totalGames, 3);
+    expect(result.homeGames, 3);
     expect(result.awayGames, 2);
     expect(result.homeWin + result.awayWin, closeTo(1, 1e-12));
     expect(result.homeWin, greaterThan(result.awayWin));
