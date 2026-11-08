@@ -8,7 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ui_kit.dart';
 
-const appVersion=28;
+const appVersion=29;
 const releaseRepo='dimasik110111-beep/kuboku16';
 class Diagnostics {
   static final List<String> events=[];
@@ -90,28 +90,4 @@ class _AppSettingsPageState extends State<AppSettingsPage>{
     finally{if(mounted)setState(()=>loading=false);}
   }
   @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Приложение')),body:SafeArea(child:ListView(children:[
-    CupSection(title:'JUNIOR U16 · v$appVersion',subtitle:'Обновления и диагностика'),
-    CupCard(padding:const EdgeInsets.all(18),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      if(loading)const LinearProgressIndicator(),Text(message??'Проверяю обновления…'),
-      TextButton(onPressed:loading?null:check,child:const Text('Проверить снова')),
-      if(release!=null)...[
-        Text('${release!['name']}',style:const TextStyle(fontWeight:FontWeight.bold)),const SizedBox(height:12),
-        Text('${release!['body']??''}'),
-        for(final asset in (release!['assets'] as List? ?? []).whereType<Map>())
-          if('${asset['name']}'.endsWith('.apk')&&releaseNumber('${release!['tag_name']}')>appVersion)
-            FilledButton.icon(onPressed:()async{
-              final uri=Uri.tryParse('${asset['browser_download_url']}');
-              if(uri!=null&&uri.scheme=='https'&&uri.host=='github.com'&&uri.path.startsWith('/$releaseRepo/releases/download/')){
-                try{if(!await launchUrl(uri,mode:LaunchMode.externalApplication))throw StateError('Cannot launch');}
-                catch(e){Diagnostics.record('download',e);if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Не удалось открыть скачивание')));}
-              }
-            },icon:const Icon(Icons.download_rounded),label:const Text('Скачать APK')),
-      ],
-    ])),
-    CupSection(title:'ДИАГНОСТИКА',subtitle:'Журнал хранится только в этой сессии. Отправляешь его ты.'),
-    CupCard(child:ListTile(leading:const Icon(Icons.copy_rounded),title:const Text('Скопировать сведения об ошибках'),onTap:()async{
-      await Clipboard.setData(ClipboardData(text:Diagnostics.report));
-      if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Диагностика скопирована')));
-    })),
-  ])));
-}
+    CupSection(title:'JUNIOR U16 · v$appVersion',subtitle:'Обновления и �

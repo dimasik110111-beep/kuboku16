@@ -93,7 +93,12 @@ class Match {
     return '${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}';
   }
   Match withDetail(Map<String, dynamic> detail) {
-    if (detail['ok'] != true || gameId == null || detail['gameId'] != gameId) return this;
+    // The worker has returned gameId as both JSON number and string across
+    // API versions. Normalize before matching so valid LIVE updates are not
+    // silently discarded.
+    final rawId = detail['gameId'];
+    final detailId = rawId is num ? rawId.toInt() : int.tryParse(rawId?.toString() ?? '');
+    if (detail['ok'] != true || gameId == null || detailId != gameId) return this;
     final hs = detail['homeScore'];
     final as = detail['awayScore'];
     return Match(date, home, away,
@@ -403,69 +408,3 @@ List<Rank> ranking(List<Match> matches,{
     result.addAll(_regulationTieBreak(buckets[points]!,played));
   }
   return result;
-}
-
-List<Rank> _regulationTieBreak(List<Rank> teams,List<Match> games){
-  if(teams.length<2)return teams;
-  final tied=teams.map((e)=>e.team).toSet();
-  final meetings=games.where((m)=>tied.contains(m.home)&&tied.contains(m.away)).toList();
-  final pairs=<String>{};
-  for(final m in meetings){
-    final ordered=[m.home,m.away]..sort();
-    pairs.add(ordered.join('|'));
-  }
-  final required=teams.length*(teams.length-1)~/2;
-  // Article 17: head-to-head criteria only when the relevant opponents
-  // have played each other. For incomplete mini-leagues, use the
-  // global fallback; ties remain explicitly provisional.
-  final complete=required>0&&pairs.length==required;
-  final criteria=complete?<int>[1,2,3,4,5,6]:<int>[5,3,6];
-  for(final criterion in criteria){
-    final groups=<int,List<Rank>>{};
-    for(final rank in teams){
-      groups.putIfAbsent(_rankCriterion(rank,criterion,meetings),()=>[]).add(rank);
-    }
-    if(groups.length<=1)continue;
-    final result=<Rank>[];
-    for(final key in (groups.keys.toList()..sort((a,b)=>b.compareTo(a)))){
-      // A new mini-league must restart criteria at the beginning.
-      result.addAll(_regulationTieBreak(groups[key]!,games));
-    }
-    if(!complete){for(final rank in result){rank.provisionalTie=true;}}
-    return result;
-  }
-  // No extra alphabetical tie breaker exists in the FHR regulation.
-  // Stable alphabetical display with a visible "not settled" marker.
-  for(final rank in teams){rank.provisionalTie=true;}
-  return teams.toList()..sort((a,b)=>a.team.compareTo(b.team));
-}
-
-int _rankCriterion(Rank rank,int criterion,List<Match> meetings) {
-  switch(criterion){
-    case 1:
-      var points=0;
-      for(final m in meetings){
-        if(m.home!=rank.team&&m.away!=rank.team)continue;
-        final goals=m.goals;
-        if(goals==null)continue;
-        final winner=m.home==rank.team?goals[0]>goals[1]:goals[1]>goals[0];
-        points+=winner?2:(m.overtime?1:0);
-      }
-      return points;
-    case 2:
-      var difference=0;
-      for(final m in meetings){
-        final goals=m.goals;
-        if(goals==null)continue;
-        if(m.home==rank.team)difference+=goals[0]-goals[1];
-        if(m.away==rank.team)difference+=goals[1]-goals[0];
-      }
-      return difference;
-    case 3:return rank.diff;
-    case 4:return rank.w;
-    case 5:return rank.rw;
-    case 6:return rank.gf;
-    default:return 0;
-  }
-}
-

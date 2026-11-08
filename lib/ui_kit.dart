@@ -14,6 +14,14 @@ class CupUi {
   static const red = Color(0xFF516DFA);
   static const ice = Color(0xFF8CEAFF);
   static const gold = Color(0xFFFFD47A);
+  static const violet = Color(0xFFB8A0FF);
+  static const coral = Color(0xFFFF8F8F);
+  static const teal = Color(0xFF61D6CE);
+  static const orange = Color(0xFFFFAE72);
+  static List<Color> get featureAccents => light
+      ? const [Color(0xFF087D9C), Color(0xFF6348C9), Color(0xFF087F79),
+          Color(0xFFC34F58), Color(0xFFAA5A17), Color(0xFF087D56), Color(0xFF91600F)]
+      : const [ice, violet, teal, coral, orange, green, gold];
   static Color get redMuted => light ? const Color(0xFFE5EAFF) : const Color(0xFF1F2D61);
   static Color get green => light ? const Color(0xFF087D56) : const Color(0xFF4DE6AD);
   static Color get yellow => light ? const Color(0xFF91600F) : const Color(0xFFFFD47A);
@@ -301,11 +309,4 @@ class _CupLivePulseState extends State<CupLivePulse>
       builder: (_, __) => _dot(.45 + controller.value * .55));
   }
   Widget _dot(double opacity) => Container(
-    width: 7, height: 7,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: CupUi.green.withValues(alpha: opacity),
-      boxShadow: [BoxShadow(
-        color: CupUi.green.withValues(alpha: opacity * .5), blurRadius: 8)]),
-  );
-}
+    

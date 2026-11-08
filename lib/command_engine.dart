@@ -2,6 +2,7 @@ import 'dart:math';
 import 'cup_data.dart';
 import 'tournament.dart';
 import 'scenario.dart';
+import 'gold_odds.dart';
 
 /// Confirmed FHR data is immutable: all what-ifs are isolated from the feed.
 class RaceEngine {
@@ -142,10 +143,11 @@ class HelpfulOutcome {
 class SimulationReport {
   final int iterations,publishedQualifiers,expectedQualifiers,predictedPerRun;
   final Map<String,double> topEight,averagePlace;
+  final Map<String,Map<int,double>> placeDistribution;
   final Map<String,Map<String,double>> thirdGroups;
   const SimulationReport(this.iterations,this.publishedQualifiers,
     this.expectedQualifiers,this.predictedPerRun,this.topEight,
-    this.averagePlace,this.thirdGroups);
+    this.averagePlace,this.placeDistribution,this.thirdGroups);
   bool get fullCalendarPublished=>publishedQualifiers>=expectedQualifiers;
   String get warning =>fullCalendarPublished
     ?'Модельные доли, не гарантия. Будущие результаты непредсказуемы.'
@@ -162,31 +164,32 @@ class SimulationInput {
 }
 
 /// Deterministic Monte Carlo; run using Flutter compute() off the UI isolate.
-/// Strength is shrunk toward 50% to handle sparse game samples.
+/// Fixture scores are sampled from the same smoothed goal model as Gold Odds.
 SimulationReport simulateCup(SimulationInput input){
   final random=Random(input.seed);
   final now=input.now;
   final clubs=input.teams.toSet().toList();
-  final original=ranking(input.matches,utcNow:now,participants:clubs);
-  final played={for(final r in original)r.team:r};
-  double winProbability(String a,String b){
-    double rating(String team){
-      final row=played[team];
-      if(row==null||row.gp==0)return .5;
-      return (row.pts+6)/(2*(row.gp+6));
-    }
-    final diff=(rating(a)-rating(b))*1.4;
-    return (.5+diff).clamp(.19,.81).toDouble();
+  final oddsCache=<String,GoldOdds>{};
+  double poisson(double lambda){
+    final limit=exp(-lambda);var product=1.0;var goals=0;
+    do {goals++;product*=random.nextDouble();} while(product>limit&&goals<30);
+    return (goals-1).toDouble();
   }
   ScenarioScore sample(Match m){
-    final homeWins=random.nextDouble()<winProbability(m.home,m.away);
-    final ot=random.nextDouble()<.19;
-    if(ot)return ScenarioScore(homeWins?3:2,homeWins?2:3,overtime:true);
-    final margin=random.nextInt(3)+1;
-    return ScenarioScore(homeWins?2+margin:1,homeWins?1:2+margin);
+    final odds=oddsCache.putIfAbsent(m.key,()=>GoldOdds.forMatch(input.matches,m,utcNow:now));
+    var home=poisson(odds.homeGoals).toInt();
+    var away=poisson(odds.awayGoals).toInt();
+    if(home==away){
+      final homeWins=random.nextDouble()<odds.homeWin;
+      if(homeWins)home++;else away++;
+      return ScenarioScore(home,away,overtime:true);
+    }
+    return ScenarioScore(home,away);
   }
   final top8=<String,int>{for(final t in clubs)t:0};
   final positions=<String,int>{for(final t in clubs)t:0};
+  final placeCounts=<String,Map<int,int>>{
+    for(final t in clubs)t:{for(var place=1;place<=clubs.length;place++)place:0}};
   final groupCount=<String,Map<String,int>>{
     for(final t in clubs)t:{'А':0,'Б':0,'В':0,'Г':0}};
   var maxPredicted=0;
@@ -213,6 +216,7 @@ SimulationReport simulateCup(SimulationInput input){
       if(!top8.containsKey(name))continue;
       if(rank<8)top8[name]=top8[name]!+1;
       positions[name]=positions[name]!+rank+1;
+      placeCounts[name]![rank+1]=placeCounts[name]![rank+1]!+1;
     }
     final projected=cup.thirdTourProjection();
     for(var group=0;group<projected.length;group++){
@@ -229,6 +233,10 @@ SimulationReport simulateCup(SimulationInput input){
     expectedQualifyingGames,maxPredicted,
     {for(final name in clubs)name:(top8[name]??0)/n},
     {for(final name in clubs)name:(positions[name]??0)/n},
+    {for(final name in clubs)name:{
+      for(final place in placeCounts[name]!.keys)
+        place:(placeCounts[name]![place]??0)/n,
+    }},
     {for(final name in clubs)name:{
       for(final letter in ['А','Б','В','Г'])
         letter:(groupCount[name]?[letter]??0)/n,

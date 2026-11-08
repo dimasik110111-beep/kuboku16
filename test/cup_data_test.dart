@@ -65,6 +65,17 @@ void main() {
     expect(m.finished,isTrue);
   });
 
+  test('detail accepts numeric or string game IDs returned by the LIVE worker',() {
+    const scheduled=Match('2026-11-06','A','B','','Группа А-II','',
+      status:'SCHEDULED',gameId:25170469);
+    final updated=scheduled.withDetail({'ok':true,'gameId':'25170469',
+      'homeScore':2,'awayScore':1,'status':'LIVE'});
+    expect(updated.status,'LIVE');
+    expect(updated.score,'2:1');
+    expect(scheduled.withDetail({'ok':true,'gameId':'999',
+      'homeScore':8,'awayScore':0,'status':'LIVE'}).score,'');
+  });
+
   test('partial source marks completeness as unverified',() {
     final feed=FhrFeed.fromApi({
       'ok':true,'groupsFetched':1,

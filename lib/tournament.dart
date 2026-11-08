@@ -99,6 +99,41 @@ class CupTournament {
     // Do not seed all 20 clubs inside an individual group table.
     return ranking(list,utcNow:now,participants:group==null?participants:const []);
   }
+
+  /// A live-only projection of the qualification table. Confirmed results keep
+  /// the official FHR tie-break order; active scorelines add provisional goals,
+  /// games and points without changing the official table.
+  List<Rank> liveTable({String? group}) {
+    final official=table(group:group);
+    final liveMatches=matches.where((m)=>m.isQualifier&&m.isLive&&m.goals!=null&&
+      (group==null||m.stage==group&&!m.isCrossover)).toList();
+    if(liveMatches.isEmpty)return official;
+    final officialOrder={for(var i=0;i<official.length;i++)official[i].team:i};
+    final rows=<String,Rank>{for(final row in official)
+      row.team:Rank(row.team)
+        ..gp=row.gp..pts=row.pts..w=row.w..rw=row.rw
+        ..gf=row.gf..ga=row.ga..otLosses=row.otLosses
+        ..provisionalTie=row.provisionalTie};
+    for(final match in liveMatches) {
+      final g=match.goals!;
+      final home=rows.putIfAbsent(match.home,()=>Rank(match.home));
+      final away=rows.putIfAbsent(match.away,()=>Rank(match.away));
+      home.gp++;away.gp++;
+      home.gf+=g[0];home.ga+=g[1];away.gf+=g[1];away.ga+=g[0];
+      if(g[0]>g[1]){home.pts+=2;home.w++;}
+      else if(g[1]>g[0]){away.pts+=2;away.w++;}
+      else {home.pts++;away.pts++;home.provisionalTie=true;away.provisionalTie=true;}
+    }
+    return rows.values.toList()..sort((a,b){
+      final pts=b.pts.compareTo(a.pts);if(pts!=0)return pts;
+      final diff=b.diff.compareTo(a.diff);if(diff!=0)return diff;
+      final gf=b.gf.compareTo(a.gf);if(gf!=0)return gf;
+      final wins=b.w.compareTo(a.w);if(wins!=0)return wins;
+      final seed=(officialOrder[a.team]??0x7fffffff).compareTo(
+        officialOrder[b.team]??0x7fffffff);if(seed!=0)return seed;
+      return a.team.compareTo(b.team);
+    });
+  }
   List<Rank> finalTable(CupTour finalRound){
     if(finalRound!=CupTour.gold&&finalRound!=CupTour.silver)return [];
     return ranking(tourMatches(finalRound),utcNow:now,includeFinals:true);

@@ -53,6 +53,10 @@ void main(){
     expect(first.predictedPerRun,greaterThan(0));
     expect(first.topEight,second.topEight);
     expect(first.topEight.values.every((p)=>p>=0&&p<=1),true);
+    expect(first.placeDistribution.values.every((places)=>
+      places.values.fold<double>(0,(sum,p)=>sum+p)>0),true);
+    expect(first.placeDistribution.values.every((places)=>
+      places.values.fold<double>(0,(sum,p)=>sum+p)<=1.000001),true);
     expect(first.thirdGroups.values.every((groups)=>
       groups.values.every((p)=>p>=0&&p<=1)),true);
     expect(fixtures[0].score,'2:1');

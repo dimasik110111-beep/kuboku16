@@ -200,12 +200,27 @@ class _CommandCenterPageState extends State<CommandCenterPage>
       ]));
   }
   Widget _race(RaceEngine r){
-    final table=r.standings,changes=r.positionChanges;
+    final official=r.standings;
+    final liveCount=games.where((m)=>m.isQualifier&&m.isLive&&m.goals!=null).length;
+    final table=liveCount>0?r.cup.liveTable():official;
+    final officialPosition={for(var i=0;i<official.length;i++)official[i].team:i+1};
     final focusTeam=chosen;
     final useful=focusTeam==null?<HelpfulOutcome>[]:
       r.helpfulOutcomes(focusTeam,limit:6);
     return Column(children:[
-      CupSection(title:'ГОНКА ЗА ЗОЛОТО',subtitle:'Текущая общая таблица и движение команд'),
+      CupSection(title:'ГОНКА ЗА ЗОЛОТО',subtitle:liveCount>0
+        ?'Промежуточная таблица обновляется по текущему счёту'
+        :'Официальная таблица по подтверждённым результатам'),
+      if(liveCount>0)Padding(padding:const EdgeInsets.symmetric(horizontal:13),
+        child:Container(padding:const EdgeInsets.symmetric(horizontal:12,vertical:10),
+          decoration:BoxDecoration(color:CupUi.green.withValues(alpha:.10),
+            border:Border.all(color:CupUi.green.withValues(alpha:.28)),
+            borderRadius:BorderRadius.circular(13)),
+          child:Row(children:[Icon(Icons.sensors_rounded,color:CupUi.green,size:17),
+            const SizedBox(width:8),Expanded(child:Text(
+              'LIVE · $liveCount ${liveCount==1?'матч':'матча'} учтено предварительно. Очки и места могут измениться до финальной сирены.',
+              style:TextStyle(color:CupUi.soft,fontSize:9,height:1.35))),
+          ]))),
       CupCard(padding:EdgeInsets.zero,child:Column(children:[
         for(var i=0;i<table.length;i++)...[
           if(i==8)Container(padding:const EdgeInsets.symmetric(vertical:11),
@@ -237,10 +252,15 @@ class _CommandCenterPageState extends State<CommandCenterPage>
                     style:TextStyle(color:CupUi.muted,fontSize:9)),
                 ])),
                 SizedBox(width:31,child:Text(
-                  (changes[table[i].team]??0)==0?'—':
-                    '${changes[table[i].team]!>0?'↑':'↓'}${changes[table[i].team]!.abs()}',
+                  liveCount>0&&officialPosition.containsKey(table[i].team)&&officialPosition[table[i].team]!=i+1
+                    ?'${officialPosition[table[i].team]!>i+1?'↑':'↓'}${(officialPosition[table[i].team]!-i-1).abs()}'
+                    :liveCount==0&&(r.positionChanges[table[i].team]??0)!=0
+                      ?'${r.positionChanges[table[i].team]!>0?'↑':'↓'}${r.positionChanges[table[i].team]!.abs()}'
+                      :'—',
                   textAlign:TextAlign.center,
-                  style:TextStyle(color:(changes[table[i].team]??0)>=0
+                  style:TextStyle(color:liveCount>0
+                    ?(officialPosition[table[i].team]??i+1)>=i+1?CupUi.green:CupUi.red
+                    :(r.positionChanges[table[i].team]??0)>=0
                     ?CupUi.green:CupUi.red,fontSize:10,fontWeight:FontWeight.w900))),
                 SizedBox(width:35,child:Text('${table[i].pts}',
                   textAlign:TextAlign.right,style:TextStyle(
@@ -683,12 +703,16 @@ class _CommandCenterPageState extends State<CommandCenterPage>
                       curve:Curves.easeOutCubic,
                       padding:const EdgeInsets.symmetric(horizontal:4,vertical:11),
                       decoration:BoxDecoration(
-                        color:screen==i?CupUi.red:CupUi.surface,
+                      color:screen==i?null:CupUi.surface,
+                      gradient:screen==i?LinearGradient(begin:Alignment.topLeft,
+                        end:Alignment.bottomRight,
+                        colors:[CupUi.featureAccents[i].withValues(alpha:.72),CupUi.red]):null,
                         borderRadius:BorderRadius.circular(14),
-                        border:Border.all(color:screen==i?CupUi.ice.withValues(alpha:.45):CupUi.stroke),
+                      border:Border.all(color:screen==i
+                        ?CupUi.featureAccents[i].withValues(alpha:.78):CupUi.stroke),
                       ),
                       child:i==6?Row(children:[
-                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.gold),
+                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.featureAccents[i]),
                         const SizedBox(width:10),
                         Expanded(child:Text('GOLD ODDS PRO',
                           style:TextStyle(color:screen==i?Colors.white:CupUi.soft,
@@ -700,7 +724,7 @@ class _CommandCenterPageState extends State<CommandCenterPage>
                         Icon(Icons.chevron_right_rounded,size:17,
                           color:screen==i?Colors.white:CupUi.muted),
                       ]):Column(mainAxisSize:MainAxisSize.min,children:[
-                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.ice),
+                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.featureAccents[i]),
                         const SizedBox(height:6),
                         Text(tabs[i],textAlign:TextAlign.center,maxLines:1,
                           overflow:TextOverflow.ellipsis,
@@ -752,90 +776,3 @@ class _CommandCenterPageState extends State<CommandCenterPage>
       CupArena(padding:const EdgeInsets.all(20),child:Column(
         crossAxisAlignment:CrossAxisAlignment.start,children:[
           Row(children:[
-            Container(width:44,height:44,decoration:BoxDecoration(
-              color:CupUi.yellow.withValues(alpha:.14),
-              borderRadius:BorderRadius.circular(15)),
-              child:Icon(Icons.auto_awesome_rounded,color:CupUi.yellow)),
-            const SizedBox(width:12),
-            const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,
-              children:[Text('GOLD ODDS PRO',style:TextStyle(color:Colors.white,
-                fontSize:15,fontWeight:FontWeight.w900)),
-                SizedBox(height:4),Text('Модель исходов и ожидаемых голов',
-                  style:TextStyle(color:Color(0xFFD1DFF6),fontSize:10))])),
-          ]),
-          const SizedBox(height:16),
-          Text('Модель использует только подтверждённые результаты квалификации. '
-            'Маленькая выборка сглаживается к среднему турнира; при равном счёте '
-            'в основное время вероятность делится по разнице ожидаемых голов.',
-            style:TextStyle(color:CupUi.soft,fontSize:10,height:1.55)),
-        ])),
-      if(fixtures.isEmpty)const CupMessage(title:'Нет предстоящих матчей',
-        message:'Когда ФХР опубликует новые игры, здесь появятся расчёты вероятностей.'),
-      for(final match in fixtures.take(40))_oddsCard(match),
-      CupCard(padding:const EdgeInsets.all(14),child:Row(
-        crossAxisAlignment:CrossAxisAlignment.start,children:[
-          Icon(Icons.info_outline_rounded,color:CupUi.yellow,size:18),
-          const SizedBox(width:9),
-          Expanded(child:Text('Это статистическая оценка, а не официальный прогноз ФХР. '
-            'Доля матчей для каждой команды и число учтённых игр показаны отдельно.',
-            style:TextStyle(color:CupUi.muted,fontSize:9,height:1.5))),
-        ])),
-    ]);
-  }
-
-  Widget _oddsCard(Match match){
-    final odds=GoldOdds.forMatch(games,match);
-    final home=(odds.homeWin*100).round(),away=100-home;
-    return CupCard(padding:const EdgeInsets.all(15),child:Column(
-      crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Row(children:[
-          Expanded(child:Text('${match.home}  —  ${match.away}',
-            maxLines:2,overflow:TextOverflow.ellipsis,
-            style:TextStyle(color:CupUi.white,fontSize:11,fontWeight:FontWeight.w900))),
-          const SizedBox(width:8),
-          Text('${match.dayLabel} · ${match.timeMsk}',
-            style:TextStyle(color:CupUi.muted,fontSize:9)),
-        ]),
-        const SizedBox(height:13),
-        Row(children:[
-          Text('$home%',style:TextStyle(color:CupUi.ice,fontSize:22,fontWeight:FontWeight.w900)),
-          const SizedBox(width:6),
-          Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(8),
-            child:SizedBox(height:9,child:Row(children:[
-              Expanded(flex:home,child:Container(color:CupUi.ice)),
-              Expanded(flex:away,child:Container(color:CupUi.yellow)),
-            ])))),
-          const SizedBox(width:6),
-          Text('$away%',style:TextStyle(color:CupUi.yellow,fontSize:22,fontWeight:FontWeight.w900)),
-        ]),
-        const SizedBox(height:6),
-        Row(children:[
-          Expanded(child:Text(match.home,maxLines:1,overflow:TextOverflow.ellipsis,
-            style:TextStyle(color:CupUi.soft,fontSize:9))),
-          Text('ПОБЕДА',style:TextStyle(color:CupUi.muted,fontSize:8,
-            fontWeight:FontWeight.w900,letterSpacing:.7)),
-          Expanded(child:Text(match.away,textAlign:TextAlign.right,maxLines:1,
-            overflow:TextOverflow.ellipsis,style:TextStyle(color:CupUi.soft,fontSize:9))),
-        ]),
-        const SizedBox(height:12),
-        Container(padding:const EdgeInsets.symmetric(horizontal:10,vertical:9),
-          decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(13)),
-          child:Row(children:[
-            Expanded(child:_oddsMetric('ОЖИД. ГОЛЫ','${odds.homeGoals.toStringAsFixed(1)} : ${odds.awayGoals.toStringAsFixed(1)}')),
-            Expanded(child:_oddsMetric('ВЫБОРКА','${odds.homeGames} / ${odds.awayGames} игр')),
-            Expanded(child:_oddsMetric('СЧЁТ · ОСН. ВРЕМЯ',odds.mostLikelyScore)),
-          ])),
-        Align(alignment:Alignment.centerRight,child:TextButton.icon(
-          onPressed:()=>widget.onMatch(match),
-          icon:const Icon(Icons.insights_rounded,size:15),
-          label:const Text('MATCH CENTER ULTRA',style:TextStyle(fontSize:9)),
-        )),
-      ]));
-  }
-  Widget _oddsMetric(String label,String value)=>Column(
-    crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Text(label,style:TextStyle(color:CupUi.dim,fontSize:7,fontWeight:FontWeight.w900)),
-      const SizedBox(height:4),Text(value,maxLines:1,overflow:TextOverflow.ellipsis,
-        style:TextStyle(color:CupUi.white,fontSize:9,fontWeight:FontWeight.w800)),
-    ]);
-}

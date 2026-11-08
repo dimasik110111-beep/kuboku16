@@ -264,8 +264,9 @@ class _TournamentPageState extends State<TournamentPage>{
                   SizedBox(width:52,child:Column(children:[
                     Text(games[i].dayLabel,style:TextStyle(color:CupUi.muted,fontSize:11,fontWeight:FontWeight.w800)),
                     SizedBox(height:4),
-                    Text(games[i].finished?'КОН.':games[i].timeMsk,
-                      style:TextStyle(color:games[i].finished?CupUi.muted:CupUi.yellow,fontSize:9)),
+                    Text(games[i].isLive?'● LIVE':games[i].finished?'КОН.':games[i].timeMsk,
+                      style:TextStyle(color:games[i].isLive?CupUi.green:
+                        games[i].finished?CupUi.muted:CupUi.yellow,fontSize:9,fontWeight:FontWeight.w900)),
                   ])),
                   SizedBox(width:7),
                   Expanded(child:Column(children:[
@@ -316,7 +317,17 @@ class _TournamentPageState extends State<TournamentPage>{
         ])),
       if(selectedTour==CupTour.other)...[
         CupSection(title:'ОБЩАЯ ТАБЛИЦА',subtitle:'Все отборочные матчи, включая стыковки'),
-        _standingsTable(cup.qualificationRanking,general:true),
+        if(widget.matches.any((m)=>m.isQualifier&&m.isLive&&m.goals!=null))
+          Padding(padding:const EdgeInsets.symmetric(horizontal:13),child:Container(
+            padding:const EdgeInsets.all(11),decoration:BoxDecoration(
+              color:CupUi.green.withValues(alpha:.10),borderRadius:BorderRadius.circular(12),
+              border:Border.all(color:CupUi.green.withValues(alpha:.25))),
+            child:Row(children:[Icon(Icons.sensors_rounded,color:CupUi.green,size:17),
+              const SizedBox(width:8),Expanded(child:Text(
+                'LIVE-таблица учитывает текущий счёт и пересчитывается при обновлении данных. Очки предварительные до финальной сирены.',
+                style:TextStyle(color:CupUi.soft,fontSize:9,height:1.4)))]))),
+        _standingsTable(widget.matches.any((m)=>m.isQualifier&&m.isLive&&m.goals!=null)
+          ?cup.liveTable():cup.qualificationRanking,general:true),
         _notice('Таблица предварительная до завершения 140 отборочных игр. '
           'Значок предупреждения обозначает неразрешённое равенство мест.'),
       ]else...[
@@ -333,12 +344,12 @@ class _TournamentPageState extends State<TournamentPage>{
           if(selected==null)...[
             for(final name in names)...[
               CupSection(title:name.toUpperCase(),subtitle:'Внутригрупповые матчи, без стыковок'),
-              _standingsTable(cup.table(group:name)),
+              _standingsTable(cup.liveTable(group:name)),
               _gameCard(cup.groupMatches(name),heading:'МАТЧИ ГРУППЫ'),
             ],
           ]else...[
             CupSection(title:selected.toUpperCase(),subtitle:'Официальные матчи группы'),
-            _standingsTable(cup.table(group:selected)),
+            _standingsTable(cup.liveTable(group:selected)),
             _gameCard(cup.groupMatches(selected),heading:'КАЛЕНДАРЬ ГРУППЫ'),
           ],
         ],
@@ -427,139 +438,4 @@ class _TournamentPageState extends State<TournamentPage>{
             Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
               Text('ГРУППА ${labels[i]}',style:TextStyle(color:CupUi.white,
                 fontWeight:FontWeight.w900,fontSize:14)),
-              const SizedBox(height:3),
-              Text(CupTournament.thirdTourSnake[i].join(' · '),
-                style:TextStyle(color:CupUi.muted,fontSize:10)),
-            ])),
-            CupTag(text:'5 КОМАНД',color:CupUi.ice),
-          ])),
-          CupDiv(),
-          for(var j=0;j<preview[i].length;j++)AnimatedContainer(
-            key:ValueKey('seed:$i:$j:${preview[i][j]}'),
-            duration:const Duration(milliseconds:420),
-            curve:Curves.easeOutCubic,
-            padding:const EdgeInsets.symmetric(vertical:10,horizontal:14),
-            decoration:BoxDecoration(color:j.isEven
-              ?CupUi.raised.withValues(alpha:.21):Colors.transparent),
-            child:Row(children:[
-              SizedBox(width:28,child:Text(
-                '${CupTournament.thirdTourSnake[i][j]}',
-                style:TextStyle(color:CupUi.ice,fontSize:12,
-                  fontWeight:FontWeight.w900))),
-              fhrTeamLogo(widget.teamLogo(preview[i][j]),size:27),
-              const SizedBox(width:10),
-              Expanded(child:Text(preview[i][j],maxLines:2,
-                overflow:TextOverflow.ellipsis,style:TextStyle(
-                color:CupUi.white,fontWeight:FontWeight.w800,fontSize:12))),
-              if(places.containsKey(preview[i][j]))
-                Text('${rank[places[preview[i][j]]!-1].pts} О',
-                  style:TextStyle(color:CupUi.soft,fontSize:11,fontWeight:FontWeight.w900)),
-            ]),
-          ),
-        ])),
-      Padding(padding:const EdgeInsets.fromLTRB(18,9,18,18),
-        child:Text('Текущая схема — расчёт по змейке статьи 4. Пока I–II туры не завершены, команды могут менять группы после каждого официального результата.',
-          style:TextStyle(color:CupUi.muted,fontSize:11,height:1.55))),
-    ]);
-  }
-
-  Widget _notice(String text)=>CupCard(
-    padding:EdgeInsets.all(13),color:CupUi.raised,
-    child:Row(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Icon(Icons.info_outline_rounded,color:CupUi.yellow,size:18),
-      SizedBox(width:10),
-      Expanded(child:Text(text,style:TextStyle(color:CupUi.soft,fontSize:11,height:1.45))),
-    ]));
-
-  Widget _finalDivision(CupTournament cup,CupTour finalRound){
-    final gold=finalRound==CupTour.gold;
-    final candidates=gold?cup.goldQualifiers:cup.silverQualifiers;
-    final fixtures=cup.tourMatches(finalRound);
-    final finalTable=cup.finalTable(finalRound);
-    return Column(children:[
-      CupSection(title:gold?'ЗОЛОТОЙ ФИНАЛ':'СЕРЕБРЯНЫЙ ФИНАЛ',
-        subtitle:gold?'8 лучших команд квалификации':'Команды, занявшие места 9–20'),
-      CupCard(padding:EdgeInsets.fromLTRB(13,13,13,13),
-        child:Row(children:[
-          Container(width:42,height:42,alignment:Alignment.center,
-            decoration:BoxDecoration(color:gold?CupUi.redMuted:CupUi.raised,
-              borderRadius:BorderRadius.circular(12)),
-            child:Icon(Icons.emoji_events_outlined,color:gold?CupUi.red:CupUi.soft,size:23)),
-          SizedBox(width:11),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            Text(gold?'МЕСТА 1–8':'МЕСТА 9–20',
-              style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900)),
-            SizedBox(height:5),
-            Text('АПРЕЛЬ 2027',style:TextStyle(color:CupUi.muted,fontSize:10)),
-          ])),
-          CupTag(text:fixtures.isNotEmpty?'${fixtures.length} игр ФХР':'ОЖИДАЕТСЯ',
-            color:fixtures.isNotEmpty?CupUi.green:CupUi.yellow,filled:true),
-        ])),
-      if(candidates.isNotEmpty)...[
-        CupSection(title:'УЧАСТНИКИ ПО ИТОГАМ ОТБОРА'),
-        CupCard(padding:EdgeInsets.symmetric(vertical:3),
-          child:Column(children:[
-            for(var i=0;i<candidates.length;i++)Padding(
-              padding:EdgeInsets.symmetric(horizontal:12,vertical:10),
-              child:Row(children:[
-                SizedBox(width:28,child:Text('${gold?i+1:i+9}',
-                  style:TextStyle(color:CupUi.red,fontWeight:FontWeight.w900,fontSize:12))),
-                fhrTeamLogo(widget.teamLogo(candidates[i].team),size:24),
-                SizedBox(width:9),
-                Expanded(child:Text(candidates[i].team,
-                  style:TextStyle(color:CupUi.white,fontSize:11,fontWeight:FontWeight.w700))),
-                Text('${candidates[i].pts} оч.',style:TextStyle(color:CupUi.muted,fontSize:11)),
-              ])),
-          ])),
-      ]else...[
-        _notice('Состав участников определяется только после трёх туров и всех стыковок. '
-          'До этого нельзя считать текущее место окончательным.'),
-        CupCard(padding:EdgeInsets.all(12),
-          child:Text(gold?'8 путёвок · места 1–8':'12 путёвок · места 9–20',
-            textAlign:TextAlign.center,
-            style:TextStyle(color:CupUi.soft,fontSize:12,fontWeight:FontWeight.w700))),
-      ],
-      if(finalTable.isNotEmpty)...[
-        CupSection(title:'ТАБЛИЦА ФИНАЛЬНОГО ТУРА',subtitle:'Только опубликованные игры финала'),
-        _standingsTable(finalTable,finalTable:true),
-      ],
-      if(fixtures.isNotEmpty)_gameCard(fixtures,heading:'ФИНАЛЬНЫЕ МАТЧИ ФХР'),
-      if(fixtures.isEmpty)CupMessage(icon:Icons.calendar_month_outlined,
-        title:'Сетка ещё не опубликована',
-        message:'Пары матчей и расписание появятся после официальной публикации ФХР. '
-          'Приложение не создаёт вымышленные четвертьфиналы и полуфиналы.'),
-    ]);
-  }
-
-  Widget _finals(CupTournament cup)=>Column(children:[
-    CupSection(title:'ФИНАЛЬНЫЕ ТУРЫ',subtitle:'Составы и пары определяются ФХР'),
-    _finalDivision(cup,CupTour.gold),
-    SizedBox(height:13),
-    _finalDivision(cup,CupTour.silver),
-    SizedBox(height:25),
-  ]);
-
-  @override Widget build(BuildContext context){
-    final cup=model;
-    return ListView(children:[
-      CupSection(title:'ТУРНИРНАЯ СИСТЕМА',
-        subtitle:'ФХР · сезон 2026/27 · 20 команд · 5 туров'),
-      CupReveal(child:_summary(cup)),
-      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:cup.participants.toList(),teamLogos:{for(final name in cup.participants)name:widget.teamLogo(name)}))),icon:const Icon(Icons.tune),label:const Text('Интерактивные расклады'))),
-      SingleChildScrollView(scrollDirection:Axis.horizontal,
-        padding:EdgeInsets.fromLTRB(12,0,12,7),
-        child:Row(children:[
-          _chip('ЭТАПЫ',section==0,()=>setState(()=>section=0)),
-          _chip('ТАБЛИЦЫ',section==1,()=>setState(()=>section=1)),
-          _chip('ФИНАЛЫ',section==2,()=>setState(()=>section=2)),
-          _chip('РАССЕВ III',section==3,()=>setState(()=>section=3)),
-        ])),
-      if(section==0)_stages(cup),
-      if(section==1)_groupTables(cup),
-      if(section==2)_finals(cup),
-      if(section==3)_snakePreview(cup),
-    ]);
-  }
-}
-
-
+              c
