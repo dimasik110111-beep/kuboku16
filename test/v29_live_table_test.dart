@@ -32,6 +32,26 @@ void main() {
     expect(cup.table().every((r)=>r.gp==0),isTrue);
   });
 
+  test('LIVE standings use head-to-head before overall goal difference',(){
+    final cup=CupTournament([
+      Match('2026-11-01','A','B','2:1','Группа А-II','',status:'FINAL',gameId:11),
+      Match('2026-11-01','B','C','9:0','Группа А-II','',status:'FINAL',gameId:12),
+      Match('2026-11-08','D','E','0:0','Группа А-II','',status:'LIVE',gameId:13),
+    ],teams:['A','B','C','D','E'],utcNow:now);
+    final rows=cup.liveTable();
+    expect(rows.indexWhere((r)=>r.team=='A'),lessThan(rows.indexWhere((r)=>r.team=='B')));
+  });
+
+  test('LIVE standings use regulation wins when tied teams have not met',(){
+    final cup=CupTournament([
+      Match('2026-11-01','A','C','2:1','Группа А-II','',status:'FINAL',gameId:21),
+      Match('2026-11-01','B','D','8:7','Группа Б-II','',status:'FINAL',scoreNote:'ОТ',gameId:22),
+      Match('2026-11-08','E','F','0:0','Группа В-II','',status:'LIVE',gameId:23),
+    ],teams:['A','B','C','D','E','F'],utcNow:now);
+    final rows=cup.liveTable();
+    expect(rows.indexWhere((r)=>r.team=='A'),lessThan(rows.indexWhere((r)=>r.team=='B')));
+  });
+
   testWidgets('tournament table labels active fixtures and explains provisional rows', (tester) async {
     await tester.pumpWidget(MaterialApp(home:Scaffold(body:TournamentPage(
       matches:[

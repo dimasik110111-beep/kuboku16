@@ -16,6 +16,11 @@ class ScenarioResult {
   final List<Match> matches;final int applied;
   const ScenarioResult(this.matches,this.applied);
 }
+bool _excludedSecondCrossover(Match match){
+  final stage=match.stage.toUpperCase().replaceAll('Ё','Е');
+  return match.isCrossover&&tourOf(match.stage)==CupTour.second&&
+    RegExp(r'(?:В|V)\s+И\s+(?:Г|G)').hasMatch(stage);
+}
 ScenarioResult applyScenario(List<Match> source,Map<String,ScenarioScore> scores,{DateTime? utcNow}){
   final now=utcNow??DateTime.now().toUtc();
   final expanded=scenarioMatches(source,scores:scores,utcNow:now);
@@ -23,7 +28,7 @@ ScenarioResult applyScenario(List<Match> source,Map<String,ScenarioScore> scores
   for(final m in expanded){
     if(result.containsKey(m.key))continue;
     final score=scores[m.key];
-    if(score==null||!score.valid||!m.isQualifier||m.isResultAt(now)||m.isLive){result[m.key]=m;continue;}
+    if(score==null||!score.valid||!m.isQualifier||_excludedSecondCrossover(m)||m.isResultAt(now)||m.isLive){result[m.key]=m;continue;}
     result[m.key]=Match(m.date,m.home,m.away,'${score.home}:${score.away}',m.stage,m.arena,
       timeMsk:m.timeMsk,status:'FINAL',scoreNote:score.overtime?'ОТ':'',gameId:m.gameId,matchUrl:m.matchUrl);
     applied++;
@@ -36,6 +41,7 @@ List<Match> scenarioFixtures(List<Match> matches,{Map<String,ScenarioScore> scor
   final rows={for(final m in scenarioMatches(matches,scores:scores,utcNow:now))m.key:m}.values
     .where((m){
       if(!m.isQualifier)return false;
+      if(_excludedSecondCrossover(m))return false;
       final original=originals[m.key];
       if(original!=null&&(original.isResultAt(now)||original.isLive))return false;
       return scores.containsKey(m.key)||(!m.isResultAt(now)&&!m.isLive);
@@ -52,7 +58,7 @@ List<Match> scenarioMatches(List<Match> source,{Map<String,ScenarioScore> scores
   final all=<String,Match>{for(final m in source)m.key:m};
   List<Match> withScores()=>[
     for(final m in all.values)
-      if(scores[m.key]!=null&&scores[m.key]!.valid&&!m.isResultAt(now)&&!m.isLive)
+      if(scores[m.key]!=null&&scores[m.key]!.valid&&!_excludedSecondCrossover(m)&&!m.isResultAt(now)&&!m.isLive)
         Match(m.date,m.home,m.away,'${scores[m.key]!.home}:${scores[m.key]!.away}',m.stage,m.arena,
           status:'FINAL',scoreNote:scores[m.key]!.overtime?'ОТ':'',gameId:m.gameId)
       else m,
@@ -67,14 +73,12 @@ List<Match> scenarioMatches(List<Match> source,{Map<String,ScenarioScore> scores
   String letter(int index)=>const ['А','Б','В','Г'][index];
   bool containsPair(List<Match> rows,String stage,String home,String away)=>rows.any((m)=>m.stage==stage&&
     ((m.home==home&&m.away==away)||(m.home==away&&m.away==home)));
-  // Round II crossovers: equal places between groups А/Б and В/Г.
+  // Only A/B round-II crossovers are offered for manual predictions.
   final secondGroups=<String,List<Match>>{};
   for(final m in all.values){final code=groupCode(m.stage);if(code!=null&&!m.isCrossover)secondGroups.putIfAbsent(code,()=>[]).add(m);}
-  // Do not make one missing/unpublished group suppress the other pair's
-  // crossovers. FHR publishes the A/B and V/G sections on separate dates.
   final secondCodes=secondGroups.keys.toSet();
   final current=withScores();
-  for(final pair in [[0,1],[2,3]]){
+  for(final pair in [[0,1]]){
     final left=letter(pair[0]),right=letter(pair[1]);
     final leftCode=secondCodes.firstWhere((code)=>groupOrder(code)==pair[0],orElse:()=> '');
     final rightCode=secondCodes.firstWhere((code)=>groupOrder(code)==pair[1],orElse:()=> '');

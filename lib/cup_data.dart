@@ -402,8 +402,14 @@ List<Rank> ranking(List<Match> matches,{
     if(m.overtime){loser.otLosses++;loser.pts++;}else{winner.rw++;}
     played.add(m);
   }
+  return regulationOrder(table.values,played);
+}
+
+/// Apply Article 17 to already accumulated standings. LIVE projections use
+/// the same tie criteria with their current, explicitly provisional scores.
+List<Rank> regulationOrder(Iterable<Rank> standings,List<Match> played){
   final buckets=<int,List<Rank>>{};
-  for(final team in table.values){
+  for(final team in standings){
     buckets.putIfAbsent(team.pts,()=>[]).add(team);
   }
   final result=<Rank>[];

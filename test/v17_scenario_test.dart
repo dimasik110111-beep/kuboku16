@@ -40,4 +40,34 @@ void main(){
     expect(crossovers.every((m)=>m.gameId!<0&&m.date.isEmpty),isTrue);
     expect(generated.where((m)=>m.stage.contains(' - II')).length,5);
   });
+
+  test('round-II V/G crossovers are absent from predictions but official results count',(){
+    final fixtures=<Match>[
+      Match('2026-11-08','В1','Г1','','Стыковые В и Г - II','',gameId:301),
+      Match('2026-11-08','В2','Г2','3:2','Стыковые В и Г - II','',
+        status:'FINAL',gameId:302),
+    ];
+    final generated=scenarioFixtures(fixtures);
+    expect(generated.where((m)=>m.stage=='Стыковые В и Г - II'),isEmpty);
+    final projected=applyScenario(fixtures,{
+      fixtures.first.key:const ScenarioScore(8,0),
+    });
+    expect(projected.applied,0);
+    expect(projected.matches.firstWhere((m)=>m.gameId==301).score,isEmpty);
+    expect(ranking(projected.matches).firstWhere((r)=>r.team=='В2').pts,2);
+  });
+
+  test('round-II V/G synthetic crossovers are not generated',(){
+    final fixtures=<Match>[];
+    for(var group=0;group<4;group++){
+      final label=['А','Б','В','Г'][group];
+      for(var i=0;i<5;i++){
+        fixtures.add(Match('2026-11-08','$label$i','$label${(i+1)%5}',
+          '','Группа $label-II','',gameId:group*10+i+1));
+      }
+    }
+    final generated=scenarioFixtures(fixtures);
+    expect(generated.where((m)=>m.stage=='Стыковые А и Б - II').length,5);
+    expect(generated.where((m)=>m.stage=='Стыковые В и Г - II'),isEmpty);
+  });
 }

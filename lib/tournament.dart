@@ -108,31 +108,31 @@ class CupTournament {
     final liveMatches=matches.where((m)=>m.isQualifier&&m.isLive&&m.goals!=null&&
       (group==null||m.stage==group&&!m.isCrossover)).toList();
     if(liveMatches.isEmpty)return official;
-    final officialOrder={for(var i=0;i<official.length;i++)official[i].team:i};
     final rows=<String,Rank>{for(final row in official)
       row.team:Rank(row.team)
         ..gp=row.gp..pts=row.pts..w=row.w..rw=row.rw
-        ..gf=row.gf..ga=row.ga..otLosses=row.otLosses
-        ..provisionalTie=row.provisionalTie};
+        ..gf=row.gf..ga=row.ga..otLosses=row.otLosses};
+    final confirmed=matches.where((m)=>m.isResultAt(now)&&
+      (group==null?m.isQualifier:m.stage==group&&!m.isCrossover)).toList();
+    final provisionalWins=<Match>[];
     for(final match in liveMatches) {
       final g=match.goals!;
       final home=rows.putIfAbsent(match.home,()=>Rank(match.home));
       final away=rows.putIfAbsent(match.away,()=>Rank(match.away));
       home.gp++;away.gp++;
       home.gf+=g[0];home.ga+=g[1];away.gf+=g[1];away.ga+=g[0];
-      if(g[0]>g[1]){home.pts+=2;home.w++;}
-      else if(g[1]>g[0]){away.pts+=2;away.w++;}
+      if(g[0]!=g[1]){
+        final winner=g[0]>g[1]?home:away;
+        final loser=g[0]>g[1]?away:home;
+        winner.pts+=2;winner.w++;
+        if(match.overtime){loser.pts++;loser.otLosses++;}else{winner.rw++;}
+        provisionalWins.add(Match(match.date,match.home,match.away,match.score,
+          match.stage,match.arena,status:'FINAL',scoreNote:match.scoreNote,
+          gameId:match.gameId));
+      }
       else {home.pts++;away.pts++;home.provisionalTie=true;away.provisionalTie=true;}
     }
-    return rows.values.toList()..sort((a,b){
-      final pts=b.pts.compareTo(a.pts);if(pts!=0)return pts;
-      final diff=b.diff.compareTo(a.diff);if(diff!=0)return diff;
-      final gf=b.gf.compareTo(a.gf);if(gf!=0)return gf;
-      final wins=b.w.compareTo(a.w);if(wins!=0)return wins;
-      final seed=(officialOrder[a.team]??0x7fffffff).compareTo(
-        officialOrder[b.team]??0x7fffffff);if(seed!=0)return seed;
-      return a.team.compareTo(b.team);
-    });
+    return regulationOrder(rows.values,[...confirmed,...provisionalWins]);
   }
   List<Rank> finalTable(CupTour finalRound){
     if(finalRound!=CupTour.gold&&finalRound!=CupTour.silver)return [];
