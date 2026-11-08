@@ -24,30 +24,39 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
   bool loading=false;
   bool cached=false;
   String? loadError;
+  int requestGeneration=0;
   @override void initState(){super.initState();restore();}
   @override void dispose(){
     if(widget.client==null)api.client.close();
     super.dispose();
   }
   Future<void> restore()async{
-    final data=await api.cached(group:group);
+    final generation=++requestGeneration;
+    final requestedGroup=group;
+    final data=await api.cached(group:requestedGroup);
+    if(generation!=requestGeneration)return;
     if(!mounted)return;
     if(data!=null)setState((){latest=data;cached=true;});
-    await load();
+    await load(generation:generation,requestedGroup:requestedGroup);
   }
-  Future<void> load()async{
-    if(loading)return;
-    loading=true;
-    final future=api.fetch(group:group);
-    setState((){pending=future;});
+  Future<void> load({int? generation,String? requestedGroup})async{
+    final current=generation??++requestGeneration;
+    final selectedGroup=requestedGroup??group;
+    if(!mounted)return;
+    final future=api.fetch(group:selectedGroup);
+    setState((){loading=true;pending=future;loadError=null;});
     try {
       final data=await future;
-      if(mounted)setState((){
+      if(mounted&&current==requestGeneration)setState((){
         latest=data;cached=false;loadError=null;
         if(team!=null&&!data.teams.contains(team))team=null;
       });
-    }catch(e){Diagnostics.record('stats',e);if(mounted)setState(()=>loadError='Обновление не удалось. Показаны последние загруженные данные.');}
-    finally{loading=false;}
+    }catch(e){
+      Diagnostics.record('stats',e);
+      if(mounted&&current==requestGeneration)setState(()=>loadError='Обновление не удалось. Показаны последние загруженные данные.');
+    }finally{
+      if(mounted&&current==requestGeneration)setState(()=>loading=false);
+    }
   }
   String mskUpdate(DateTime? time){
     if(time==null)return 'ФХР · время не указано';
@@ -80,10 +89,10 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
           DropdownMenuItem(value:group,child:Text(group,maxLines:1,overflow:TextOverflow.ellipsis)),
       ],
       onChanged:(next) {
-        if(next==null||loading)return;
+        if(next==null||next==(group??''))return;
         setState((){
           group=next.isEmpty?null:next;
-          team=null;latest=null;pending=null;loadError=null;
+          team=null;latest=null;pending=null;loadError=null;cached=false;
         });
         restore();
       },

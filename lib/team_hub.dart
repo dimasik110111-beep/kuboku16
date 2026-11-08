@@ -23,7 +23,20 @@ class _TeamHubPageState extends State<TeamHubPage>{
   bool following=false;
   Future<void> loadFollowing()async{final all=await FollowStore.teams();if(mounted)setState(()=>following=all.contains(widget.team.fullName));}
   Future<void> toggleFollowing()async{final next=await FollowStore.toggleTeam(widget.team.fullName);if(mounted)setState(()=>following=next);}
-  Future<CupStatistics?> fetchStats()=>CupStatisticsClient(client).fetch().then<CupStatistics?>((value)=>value,onError:(Object error,StackTrace stack){Diagnostics.record('team stats',error);return null;});
+  Future<CupStatistics?> fetchStats()async{
+    final source=CupStatisticsClient(client);
+    final saved=await source.cached();
+    if(saved!=null&&mounted)setState(()=>stats=Future.value(saved));
+    try{
+      final fresh=await source.fetch();
+      if(mounted)setState(()=>stats=Future.value(fresh));
+      return fresh;
+    }
+    catch(error,stack){
+      Diagnostics.record('team stats',error);
+      return saved;
+    }
+  }
   @override void initState(){super.initState();stats=fetchStats();loadFollowing();}
   @override void dispose(){client.close();super.dispose();}
   void open(Match m)=>Navigator.push(context,MaterialPageRoute(builder:(_)=>MatchCenterPage(match:m)));

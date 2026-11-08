@@ -65,13 +65,22 @@ void main() {
     expect(m.finished,isTrue);
   });
 
+  test('API numeric strings are normalized for scores and club IDs',() {
+    final match=Match.fromApi({'gameId':'25170469','home':'A','away':'B',
+      'homeScore':'3','awayScore':'1','group':'Группа А-I'});
+    expect(match.gameId,25170469);
+    expect(match.score,'3:1');
+    expect(TeamInfo.fromApi({'id':'42','name':'Крылья'}).id,42);
+  });
+
   test('detail accepts numeric or string game IDs returned by the LIVE worker',() {
     const scheduled=Match('2026-11-06','A','B','','Группа А-II','',
       status:'SCHEDULED',gameId:25170469);
     final updated=scheduled.withDetail({'ok':true,'gameId':'25170469',
-      'homeScore':2,'awayScore':1,'status':'LIVE'});
+      'homeScore':'2','awayScore':'1','status':'LIVE','scoreNote':'ОТ'});
     expect(updated.status,'LIVE');
     expect(updated.score,'2:1');
+    expect(updated.scoreNote,'ОТ');
     expect(scheduled.withDetail({'ok':true,'gameId':'999',
       'homeScore':8,'awayScore':0,'status':'LIVE'}).score,'');
   });

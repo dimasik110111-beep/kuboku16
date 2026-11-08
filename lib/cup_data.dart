@@ -5,6 +5,8 @@ import 'app_services.dart';
 const fhrApiBase = 'https://kubok-u16-live.dimasik110111.workers.dev';
 const fhrCalendarUrl = 'https://junior.fhr.ru/tournaments/kubokrossii-25008909/calendar/';
 
+int? _apiInt(dynamic value) => value is num ? value.toInt() : int.tryParse(value?.toString() ?? '');
+
 class Match {
   final String date, home, away, score, stage, arena, timeMsk, status, scoreNote;
   final int? gameId;
@@ -15,7 +17,8 @@ class Match {
   factory Match.fromApi(Map<String, dynamic> item) {
     final hs = item['homeScore'];
     final as = item['awayScore'];
-    final score = hs is num && as is num ? '${hs.toInt()}:${as.toInt()}' : '';
+    final homeScore = _apiInt(hs), awayScore = _apiInt(as);
+    final score = homeScore != null && awayScore != null ? '$homeScore:$awayScore' : '';
     final id = item['gameId'];
     return Match(
       item['date']?.toString() ?? '',
@@ -27,7 +30,7 @@ class Match {
       timeMsk: item['timeMsk']?.toString() ?? '',
       scoreNote: item['scoreNote']?.toString() ?? '',
       status: item['status']?.toString() ?? 'UNKNOWN',
-      gameId: id is num ? id.toInt() : int.tryParse(id?.toString() ?? ''),
+      gameId: _apiInt(id),
       matchUrl: item['matchUrl']?.toString(),
     );
   }
@@ -97,16 +100,16 @@ class Match {
     // API versions. Normalize before matching so valid LIVE updates are not
     // silently discarded.
     final rawId = detail['gameId'];
-    final detailId = rawId is num ? rawId.toInt() : int.tryParse(rawId?.toString() ?? '');
+    final detailId = _apiInt(rawId);
     if (detail['ok'] != true || gameId == null || detailId != gameId) return this;
-    final hs = detail['homeScore'];
-    final as = detail['awayScore'];
+    final hs = _apiInt(detail['homeScore']);
+    final as = _apiInt(detail['awayScore']);
     return Match(date, home, away,
-      hs is num && as is num ? '${hs.toInt()}:${as.toInt()}' : score,
+      hs != null && as != null ? '$hs:$as' : score,
       stage, arena,
       timeMsk: timeMsk, gameId: gameId, matchUrl: matchUrl,
       status: detail['status']?.toString() ?? status,
-      scoreNote: scoreNote);
+      scoreNote: detail['scoreNote']?.toString() ?? scoreNote);
   }
 }
 
@@ -191,7 +194,7 @@ class TeamInfo {
   final String? logo;
   const TeamInfo(this.id,this.name,this.city,this.fullName,this.url,this.logo);
   factory TeamInfo.fromApi(Map<String,dynamic> data) => TeamInfo(
-    (data['id'] as num).toInt(),
+    _apiInt(data['id']) ?? 0,
     data['name']?.toString()??'',
     data['city']?.toString()??'',
     data['fullName']?.toString()??'',

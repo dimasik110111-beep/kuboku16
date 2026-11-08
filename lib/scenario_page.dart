@@ -311,9 +311,9 @@ class _ScenarioPageState extends State<ScenarioPage>{
     final names=<String,String>{'@current':'Текущий вариант',
       for(final name in savedScenarios.keys)if(name!='@current')name:name};
     if(savedScenarios.isEmpty)return const SizedBox.shrink();
-    if(!names.containsKey(scenarioLeft))scenarioLeft='@current';
-    if(!names.containsKey(scenarioRight))scenarioRight=savedScenarios.keys.first;
-    final left=_tableForScenario(scenarioLeft),right=_tableForScenario(scenarioRight);
+    final leftId=names.containsKey(scenarioLeft)?scenarioLeft:'@current';
+    final rightId=names.containsKey(scenarioRight)?scenarioRight:savedScenarios.keys.first;
+    final left=_tableForScenario(leftId),right=_tableForScenario(rightId);
     final leftPlaces={for(var i=0;i<left.length;i++)left[i].team:i+1};
     final rightPlaces={for(var i=0;i<right.length;i++)right[i].team:i+1};
     final teams={...leftPlaces.keys,...rightPlaces.keys}.toList()..sort((a,b){
@@ -326,12 +326,12 @@ class _ScenarioPageState extends State<ScenarioPage>{
       CupSection(title:'МАШИНА ВРЕМЕНИ',subtitle:'Сравни, как разные прогнозы меняют турнирную таблицу'),
       CupCard(margin:const EdgeInsets.fromLTRB(13,2,13,8),padding:const EdgeInsets.all(12),child:Column(children:[
         Row(children:[
-          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('left:$scenarioLeft'),initialValue:scenarioLeft,
+          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('left:$leftId'),initialValue:leftId,
             isExpanded:true,decoration:const InputDecoration(labelText:'Вариант A',contentPadding:EdgeInsets.symmetric(horizontal:9,vertical:4)),
             items:[for(final e in names.entries)DropdownMenuItem(value:e.key,child:Text(e.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:9))),],
             onChanged:(value)=>setState(()=>scenarioLeft=value??'@current'))),
           const SizedBox(width:8),
-          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('right:$scenarioRight'),initialValue:scenarioRight,
+          Expanded(child:DropdownButtonFormField<String>(key:ValueKey('right:$rightId'),initialValue:rightId,
             isExpanded:true,decoration:const InputDecoration(labelText:'Вариант B',contentPadding:EdgeInsets.symmetric(horizontal:9,vertical:4)),
             items:[for(final e in names.entries)DropdownMenuItem(value:e.key,child:Text(e.value,maxLines:1,overflow:TextOverflow.ellipsis,style:const TextStyle(fontSize:9))),],
             onChanged:(value)=>setState(()=>scenarioRight=value??'@current'))),
