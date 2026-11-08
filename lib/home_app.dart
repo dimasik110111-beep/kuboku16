@@ -1,48 +1,823 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×zİ:-jZ.¶›­–)Ş³V–×÷'BvF'C¦7–æ2s°¦–×÷'BvF'C¦6öçfW'Bs°¦–×÷'Bw6¶vS¦fÇWGFW"öÖFW&–ÂæF'Bs°¦–×÷'Bw6¶vS¦‡GGö‡GGæF'Br2‡GG°¦–×÷'Bw6¶vS§6†&VE÷&VfW&Væ6W2÷6†&VE÷&VfW&Væ6W2æF'Bs°¦–×÷'Bv7WöFFæF'Bs°¦–×÷'BvÖF6…ö6VçFW"æF'Bs°¦–×÷'BwFVÕ÷vW2æF'Bs°¦–×÷'BwV•ö¶—BæF'Bs°¦–×÷'BwF÷W&æÖVçE÷vRæF'Bs°¦–×÷'BwÆ–W%÷7FF—7F–75÷vRæF'Bs°¦–×÷'BwFVÕö‡V"æF'Bs°¦–×÷'Bv÷6W'f–6W2æF'Bs°¦–×÷'Bv×•÷FVÒæF'Bs°¦–×÷'Bw66Væ&–õ÷vRæF'Bs°¦–×÷'Bv6öÖÖæEö6VçFW%÷vRæF'Bs° ¦6öç7Bf‡$7WÆövóÒv‡GG3¢òö–Öræf‡"ç'R÷F÷W&æÖVçG2ö#böVbó#Sƒ“’çvV's° ¦6Æ72§Væ–÷$W‡FVæG27FFVgVÅv–FvWB°¢6öç7B§Væ–÷$‡·7WW"æ¶W—Ò“°¢÷fW'&–FR7FFSÄ§Væ–÷$â7&VFU7FFR‚“Óåô§Væ–÷$7FFR‚“°§Ğ¦6Æ72ô§Væ–÷$7FFRW‡FVæG27FFSÄ§Væ–÷$ç°¢&ööÂÆ–v‡CÖfÇ6S°¢÷fW'&–FRfö–B–æ—E7FFR‚—°¢7WW"æ–æ—E7FFR‚“°¢7WV’æÆ–v‡CÖfÇ6S°¢6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚’çF†Vâ‚‡—°¢–b†Ö÷VçFVB—°¢6WE7FFR‚‚—°¢Æ–v‡C×ævWD&ööÂ‚v§Væ–÷%÷SeöÆ–v‡E÷F†VÖRr“óöfÇ6S°¢7WV’æÆ–v‡CÖÆ–v‡C°¢Ò“°¢Ğ¢Ò“°¢Ğ¢fö–B7v—F6…F†VÖR‚—°¢6WE7FFR‚‚—¶Æ–v‡CÒÆ–v‡C´7WV’æÆ–v‡CÖÆ–v‡C·Ò“°¢6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚’çF†Vâ‚‡“Óçç6WD&ööÂ‚v§Væ–÷%÷SeöÆ–v‡E÷F†VÖRrÆÆ–v‡B’“°¢Ğ¢÷fW'&–FRv–FvWB'V–ÆB„'V–ÆD6öçFW‡B6öçFW‡B—°¢7WV’æÆ–v‡CÖÆ–v‡C°¢f–æÂ'&–v‡FæW73ÖÆ–v‡Cô'&–v‡FæW72æÆ–v‡C¤'&–v‡FæW72æF&³°¢&WGW&âÖFW&–Ä€¢FV'Vu6†÷t6†V6¶VDÖöFT&ææW#¦fÇ6RÇF—FÆS¢t¥Tä”õ"Sb+r	­=í¢
-í‚rÀ¢F†VÖTæ–ÖF–öäGW&F–öã¦6öç7BGW&F–öâ†Ö–ÆÆ—6V6öæG3£Cƒ’À¢F†VÖTæ–ÖF–öä7W'fS¤7W'fW2æV6T–ä÷WD7V&–2À¢F†VÖS¥F†VÖTFF€¢W6TÖFW&–Ã3§G'VRÆ'&–v‡FæW73¦'&–v‡FæW72ÆföçDfÖ–Ç“¢tÖç&÷RrÀ¢66fföÆD&6¶w&÷VæD6öÆ÷#¤7WV’æ&6¶w&÷VæBÀ¢6öÆ÷%66†VÖS¤6öÆ÷%66†VÖRæg&öÕ6VVB‡6VVD6öÆ÷#¤7WV’ç&VBÆ'&–v‡FæW73¦'&–v‡FæW72’æ6÷•v—F‚€¢&–Ö'“¤7WV’ç&VBÇ6V6öæF'“¤7WV’æ–6RÇ7W&f6S¤7WV’ç7W&f6RÀ¢öå7W&f6S¤7WV’çv†—FRÆW'&÷#¦6öç7B6öÆ÷"ƒ„dddcc“s‚’’À¢&%F†VÖS¤&%F†VÖR†&6¶w&÷VæD6öÆ÷#¤7WV’æ&6¶w&÷VæBÀ¢f÷&Vw&÷VæD6öÆ÷#¤7WV’çv†—FRÇ7W&f6UF–çD6öÆ÷#¤6öÆ÷'2çG&ç7&VçBÀ¢6VçFW%F—FÆS¦fÇ6RÇFööÆ&$†V–v‡C£c"À¢F—FÆUFW‡E7G–ÆS¥FW‡E7G–ÆR†föçDfÖ–Ç“¢tÖç&÷RrÆ6öÆ÷#¤7WV’çv†—FRÆföçE6—¦S£rÆföçEvV–v‡C¤föçEvV–v‡BçsƒÆÆWGFW%76–æs¢Òã2’’À¢F—f–FW$6öÆ÷#¤7WV’ç7G&ö¶RÀ¢7Æ6„6öÆ÷#¤7WV’æ–6Rçv—F…fÇVW2†Ç†¢ã‚’À¢†–v†Æ–v‡D6öÆ÷#¤7WV’æ–6Rçv—F…fÇVW2†Ç†¢ãR’À¢FW‡EF†VÖS¥F†VÖTFF†'&–v‡FæW73¦'&–v‡FæW72’çFW‡EF†VÖRæÇ’€¢föçDfÖ–Ç“¢tÖç&÷RrÆ&öG”6öÆ÷#¤7WV’çv†—FRÆF—7Æ”6öÆ÷#¤7WV’çv†—FR’À¢–çWDFV6÷&F–öåF†VÖS¤–çWDFV6÷&F–öåF†VÖR€¢f–ÆÆVC§G'VRÆf–ÆÄ6öÆ÷#¤7WV’ç&—6VBÀ¢†–çE7G–ÆS¥FW‡E7G–ÆR†6öÆ÷#¤7WV’æF–ÒÆföçE6—¦S£2’À¢Æ&VÅ7G–ÆS¥FW‡E7G–ÆR†6öÆ÷#¤7WV’æ×WFVBÆföçE6—¦S£2’À¢6öçFVçEFF–æs¦6öç7BVFvT–ç6WG2ç7–ÖÖWG&–2††÷&—¦öçFÃ£RÇfW'F–6Ã£B’À¢&÷&FW#¤÷WFÆ–æT–çWD&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒR’À¢&÷&FW%6–FS¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç7G&ö¶R’’À¢Væ&ÆVD&÷&FW#¤÷WFÆ–æT–çWD&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒR’À¢&÷&FW%6–FS¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç7G&ö¶R’’À¢fö7W6VD&÷&FW#¤÷WFÆ–æT–çWD&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒR’À¢&÷&FW%6–FS¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç&VBÇv–GFƒ£ãR’’’À¢6&EF†VÖS¤6&EF†VÖTFF†6öÆ÷#¤7WV’ç7W&f6RÆVÆWfF–öã£À¢6†S¥&÷VæFVE&V7FævÆT&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒ#’À¢6–FS¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç7G&ö¶R’’’À¢F–ÆöuF†VÖS¤F–ÆöuF†VÖTFF€¢&6¶w&÷VæD6öÆ÷#¤7WV’ç7W&f6RÇ7W&f6UF–çD6öÆ÷#¤6öÆ÷'2çG&ç7&VçBÀ¢6†S¥&÷VæFVE&V7FævÆT&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒ#B’’’À¢6æ6´&%F†VÖS¥6æ6´&%F†VÖTFF†&6¶w&÷VæD6öÆ÷#¤7WV’ç&—6VBÀ¢6öçFVçEFW‡E7G–ÆS¥FW‡E7G–ÆR†6öÆ÷#¤7WV’çv†—FRÆföçE6—¦S£"ÆföçEvV–v‡C¤föçEvV–v‡Bçss’À¢&V†f–÷#¥6æ6´&$&V†f–÷"æfÆöF–ærÀ¢6†S¥&÷VæFVE&V7FævÆT&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒR’’’À¢&öw&W74–æF–6F÷%F†VÖS¥&öw&W74–æF–6F÷%F†VÖTFF†6öÆ÷#¤7WV’ç&VBÀ¢Æ–æV%G&6´6öÆ÷#¤7WV’ç7G&ö¶RÆ6—&7VÆ%G&6´6öÆ÷#¤7WV’ç7G&ö¶R’À¢vUG&ç6—F–öç5F†VÖS¦6öç7BvUG&ç6—F–öç5F†VÖR†'V–ÆFW'3§°¢F&vWEÆFf÷&ÒææG&ö–C¤fFUWv&G5vUG&ç6—F–öç4'V–ÆFW"‚’À¢F&vWEÆFf÷&Òæ”õ3¤7WW'F–æõvUG&ç6—F–öç4'V–ÆFW"‚’À¢Ò’À¢F$&%F†VÖS¥F$&%F†VÖTFF†Æ&VÄ6öÆ÷#¤7WV’çv†—FRÇVç6VÆV7FVDÆ&VÄ6öÆ÷#¤7WV’æ×WFVBÀ¢–æF–6F÷$6öÆ÷#¤7WV’ç&VBÆF—f–FW$6öÆ÷#¤7WV’ç7G&ö¶RÀ¢Æ&VÅ7G–ÆS¦6öç7BFW‡E7G–ÆR†föçE6—¦S£"ÆföçEvV–v‡C¤föçEvV–v‡Bçsƒ’À¢–æF–6F÷%6—¦S¥F$&$–æF–6F÷%6—¦RæÆ&VÂ’À¢f–ÆÆVD'WGFöåF†VÖS¤f–ÆÆVD'WGFöåF†VÖTFF‡7G–ÆS¤f–ÆÆVD'WGFöâç7G–ÆTg&öÒ€¢&6¶w&÷VæD6öÆ÷#¤7WV’ç&VBÆf÷&Vw&÷VæD6öÆ÷#¤6öÆ÷'2çv†—FRÀ¢FW‡E7G–ÆS¦6öç7BFW‡E7G–ÆR†föçEvV–v‡C¤föçEvV–v‡Bçsƒ’À¢6†S¥&÷VæFVE&V7FævÆT&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒB’’À¢FF–æs¦6öç7BVFvT–ç6WG2ç7–ÖÖWG&–2††÷&—¦öçFÃ£‚ÇfW'F–6Ã£2’’’À¢÷WFÆ–æVD'WGFöåF†VÖS¤÷WFÆ–æVD'WGFöåF†VÖTFF‡7G–ÆS¤÷WFÆ–æVD'WGFöâç7G–ÆTg&öÒ€¢f÷&Vw&÷VæD6öÆ÷#¤7WV’çv†—FRÇ6–FS¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç7G&ö¶R’À¢FW‡E7G–ÆS¦6öç7BFW‡E7G–ÆR†föçEvV–v‡C¤föçEvV–v‡Bçsƒ’À¢6†S¥&÷VæFVE&V7FævÆT&÷&FW"†&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒB’’À¢FF–æs¦6öç7BVFvT–ç6WG2ç7–ÖÖWG&–2††÷&—¦öçFÃ£‚ÇfW'F–6Ã£"’’’À¢–6öä'WGFöåF†VÖS¤–6öä'WGFöåF†VÖTFF‡7G–ÆS¤–6öä'WGFöâç7G–ÆTg&öÒ€¢f÷&Vw&÷VæD6öÆ÷#¤7WV’ç6ögBÆ†–v†Æ–v‡D6öÆ÷#¤7WV’æ–6Rçv—F…fÇVW2†Ç†¢ã"’’’À¢’À¢†öÖS¥66÷&W4†öÖR†Æ–v‡C¦Æ–v‡BÆöå7v—F6…F†VÖS§7v—F6…F†VÖR’À¢“°¢Ğ§Ğ¦6Æ7266÷&W4†öÖRW‡FVæG27FFVgVÅv–FvWG°¢f–æÂ&ööÂÆ–v‡C°¢f–æÂfö–D6ÆÆ&6²öå7v—F6…F†VÖS°¢6öç7B66÷&W4†öÖR‡·7WW"æ¶W’Ç&WV—&VBF†—2æÆ–v‡BÇ&WV—&VBF†—2æöå7v—F6…F†VÖWÒ“°¢÷fW'&–FR7FFSÅ66÷&W4†öÖSâ7&VFU7FFR‚“Óåõ66÷&W4†öÖU7FFR‚“°§Ğ ¦6Æ72õ66÷&W4†öÖU7FFRW‡FVæG27FFSÅ66÷&W4†öÖSâv—F‚v–FvWG4&–æF–ætö'6W'fW'°¢f–æÂ“Ôf‡$”6Æ–VçB†‡GGä6Æ–VçB‚’“°¢F–ÖW#òF–ÖW#°¢&ööÂf÷&Vw&÷VæC×G'VS°¢f–æÂf—6—FVCÓÆ–çCç³Ó°¢–çBF#ÓÆf–ÇFW#Ó°¢&ööÂÆöF–æsÖfÇ6RÆÆöF–æuFV×3ÖfÇ6RÆ66†VCÖfÇ6RÆFFTf–ÇFW#ÖfÇ6S°¢FFUF–ÖRFFSÔFFUF–ÖRææ÷r‚’çFõWF2‚’æFB„GW&F–öâ††÷W'3£2’“°¢FFUF–ÖSòWFFVDC°¢7G&–æsòW'&÷"ÇFVÔW'&÷#°¢7G&–ær6V&6ƒÒrs°¢Æ—7CÄÖF6ƒâvÖW3ÕµÓ°¢Æ—7CÅFVÔ–æfóâ6ÇV'3ÕµÓ°¢6WCÅ7G&–æsâff÷&—FW3×·Ó°¢7FF–26öç7Bf–ÇFW'3Õ²}	-
-	RrÂtÄ•dRrÂ}
-	]	}
-=	½
-Í
--	
--
-²rÂ}
-	
-	ı	
-		İ		RuÓ°¢7FF–26öç7B6V7F–öç3Õ°¢„–6öç2æ†öÖUö÷WFÆ–æVBÄ–6öç2æ†öÖU÷&÷VæFVBÂ}	=½-İòr’À¢„–6öç2ç7÷'G5ö†ö6¶W•ö÷WFÆ–æVBÄ–6öç2ç7÷'G5ö†ö6¶W’Â}	Í-}‚r’À¢„–6öç2æÆVFW&&ö&Eö÷WFÆ–æVBÄ–6öç2æÆVFW&&ö&E÷&÷VæFVBÂ}
--=İr’À¢„–6öç2æ&%ö6†'Eö÷WFÆ–æVBÄ–6öç2æ&%ö6†'E÷&÷VæFVBÂ}	=í­‚r’À¢„–6öç2ç6†–VÆEö÷WFÆ–æVBÄ–6öç2ç6†–VÆE÷&÷VæFVBÂ}	­íÍİM²r’À¢„–6öç2ç7F%ö&÷&FW%÷&÷VæFVBÄ–6öç2ç7F%÷&÷VæFVBÂ}	}İİíRr’À¢Ó°¢÷fW'&–FRfö–B–æ—E7FFR‚—°¢7WW"æ–æ—E7FFR‚“µv–FvWG4&–æF–æræ–ç7Fæ6RæFDö'6W'fW"‡F†—2“°¢öÆöDÆö6Â‚’çF†Vâ‚…ò—·&Vg&W6‚‚“¶ÆöD6ÇV'2‚“·Ò“°¢÷7F'EöÆÆ–ær‚“°¢Ğ¢÷fW'&–FRfö–BF–D6†ævTÆ–fV7–6ÆU7FFR„Æ–fV7–6ÆU7FFR7FFR—°¢f÷&Vw&÷VæC×7FFSÓÔÆ–fV7–6ÆU7FFRç&W7VÖVC°¢F–ÖW#òæ6æ6VÂ‚“°¢–b†f÷&Vw&÷VæB—·&Vg&W6‚‚“¶ÆöD6ÇV'2‚“µ÷7F'EöÆÆ–ær‚“·Ğ¢Ğ¢fö–B÷7F'EöÆÆ–ær‚—°¢F–ÖW#òæ6æ6VÂ‚“°¢F–ÖW#ÕF–ÖW"çW&–öF–2†6öç7BGW&F–öâ‡6V6öæG3£#R’Â…ò—°¢–b†f÷&Vw&÷VæBbb„ÖöFÅ&÷WFRæöb†6öçFW‡B“òæ—47W'&VçCó÷G'VR’—&Vg&W6‚‚“°¢Ò“°¢Ğ¢fö–B6VÆV7EF"†–çBfÇVR—°¢6WE7FFR‚‚—·F#×fÇVS·f—6—FVBæFB‡fÇVR“·Ò“°¢6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚’çF†Vâ‚‡“Óçç6WD–çB‚v§Væ–÷%÷F"rÇfÇVR’“°¢Ğ¢÷fW'&–FRfö–BF—7÷6R‚—°¢F–ÖW#òæ6æ6VÂ‚“µv–FvWG4&–æF–æræ–ç7Fæ6Rç&VÖ÷fTö'6W'fW"‡F†—2“¶’æ6Æ–VçBæ6Æ÷6R‚“·7WW"æF—7÷6R‚“°¢Ğ ¢gWGW&SÇfö–CâöÆöDÆö6Â‚’7–æ2°¢G'—°¢f–æÂÖv—B6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚“°¢f–æÂc×ævWE7G&–ætÆ—7B‚v§Væ–÷%öff÷&—FW2r“óõµÓ°¢f–æÂ6fVEF#Ò‡ævWD–çB‚v§Væ–÷%÷F"r“óó’æ6Æ×ƒÃR“°¢f–æÂ6fVD6ÇV'3Öv—BfVVD66†Rç&VB‚rö’÷c÷FV×2r“°¢–b‚Ö÷VçFVB—&WGW&ã°¢6WE7FFR‚‚—·F#×6fVEF#·f—6—FVBæFB‡F"“°¢–b‡6fVD6ÇV'3õ²wFV×2uÒ—2Æ—7B–6ÇV'3Ò‡6fVD6ÇV'2²wFV×2uÒ2Æ—7B’çv†W&UG—SÄÖâ‚’æÖ‚‡B“ÓåFVÔ–æfòæg&öÔ’„ÖÅ7G&–ærÆG–æÖ–3âæg&öÒ‡B’’’çFôÆ—7B‚“°¢Ò“°¢f–æÂ6öçFVçC×ævWE7G&–ær‚v§Væ–÷%÷Seö6ÆVæF%÷c’r“°¢–b‚Ö÷VçFVB—&WGW&ã°¢–b†6öçFVçBÖçVÆÂ—°¢f–æÂö&£Ö§6öäFV6öFR†6öçFVçB“°¢–b†ö&¢—2Ö’°¢f–æÂfVVCÔf‡$fVVBæg&öÔ’„ÖÅ7G&–ærÆG–æÖ–3âæg&öÒ†ö&¢’“°¢6WE7FFR‚‚—¶vÖW3ÖfVVBæÖF6†W3·WFFVDCÖfVVBçWFFVDC¶66†VC×G'VS¶ff÷&—FW3ÖbçFõ6WB‚“·Ò“°¢&WGW&ã°¢Ğ¢Ğ¢6WE7FFR‚‚“Óæff÷&—FW3ÖbçFõ6WB‚’“°¢Ö6F6‚…ò—²ò¢Vç7W÷'FVBö6÷''WB6fVB7FFR×W7Bæ÷B&Æö6²æWGv÷&²fWF6‚â¢÷Ğ¢Ğ ¢gWGW&SÇfö–Câ&Vg&W6‚‚’7–æ2°¢–b†ÆöF–ær—&WGW&ã°¢–b†Ö÷VçFVB—6WE7FFR‚‚“ÓæÆöF–æs×G'VR“°¢G'—°¢f–æÂfVVCÖv—B’æ6ÆVæF"‚“°¢f–æÂ–æFW†VCÓÅ7G&–ærÄÖF6ƒç¶f÷"†f–æÂÒ–âfVVBæÖF6†W2–Òæ¶W“¦×Ó°¢G'—°¢f–æÂFWF–Ç3Öv—B’æÆ—fT6†V6²‚“°¢f÷"†f–æÂR–âFWF–Ç2—°¢f–æÂ–CÖU²vvÖT–BuÓòçFõ7G&–ær‚“°¢–b†–CÓÖçVÆÇÇÆ–æFW†VE¶–EÓÓÖçVÆÂ–6öçF–çVS°¢–æFW†VE¶–EÓÖ–æFW†VE¶–EÒçv—F„FWF–Â†R“°¢Ğ¢Ö6F6‚…ò—²ò¢Ä•dR—2VçfW&–f–VBv†VâFWF–ÂfWF6‚f–Ç2ÂæWfW"–æfW"—Bâ¢÷Ğ¢f–æÂ'F–ÃÖfVVBæ—77VW2æ—4æ÷DV×G—ÇÀ¢†–æFW†VBæ—4V×G’bfvÖW2æ—4æ÷DV×G’“°¢f–æÂ&÷w3×&V6öæ6–ÆT6ÆVæF"†vÖW2Æ–æFW†VBçfÇVW2çFôÆ—7B‚’Ç'F–Ã§'F–Â¢âç6÷'B‚†Æ"—¶f–æÂCÖ"æFFRæ6ö×&UFò†æFFR“°¢&WGW&âBÓöC¦"çF–ÖT×6²æ6ö×&UFò†çF–ÖT×6²“·Ò“°¢–b‚Ö÷VçFVB—&WGW&ã°¢6WE7FFR‚‚—°¢vÖW3×&÷w3·WFFVDCÖfVVBçWFFVDC¶66†VCÖfÇ6S¶W'&÷#ÖfVVBæ—77VW2æ—4V×G“öçVÆÃ ¢}	Mİİ½R
-M
-]
-}-}İ½S¢G¶fVVBæ—77VW2æf—'7GÒs°¢Ò“°¢f–æÂÖv—B6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚“°¢v—Bç6WE7G&–ær‚v§Væ–÷%÷Seö6ÆVæF%÷c’rÆ§6öäVæ6öFR„f‡$fVVB‡&÷w2ÆfVVBçWFFVDBÆfVVBæ—77VW2ÆfVVBæw&÷W4fWF6†VBÆfVVBæÆÅ7FvW46ö×ÆWFRÆfVVBæW‡V7FVDÖF6„6÷VçB’çFô66†R‚’’“°¢Ö6F6‚†R—°¢F–væ÷7F–72ç&V6÷&B‚v6ÆVæF"rÆR“°¢–b†Ö÷VçFVB—6WE7FFR‚‚—¶66†VCÖvÖW2æ—4æ÷DV×G“¶W'&÷#Ò}	İR=M½íÂíİí--ÂMİİ½Râ	ıí-]Âİ-]İ]"‚ıí--í‚âs·Ò“°¢Öf–æÆÇ—¶–b†Ö÷VçFVB—6WE7FFR‚‚“ÓæÆöF–æsÖfÇ6R“·Ğ¢Ğ ¢gWGW&SÇfö–CâÆöD6ÇV'2‚’7–æ2°¢–b†ÆöF–æuFV×2—&WGW&ã°¢–b†Ö÷VçFVB—6WE7FFR‚‚“ÓæÆöF–æuFV×3×G'VR“°¢G'—°¢f–æÂFFÖv—B’çFV×2‚“°¢–b‚Ö÷VçFVB—&WGW&ã°¢6WE7FFR‚‚—°¢6ÇV'3ÖFF·FVÔW'&÷#ÖFFæÆVæwFƒÃ#ò}
-ıí¢
-M
-]
-İ]ıí½İ½“¢G¶FFæÆVæwF‡Ò­½=í"s¦çVÆÃ°¢Ò“°¢Ö6F6‚†R—¶–b†Ö÷VçFVB—6WE7FFR‚‚“ÓçFVÔW'&÷#Ò}	­íÍİM²
-M
-]
-İ]Mí-=ıİ³¢FRr“·Ğ¢f–æÆÇ—¶–b†Ö÷VçFVB—6WE7FFR‚‚“ÓæÆöF–æuFV×3ÖfÇ6R“·Ğ¢Ğ ¢7G&–æræ÷&ÖÆ—¦R…7G&–ær2“Óç2çFõWW$66R‚’ç&WÆ6TÆÂ‚}rÂ}	Rr¢ç&WÆ6TÆÂ…&VtW‡‡"uÇ2²r’Ârr’çG&–Ò‚“°¢FVÔ–æfóòf–æD6ÇV"…7G&–ærFVÒ—°¢f–æÂ¶W“Öæ÷&ÖÆ—¦R‡FVÒ“°¢f÷"†f–æÂB–â6ÇV'2—°¢–b†æ÷&ÖÆ—¦R‡BægVÆÄæÖR“ÓÖ¶W—ÇÆæ÷&ÖÆ—¦R‡BææÖR“ÓÖ¶W’—&WGW&âC°¢Ğ¢&WGW&âçVÆÃ°¢Ğ¢fö–B÷Vä6öÖÖæD6VçFW"‚“Óäæf–vF÷"æöb†6öçFW‡B’çW6‚„ÖFW&–ÅvU&÷WFR€¢'V–ÆFW#¢…ò“Óä6öÖÖæD6VçFW%vR†ÖF6†W3¦vÖW2Æ6ÇV'3¦6ÇV'2À¢öåFVÓ¢†æÖR—¶f–æÂ6ÇV#Öf–æD6ÇV"†æÖR“¶–b†6ÇV"ÖçVÆÂ–÷Vä6ÇV"†6ÇV"“·ÒÀ¢öäÖF6ƒ¦÷VäÖF6‚’’“°¢fö–B÷VäÖF6‚„ÖF6‚Ò“Óäæf–vF÷"æöb†6öçFW‡B’çW6‚„ÖFW&–ÅvU&÷WFR€¢'V–ÆFW#¢…ò“ÓäÖF6„6VçFW%vR†ÖF6ƒ¦ÒÆ†öÖUFVÓ¦f–æD6ÇV"†Òæ†öÖR’Æv•FVÓ¦f–æD6ÇV"†Òæv’’ÆÖF6†W3¦vÖW2’’“°¢fö–B÷Vä6ÇV"…FVÔ–æfòB“Óäæf–vF÷"æöb†6öçFW‡B’çW6‚„ÖFW&–ÅvU&÷WFR€¢'V–ÆFW#¢…ò“ÓåFVÔ‡V%vR‡FVÓ§BÆÖF6†W3¦vÖW2ÇFV×3¦6ÇV'2’’“°¢gWGW&SÇfö–CâFövvÆTff÷&—FR„ÖF6‚Ò’7–æ2°¢6WE7FFR‚‚—°¢–b†ff÷&—FW2æ6öçF–ç2†Òæ¶W’’—¶ff÷&—FW2ç&VÖ÷fR†Òæ¶W’“·ÖVÇ6W¶ff÷&—FW2æFB†Òæ¶W’“·Ğ¢Ò“°¢f–æÂÖv—B6†&VE&VfW&Væ6W2ævWD–ç7Fæ6R‚“°¢v—Bç6WE7G&–ætÆ—7B‚v§Væ–÷%öff÷&—FW2rÆff÷&—FW2çFôÆ—7B‚’“°¢Ğ ¢7G&–ær6†÷'DFFR„FFUF–ÖRB“ÓârG¶BæF’çFõ7G&–ær‚’çDÆVgBƒ"Âsr—ÒâG¶BæÖöçF‚çFõ7G&–ær‚’çDÆVgBƒ"Âsr—Òs°¢7G&–ærvVV¶F’„FFUF–ÖRB“Óæ6öç7B²}	ı	ÒrÂ}	-
-"rÂ}
-
-rÂ}
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'cup_data.dart';
+import 'match_center.dart';
+import 'team_pages.dart';
+import 'ui_kit.dart';
+import 'tournament_page.dart';
+import 'player_statistics_page.dart';
+import 'team_hub.dart';
+import 'app_services.dart';
+import 'my_team.dart';
+import 'scenario_page.dart';
+import 'command_center_page.dart';
+
+const fhrCupLogo='https://img.fhr.ru/tournaments/b6/ef/25008909.webp';
+
+class JuniorApp extends StatefulWidget {
+  const JuniorApp({super.key});
+  @override State<JuniorApp> createState()=>_JuniorAppState();
 }
-"rÂ}	ı
-"rÂ}
-	rÂ}	-
-uÕ¶BçvVV¶F’ÓÓ°¢7G&–ær&Vg&W6…F–ÖR‚—°¢–b‡WFFVDCÓÖçVÆÂ—&WGW&â}	ímMİR
-M
-]
-s°¢f–æÂC×WFFVDBçFõWF2‚’æFB„GW&F–öâ††÷W'3£2’“°¢&WGW&â}
-M
-]
-+rG·Bæ†÷W"çFõ7G&–ær‚’çDÆVgBƒ"Âsr—Ó¢G·BæÖ–çWFRçFõ7G&–ær‚’çDÆVgBƒ"Âsr—Ò	Í
-	¢s°¢Ğ ¢v–FvWBö†VFW"‚“Óå6fT&V†&÷GFöÓ¦fÇ6RÆ6†–ÆC¤6öçF–æW"€¢FF–æs¦6öç7BVFvT–ç6WG2æg&öÔÅE$"ƒRÃÃÃ’À¢FV6÷&F–öã¤&÷„FV6÷&F–öâ€¢6öÆ÷#¤7WV’æ&6¶w&÷VæBÀ¢&÷&FW#¤&÷&FW"†&÷GFöÓ¤&÷&FW%6–FR†6öÆ÷#¤7WV’ç7G&ö¶Rçv—F…fÇVW2†Ç†¢ãr’’’’À¢6†–ÆC¥&÷r†6†–ÆG&Vã¥°¢6öçF–æW"‡v–GFƒ£C2Æ†V–v‡C£C2ÇFF–æs¦6öç7BVFvT–ç6WG2æÆÂƒR’À¢FV6÷&F–öã¤&÷„FV6÷&F–öâ€¢w&F–VçC¤Æ–æV$w&F–VçB†&Vv–ã¤Æ–væÖVçBçF÷ÆVgBÆVæC¤Æ–væÖVçBæ&÷GFöÕ&–v‡BÀ¢6öÆ÷'3¥´7WV’ç&VBçv—F…fÇVW2†Ç†¢ãSR’Ä7WV’ç&—6VEÒ’À¢&÷&FW%&F—W3¤&÷&FW%&F—W2æ6—&7VÆ"ƒR’À¢&÷&FW#¤&÷&FW"æÆÂ†6öÆ÷#¤7WV’æ–6Rçv—F…fÇVW2†Ç†¢ã#"’’À¢&÷…6†F÷s¥´&÷…6†F÷r†6öÆ÷#¤7WV’ç&VBçv—F…fÇVW2†Ç†¢ã#’Æ&ÇW%&F—W3£‚•Ò’À¢6†–ÆC¤–ÖvRææWGv÷&²†f‡$7WÆövòÆf—C¤&÷„f—Bæ6öçF–âÀ¢W'&÷$'V–ÆFW#¢…òÅõòÅõõò“Óä–6öâ„–6öç2ç7÷'G5ö†ö6¶W’Æ6öÆ÷#¤7WV’æ–6R’’’À¢6öç7B6—¦VD&÷‚‡v–GFƒ£’À¢W‡æFVB†6†–ÆC¤6öÇVÖâ†7&÷74†—4Æ–væÖVçC¤7&÷74†—4Æ–væÖVçBç7F'BÆ6†–ÆG&Vã¥°¢FW‡B‚t¥Tä”õ"SbrÆÖ„Æ–æW3£Æ÷fW&fÆ÷s¥FW‡D÷fW&fÆ÷ræVÆÆ—6—2À¢7G–ÆS¥FW‡E7G–ÆR†6öÆ÷#¤7WV’çv†—FRÆÆWGFW%76–æs¢ÒãSRÀ¢föçEvV–v‡C¤föçEvV–v‡Bçs“ÆföçE6—¦S£’Æ†V–v‡C£’’À¢6öç7B6—¦VD&÷‚††V–v‡C£b’À¢&÷r†6†–ÆG&Vã¥°¢6öçF–æW"‡v–GFƒ£bÆ†V–v‡C£bÆFV6÷&F–öã¤&÷„FV6÷&F–öâ€¢6öÆ÷#¦W'&÷#ÓÖçVÆÃô7WV’æw&VVã¤7WV’ç–VÆÆ÷rÇ6†S¤&÷…6†Ræ6—&6ÆRÀ¢&÷…6†F÷s¥´&÷…6†F÷r†6öÆ÷#¢†W'&÷#ÓÖçVÆÃô7WV’æw&VVã¤7WV’ç–VÆÆ÷r’çv—F…fÇVW2†Ç†¢ãB’Æ&ÇW%&F—W3£‚•Ò’’À¢6öç7B6—¦VD&÷‚‡v–GFƒ£b’À¢fÆW†–&ÆR†6†–ÆC¥FW‡B‚t$Tä"ãò	­
-=		í	¢
-	í
-
-		‚##l+s#rrÀ¢Ö„Æ–æW3£Æ÷fW&fÆ÷s¥FW‡D÷fW&fÆ÷ræVÆÆ—6—2À¢7G–ÆS¥FW‡E7G–ÆR†6öÆ÷#¤7WV’æ×WFVBÀ¢föçEvV–v‡C¤föçEvV–v‡Bçs“ÆÆWGFW%76–æs¢ãƒRÆföçE6—¦S£‚’’’À¢Ò’À¢Ò’’À¢–b†vÖW2æç’‚†Ò“ÓæÒæ—4Æ—fR’•FF–ær‡FF–æs¦6öç7BVFvT–ç6WG2æöæÇ’‡&–v‡C£2’À¢6†–ÆC¤7WFr‡FW‡C¢tÄ•dRrÆ6öÆ÷#¤7WV’æw&VVâÆf–ÆÆVC§G'VR’’À¢ö†VFW$7F–öâ†–6öã§v–FvWBæÆ–v‡Cô–6öç2æF&µöÖöFUö÷WFÆ–æVC¤–6öç2æÆ–v‡EöÖöFUö÷WFÆ–æVBÀ¢FööÇF—§v–FvWBæÆ–v‡Cò}
--Íİò-]Ís¢}
--]-½ò-]ÍrÆöåF§v–FvWBæöå7v—F6…F†VÖR’À¢÷WÖVçT'WGFöãÅ7G&–æsâ€¢FööÇF—¢}	]rÆ–6öã¤–6öâ„–6öç2æÖ÷&Uö†÷&—¥÷&÷VæFVBÆ6öÆ÷#¤7WV’ç6ögBÇ6—¦S£#2’À¢6öÆ÷#¤7WV’ç7W&f6RÀ¢öå6VÆV7FVC¢‡fÇVR—°¢–b‡fÇVSÓÒw6WGF–æw2r”æf–vF÷"çW6‚†6öçFW‡BÄÖFW&–ÅvU&÷WFR†'V–ÆFW#¢…ò“Óæ6öç7B6WGF–æw5vR‚’’“°¢–b‡fÇVSÓÒw&Vg&W6‚r—&Vg&W6‚‚“°¢ÒÀ¢—FVÔ'V–ÆFW#¢…ò“Óå°¢6öç7B÷WÖVçT—FVÒ‡fÇVS¢w6WGF–æw2rÆ6†ıë{h‘éì¶»§q«^uÌémÕÁU¤¹É…¥Í•±ÕÁU¤¹ÍÕÉ™…•t¤¤°(€€€€€€€Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡¡½É¥é½¹Ñ…°èÄÌ±Ù•ÉÑ¥…°èÄÌ¤°(€€€€€€€¡¥±éI½Ü¡¡¥±‘É•¸él(€€€€€€€€€½¹Ñ…¥¹•È¡İ¥‘Ñ èÈÜ±¡•¥¡ĞèÈÜ±‘•½É…Ñ¥½¸é	½á•½É…Ñ¥½¸¡½±½ÈéÕÁU¤¹É•‘5ÕÑ•°(€€€€€€€€€€€‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È à¤¤°(€€€€€€€€€€€¡¥±é%½¸¡%½¹Ì¹ÍÁ½ÉÑÍ}¡½­•ä±Í¥é”èÄÜ±½±½ÈéÕÁU¤¹É•¤¤°(€€€€€€€€€M¥é•‘	½à¡İ¥‘Ñ èÄÀ¤°(€€€€€€€€€áÁ…¹‘•¡¡¥±é½±Õµ¸¡É½ÍÍá¥Í±¥¹µ•¹ĞéÉ½ÍÍá¥Í±¥¹µ•¹Ğ¹ÍÑ…ÉĞ±¡¥±‘É•¸él(€€€€€€€€€€€Q•áĞ ŸBƒB{B‡B‡BcB¼ƒ
-ÜƒBkBBGB{BhTÄØœ±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹µÕÑ•±™½¹ÑM¥é”èä±±•ÑÑ•ÉMÁ…¥¹œè¸Ô¤¤°(€€€€€€€€€€€M¥é•‘	½à¡¡•¥¡ĞèÌ¤°(€€€€€€€€€€€Q•áĞ¡±…‰•°¹Ñ½UÁÁ•É…Í” ¤±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹İ¡¥Ñ”±™½¹ÑM¥é”èÄÄ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜàÀÀ¤¤°(€€€€€€€€€t¤¤°(€€€€€€€€€ÕÁQ…œ¡Ñ•áĞèœ‘í±¥ÍĞ¹±•¹Ñ¡ôœ±½±½ÈéÕÁU¤¹Í½™Ğ¤°(€€€€€€€t¤¤°(€€€€€™½È¡Ù…È¤ôÀí¤ñ±¥ÍĞ¹±•¹Ñ í¤¬¬¤¸¸¹l(€€€€€€€}µ…Ñ¡1¥¹”¡±¥ÍÑm¥t¤°(€€€€€€€¥˜¡¤¬Äñ±¥ÍĞ¹±•¹Ñ ¥ÕÁ¥Ø¡¥¹‘•¹ĞèÄÔ¤°(€€€€€t°(€€€t¤°(€€¤ì((€]¥‘•Ğ}™¥±Ñ•ÉÌ ¤ôùM¥¹±•¡¥±‘MÉ½±±Y¥•Ü¡ÍÉ½±±¥É•Ñ¥½¸éá¥Ì¹¡½É¥é½¹Ñ…°°(€€€Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹™É½µ1QI ÄÌ°à°à°ÄÀ¤°(€€€¡¥±éI½Ü¡¡¥±‘É•¸él(€€€€€™½È¡Ù…È¤ôÀí¤ñ™¥±Ñ•ÉÌ¹±•¹Ñ í¤¬¬¥}™¥±Ñ•É¡¥À¡™¥±Ñ•ÉÍm¥t±™¥±Ñ•Èôõ¤° ¤ôùÍ•ÑMÑ…Ñ”  ¤ôù™¥±Ñ•Èõ¤¤¤°(€€€t¤¤ì((€1¥ÍĞñ]¥‘•Ğø}…µ•ÍÉ½ÕÁ•¡1¥ÍĞñ5…Ñ øÙ¥Í¥‰±”±í¥¹Ğü±¥µ¥Ñô¥ì(€€€™¥¹…°Í•±•Ñ•õ±¥µ¥Ğôõ¹Õ±°ıÙ¥Í¥‰±”éÙ¥Í¥‰±”¹Ñ…­”¡±¥µ¥Ğ¤¹Ñ½1¥ÍĞ ¤ì(€€€™¥¹…°É½ÕÁÌôñMÑÉ¥¹œ±1¥ÍĞñ5…Ñ øùíôì(€€€™½È¡™¥¹…°´¥¸Í•±•Ñ•¥íÉ½ÕÁÌ¹ÁÕÑ%™‰Í•¹Ğ¡´¹ÍÑ…”° ¤ôùmt¤¹…‘¡´¤íô(€€€É•ÑÕÉ¸m™½È¡™¥¹…°É½ÕÀ¥¸É½ÕÁÌ¹•¹ÑÉ¥•Ì¥}±•…Õ•	±½¬¡É½ÕÀ¹­•ä±É½ÕÀ¹Ù…±Õ”¥tì(€ô((€]¥‘•Ğ}¡½µ•!•É¼ ¥ì(€€€™¥¹…°½µÁ±•Ñ•õ…µ•Ì¹İ¡•É” ¡´¤ôù´¹™¥¹¥Í¡•¤¹±•¹Ñ ì(€€€™¥¹…°ÁÉ½É•ÍÌõ…µ•Ì¹¥ÍµÁÑäüÀ¸Àé½µÁ±•Ñ•½…µ•Ì¹±•¹Ñ ì(€€€™¥¹…°±¥Ù”õ…µ•Ì¹İ¡•É” ¡´¤ôù´¹¥Í1¥Ù”¤¹±•¹Ñ ì(€€€É•ÑÕÉ¸ÕÁÉ•¹„ (€€€€€µ…É¥¸é½¹ÍĞ‘•%¹Í•ÑÌ¹™É½µ1QI ÄÈ°ÄĞ°ÄÈ°ÄÀ¤°(€€€€€Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹™É½µ1QI ÈÈ°ÈÌ°ÈÈ°ÈĞ¤°(€€€€€¡¥±é½±Õµ¸¡É½ÍÍá¥Í±¥¹µ•¹ĞéÉ½ÍÍá¥Í±¥¹µ•¹Ğ¹ÍÑ…ÉĞ±¡¥±‘É•¸él(€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€½¹Ñ…¥¹•È¡İ¥‘Ñ èÌÈ±¡•¥¡ĞèÌÈ±‘•½É…Ñ¥½¸é	½á•½É…Ñ¥½¸ (€€€€€€€€€€€½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸ÄÀ¤°(€€€€€€€€€€€‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È ÄÄ¤°(€€€€€€€€€€€‰½É‘•Èé	½É‘•È¹…±°¡½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸ÄÈ¤¤¤°(€€€€€€€€€€€¡¥±é½¹ÍĞ%½¸¡%½¹Ì¹ÍÁ½ÉÑÍ}¡½­•å}É½Õ¹‘•±½±½ÈéÕÁU¤¹¥”±Í¥é”èÄä¤¤°(€€€€€€€€€½¹ÍĞM¥é•‘	½à¡İ¥‘Ñ èÄÀ¤°(€€€€€€€€€½¹ÍĞáÁ…¹‘•¡¡¥±éQ•áĞ )U9%=H€€¼€Q=UI959Pœ°(€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹¥”±™½¹ÑM¥é”èÄÀ°(€€€€€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œèÄ¸Ì±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ¤¤¤°(€€€€€€€€€ÕÁQ…œ¡Ñ•áĞé±¥Ù”øÀüŸŠ^<1%YœèMM=8€ÈØ¼ÈÜœ°(€€€€€€€€€€€½±½Èé±¥Ù”øÀıÕÁU¤¹É••¸éÕÁU¤¹¥”±™¥±±•éÑÉÕ”¤°(€€€€€€€t¤°(€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÈÜ¤°(€€€€€€€½¹ÍĞQ•áĞ ŸBkBBGB{Bhœ±ÍÑå±”éQ•áÑMÑå±”¡™½¹ÑM¥é”èĞÌ±¡•¥¡Ğè¸äÌ°(€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œè´È¸Ä±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±½±½Èé½±½ÉÌ¹İ¡¥Ñ”¤¤°(€€€€€€€½¹ÍĞQ•áĞ ŸBƒB{B‡B‡BcB`œ±ÍÑå±”éQ•áÑMÑå±”¡™½¹ÑM¥é”èĞÌ±¡•¥¡ĞèÄ°(€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œè´È¸Ä±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±½±½Èé½±½ÉÌ¹İ¡¥Ñ”¤¤°(€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÄÈ¤°(€€€€€€€Q•áĞ TÄØ€ƒŠˆ€€ÈÀƒBkB{BsBCBwBP€ƒŠˆ€ƒB‡BWB_B{Bt€ÈÀÈØ¼ÈÜœ°(€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹Í½™Ğ±™½¹ÑM¥é”èÄÀ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜàÀÀ°(€€€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œè¸Ô¤¤°(€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÈÔ¤°(€€€€€€€½¹Ñ…¥¹•È¡Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹…±° ÄÌ¤°(€€€€€€€€€‘•½É…Ñ¥½¸é	½á•½É…Ñ¥½¸¡½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸ÀÜ¤°(€€€€€€€€€€€‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È Äà¤°(€€€€€€€€€€€‰½É‘•Èé	½É‘•È¹…±°¡½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸Ä¤¤¤°(€€€€€€€€€¡¥±é½±Õµ¸¡¡¥±‘É•¸él(€€€€€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€€€€€Q•áĞ ŸB‹BBƒBwBcB€ƒBHƒBSBKBcB[BWBwBcB`œ°(€€€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹Í½™Ğ±™½¹ÑM¥é”èä°(€€€€€€€€€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œè¸à±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ¤¤°(€€€€€€€€€€€€€½¹ÍĞMÁ…•È ¤°(€€€€€€€€€€€€€Q•áĞ œ‘ì¡ÁÉ½É•ÍÌ¨ÄÀÀ¤¹É½Õ¹ ¥ô”œ±ÍÑå±”é½¹ÍĞQ•áÑMÑå±” (€€€€€€€€€€€€€€€½±½Èé½±½ÉÌ¹İ¡¥Ñ”±™½¹ÑM¥é”èÄÔ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ¤¤°(€€€€€€€€€€€t¤°(€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡Ğèä¤°(€€€€€€€€€€€±¥ÁII•Ğ¡‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È ÄÀ¤°(€€€€€€€€€€€€€¡¥±é1¥¹•…ÉAÉ½É•ÍÍ%¹‘¥…Ñ½È¡Ù…±Õ”éÁÉ½É•ÍÌ±µ¥¹!•¥¡ĞèÔ°(€€€€€€€€€€€€€€€‰…­É½Õ¹‘½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸ÄÌ¤°(€€€€€€€€€€€€€€€Ù…±Õ•½±½Èé½¹ÍĞ±İ…åÍMÑ½ÁÁ•‘¹¥µ…Ñ¥½¸ñ½±½Èø¡ÕÁU¤¹¥”¤¤¤°(€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡Ğèä¤°(€€€€€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€€€€€Q•áĞ œ‘í½µÁ±•Ñ•‘ôƒBßBÃBËB×FF#B×B÷Bøœ±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹µÕÑ•±™½¹ÑM¥é”èÄÀ¤¤°(€€€€€€€€€€€€€½¹ÍĞMÁ…•È ¤°(€€€€€€€€€€€€€Q•áĞ œ‘í…µ•Ì¹±•¹Ñ¡ôƒBÈƒBëBÃBïB×B÷BÓBÃFBÔœ°(€€€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹µÕÑ•±™½¹ÑM¥é”èÄÀ¤¤°(€€€€€€€€€€€t¤°(€€€€€€€€€t¤¤°(€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÄÜ¤°(€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€áÁ…¹‘•¡¡¥±é¥±±•‘	ÕÑÑ½¸¹¥½¸ (€€€€€€€€€€€½¹AÉ•ÍÍ•è ¤ôù9…Ù¥…Ñ½È¹ÁÕÍ ¡½¹Ñ•áĞ±5…Ñ•É¥…±A…•I½ÕÑ”¡‰Õ¥±‘•Èè¡|¤ôùM•¹…É¥½A…” (€€€€€€€€€€€€€µ…Ñ¡•Ìé…µ•Ì±Ñ•…µÌé±Õ‰Ì¹µ…À ¡Ğ¤ôùĞ¹™Õ±±9…µ”¤¹Ñ½1¥ÍĞ ¤°(€€€€€€€€€€€€€Ñ•…µ1½½Ìéí™½È¡™¥¹…°Ğ¥¸±Õ‰Ì¥Ğ¹™Õ±±9…µ”éĞ¹±½½ô¤¤¤°(€€€€€€€€€€€ÍÑå±”é¥±±•‘	ÕÑÑ½¸¹ÍÑå±•É½´ (€€€€€€€€€€€€€‰…­É½Õ¹‘½±½Èé½±½ÉÌ¹İ¡¥Ñ”°(€€€€€€€€€€€€€™½É•É½Õ¹‘½±½Èé½¹ÍĞ½±½È ÁáÄÌÈÌÑ¤°(€€€€€€€€€€€€€Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡¡½É¥é½¹Ñ…°èÔ±Ù•ÉÑ¥…°èÄÈ¤¤°(€€€€€€€€€€€¥½¸é½¹ÍĞ%½¸¡%½¹Ì¹…ÕÑ½}…İ•Í½µ•}É½Õ¹‘•±Í¥é”èÄÜ¤°(€€€€€€€€€€€±…‰•°é½¹ÍĞQ•áĞ ŸBBƒBWBSBcBkB‹B¬œ°(€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±™½¹ÑM¥é”èÄÀ¤¤¤¤°(€€€€€€€€€½¹ÍĞM¥é•‘	½à¡İ¥‘Ñ èä¤°(€€€€€€€€€áÁ…¹‘•¡¡¥±é=ÕÑ±¥¹•‘	ÕÑÑ½¸¹¥½¸ (€€€€€€€€€€€½¹AÉ•ÍÍ•è ¤ôùÍ•±•ÑQ…ˆ È¤°(€€€€€€€€€€€ÍÑå±”é=ÕÑ±¥¹•‘	ÕÑÑ½¸¹ÍÑå±•É½´ (€€€€€€€€€€€€€™½É•É½Õ¹‘½±½Èé½±½ÉÌ¹İ¡¥Ñ”°(€€€€€€€€€€€€€Í¥‘”é	½É‘•ÉM¥‘”¡½±½Èé½±½ÉÌ¹İ¡¥Ñ”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸Ì¤¤°(€€€€€€€€€€€€€Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡¡½É¥é½¹Ñ…°èÔ±Ù•ÉÑ¥…°èÄÈ¤¤°(€€€€€€€€€€€¥½¸é½¹ÍĞ%½¸¡%½¹Ì¹±•…‘•É‰½…É‘}É½Õ¹‘•±Í¥é”èÄÜ¤°(€€€€€€€€€€€±…‰•°é½¹ÍĞQ•áĞ ŸB‹BCBGBoBcB›B@œ°(€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±™½¹ÑM¥é”èÄÀ¤¤¤¤°(€€€€€€€t¤°(€€€€€t¤°(€€€€¤ì(€ô((€]¥‘•Ğ}¡½µ•A…” ¥ì(€€€™¥¹…°É••¹Ğõ™¥±Ñ•É• ¤ì(€€€™¥¹…°±¥Ù”õ…µ•Ì¹İ¡•É” ¡´¤ôù´¹¥Í1¥Ù”¤¹Ñ½1¥ÍĞ ¤ì(€€€É•ÑÕÉ¸I•™É•Í¡%¹‘¥…Ñ½È¡½¹I•™É•Í éÉ•™É•Í ±¡¥±é1¥ÍÑY¥•Ü¡­•äé½¹ÍĞA…•MÑ½É…•-•ä ¡½µ”œ¤±¡¥±‘É•¸él(€€€€€ÕÁI•Ù•…°¡¡¥±é}¡½µ•!•É¼ ¤¤°(€€€€€ÕÁÉ•¹„¡µ…É¥¸é½¹ÍĞ‘•%¹Í•ÑÌ¹™É½µ1QI ÄÈ°Ğ°ÄÈ°ÄÄ¤°(€€€€€€€Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹é•É¼±¡¥±é5…Ñ•É¥…°¡½±½Èé½±½ÉÌ¹ÑÉ…¹ÍÁ…É•¹Ğ°(€€€€€€€€€¡¥±é%¹­]•±°¡½¹Q…Àé½Á•¹½µµ…¹‘•¹Ñ•È°(€€€€€€€€€€€‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È ÈÈ¤°(€€€€€€€€€€€¡¥±éA…‘‘¥¹œ¡Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹™É½µ1QI Äà°Äà°ÄÜ°Ää¤°(€€€€€€€€€€€€€¡¥±é½±Õµ¸¡É½ÍÍá¥Í±¥¹µ•¹ĞéÉ½ÍÍá¥Í±¥¹µ•¹Ğ¹ÍÑ…ÉĞ±¡¥±‘É•¸él(€€€€€€€€€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€€€€€€€€€%½¸¡%½¹Ì¹É…‘…É}É½Õ¹‘•±½±½ÈéÕÁU¤¹¥”±Í¥é”èÈĞ¤°(€€€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡İ¥‘Ñ èÄÀ¤°(€€€€€€€€€€€€€€€€€½¹ÍĞáÁ…¹‘•¡¡¥±éQ•áĞ =5599QHœ±ÍÑå±”éQ•áÑMÑå±” (€€€€€€€€€€€€€€€€€€€½±½Èé½±½ÉÌ¹İ¡¥Ñ”±™½¹ÑM¥é”èÄÌ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ°(€€€€€€€€€€€€€€€€€€€±•ÑÑ•ÉMÁ…¥¹œèÄ¤¤¤°(€€€€€€€€€€€€€€€€€ÕÁQ…œ¡Ñ•áĞèØÈàœ±½±½ÈéÕÁU¤¹½±±™¥±±•éÑÉÕ”¤°(€€€€€€€€€€€€€€€t¤°(€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÄĞ¤°(€€€€€€€€€€€€€€€½¹ÍĞQ•áĞ ŸBCBƒBWBwB@ƒBkBBGBkB@¹q»BB{BoBwB¯BdƒBkB{BwB‹BƒB{BoB°¸œ°(€€€€€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½Èé½±½ÉÌ¹İ¡¥Ñ”±™½¹ÑM¥é”èÈÄ°(€€€€€€€€€€€€€€€€€€€™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±¡•¥¡ĞèÄ¸Ä¤¤°(€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÄÄ¤°(€€€€€€€€€€€€€€€Q•áĞ ŸBFBûBÏB÷BûBßF,ƒ
-ÜƒBƒBÃFFB×BÈƒ
-ÜƒBCB÷BÃBïBãFBãBëBÀƒ
-ÜƒBsBûBàƒBëBûBóBÃB÷BÓF,œ°(€€€€€€€€€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹Í½™Ğ±™½¹ÑM¥é”èÄÄ¤¤°(€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÄØ¤°(€€€€€€€€€€€€€€€I½Ü¡¡¥±‘É•¸él(€€€€€€€€€€€€€€€€€áÁ…¹‘•¡¡¥±é½¹Ñ…¥¹•È¡¡•¥¡ĞèÄ°(€€€€€€€€€€€€€€€€€€€½±½ÈéÕÁU¤¹¥”¹İ¥Ñ¡Y…±Õ•Ì¡…±Á¡„è¸ÌÔ¤¤¤°(€€€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡İ¥‘Ñ èÄÌ¤°(€€€€€€€€€€€€€€€€€½¹ÍĞQ•áĞ ŸB{B‹BkBƒB¯B‹B°ƒBCBwBCBoBcB‹BcBkBŒœ±ÍÑå±”éQ•áÑMÑå±” (€€€€€€€€€€€€€€€€€€€½±½Èé½±½ÉÌ¹İ¡¥Ñ”±™½¹ÑM¥é”èÄÀ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ¤¤°(€€€€€€€€€€€€€€€€€½¹ÍĞM¥é•‘	½à¡İ¥‘Ñ èÜ¤°(€€€€€€€€€€€€€€€€€½¹ÍĞ%½¸¡%½¹Ì¹…ÉÉ½İ}™½Éİ…É‘}É½Õ¹‘•°(€€€€€€€€€€€€€€€€€€€½±½Èé½±½ÉÌ¹İ¡¥Ñ”±Í¥é”èÄÜ¤°(€€€€€€€€€€€€€€€t¤°(€€€€€€€€€€€€€t¤¤¤¤¤°(€€€€€5åQ•…µ…É¡Ñ•…µÌé±Õ‰Ì±µ…Ñ¡•Ìé…µ•Ì±½¹Q•…´é½Á•¹±Õˆ±½¹5…Ñ é½Á•¹5…Ñ ¤°(€€€€€ÕÁ…É¡µ…É¥¸é½¹ÍĞ‘•%¹Í•ÑÌ¹™É½µ1QI ÄÈ°Ì°ÄÈ°ÄÀ¤±Á…‘‘¥¹œé½¹ÍĞ‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡Ù•ÉÑ¥…°èÄØ±¡½É¥é½¹Ñ…°èÜ¤°(€€€€€€€¡¥±éI½Ü¡¡¥±‘É•¸él(€€€€€€€€€}µ•ÑÉ¥Œ œ‘í…µ•Ì¹İ¡•É” ¡´¤ôù´¹™¥¹¥Í¡•¤¹±•¹Ñ¡ôœ°ŸB‡B¯BOBƒBCBwBxœ±%½¹Ì¹¡•­}¥É±•}½ÕÑ±¥¹•}É½Õ¹‘•¤°(€€€€€€€€€½¹Ñ…¥¹•È¡İ¥‘Ñ èÄ±¡•¥¡ĞèÌÜ±½±½ÈéÕÁU¤¹ÍÑÉ½­”¤°(€€€€€€€€€}µ•ÑÉ¥Œ œ‘í…µ•Ì¹İ¡•É” ¡´¤ôø…´¹™¥¹¥Í¡•˜˜…´¹¥Í1¥Ù”¤¹±•¹Ñ¡ôœ°ŸBKBBWBƒBWBSB`œ±%½¹Ì¹Í¡•‘Õ±•}É½Õ¹‘•¤°(€€€€€€€€€½¹Ñ…¥¹•È¡İ¥‘Ñ èÄ±¡•¥¡ĞèÌÜ±½±½ÈéÕÁU¤¹ÍÑÉ½­”¤°(€€€€€€€€€}µ•ÑÉ¥Œ œ‘í±¥Ù”¹±•¹Ñ¡ôœ°1%Yœ±%½¹Ì¹É…‘¥½}‰ÕÑÑ½¹}¡•­•‘}É½Õ¹‘•¤°(€€€€€€€t¤¤°(€€€€€¥˜¡±¥Ù”¹¥Í9½ÑµÁÑä¤¸¸¹l(€€€€€€€ÕÁM•Ñ¥½¸¡Ñ¥Ñ±”èŸBBƒB¿BsBxƒB‡BWBgBŸBCB„œ¤°(€€€€€€€™½È¡™¥¹…°‰±½¬¥¸}…µ•ÍÉ½ÕÁ•¡±¥Ù”¤¥‰±½¬°(€€€€€t°(€€€€€ÕÁM•Ñ¥½¸¡Ñ¥Ñ±”èŸBsBCB‹BŸB`ƒBkBBGBkB@œ±ÍÕ‰Ñ¥Ñ±”èŸBKF/BÇB×FBàƒBÓBÃFFƒBãBïBàƒBûFBëFBûBäƒFB×BßFBïF3FBÃFœ¤°(€€€€€}‘…Ñ•M•±•Ñ½È ¤±}™¥±Ñ•ÉÌ ¤°(€€€€€¥˜¡É••¹Ğ¹¥ÍµÁÑä¥ÕÁ5•ÍÍ…” (€€€€€€€¥½¸é%½¹Ì¹ÍÁ½ÉÑÍ}¡½­•ä±Ñ¥Ñ±”èŸBBûBëBÀƒB÷B×FƒBóBÃFFB×Bäœ°(€€€€€€€µ•ÍÍ…”é…µ•Ì¹¥ÍµÁÑäüŸB_BÃBÿFBÃF#BãBËBÃF8ƒFB×BßFBïF3FBÃFF,ƒFƒB“B—B€¸ƒBBûFF?B÷BàƒBËB÷BãBÜ°ƒFFBûBÇF,ƒBûBÇB÷BûBËBãFF0¸œè(€€€€€€€€ŸBwBÀƒBËF/BÇFBÃB÷B÷FF8ƒBÓBÃFFƒBãBïBàƒBÓBïF<ƒF7FBûBÏBøƒFBãBïF3FFBÀƒBãBÏF ƒB÷B×F¸œ°(€€€€€€€É•ÑÉäéÉ•™É•Í ¤°(€€€€€™½È¡™¥¹…°‰±½¬¥¸}…µ•ÍÉ½ÕÁ•¡É••¹Ğ±±¥µ¥ĞèÈÈ¤¥‰±½¬°(€€€€€¥˜¡É••¹Ğ¹±•¹Ñ øÈÈ¥A…‘‘¥¹œ¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹™É½µ1QI ÄÈ°Ø°ÄÈ°ÈÀ¤°(€€€€€€€¡¥±é¥±±•‘	ÕÑÑ½¸¹Ñ½¹…°¡½¹AÉ•ÍÍ•è ¤ôùÍ•±•ÑQ…ˆ Ä¤°(€€€€€€€€€¡¥±éQ•áĞ ŸBB{BkBCB_BCB‹B°ƒBKB‡BTƒBsBCB‹BŸB`œ¤¤¤°(€€€€€M¥é•‘	½à¡¡•¥¡ĞèÈÀ¤°(€€€t¤¤ì(€ô((€]¥‘•Ğ}µ•ÑÉ¥Œ¡MÑÉ¥¹œÙ…±Õ”±MÑÉ¥¹œ±…‰•°±%½¹…Ñ„¥½¸¤ôùáÁ…¹‘•¡¡¥±é½±Õµ¸¡¡¥±‘É•¸él(€€€%½¸¡¥½¸±½±½Èé±…‰•°ôô1%YœıÕÁU¤¹É••¸éÕÁU¤¹¥”±Í¥é”èÄÜ¤±½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèÔ¤°(€€€Q•áĞ¡Ù…±Õ”±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹İ¡¥Ñ”±™½¹ÑM¥é”èÈÀ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±¡•¥¡ĞèÄ¤¤°(€€€½¹ÍĞM¥é•‘	½à¡¡•¥¡ĞèĞ¤±Q•áĞ¡±…‰•°±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹µÕÑ•±™½¹ÑM¥é”èà±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜäÀÀ±±•ÑÑ•ÉMÁ…¥¹œè¸Ø¤¤°(€t¤¤ì((€]¥‘•Ğ}µ…Ñ¡•ÍA…” ¤ôùI•™É•Í¡%¹‘¥…Ñ½È¡½¹I•™É•Í éÉ•™É•Í ±¡¥±é1¥ÍÑY¥•Ü¡­•äé½¹ÍĞA…•MÑ½É…•-•ä µ…Ñ¡•Ìœ¤±¡¥±‘É•¸él(€€€ÕÁM•Ñ¥½¸¡Ñ¥Ñ±”èŸBKB‡BTƒBsBCB‹BŸB`œ±ÍÕ‰Ñ¥Ñ±”èŸBkBÃBïB×B÷BÓBÃFF0ƒBkFBÇBëBÀƒBƒBûFFBãBàTÄØœ¤°(€€€}‘…Ñ•M•±•Ñ½È ¤±}™¥±Ñ•ÉÌ ¤°(€€€¥˜¡™¥±Ñ•É• ¤¹¥ÍµÁÑä¥ÕÁ5•ÍÍ…”¡¥½¸é%½¹Ì¹…±•¹‘…É}µ½¹Ñ¡}½ÕÑ±¥¹•±Ñ¥Ñ±”èŸBwBãFB×BÏBøƒB÷BÔƒB÷BÃBçBÓB×B÷Bøœ°(€€€€€µ•ÍÍ…”èŸBKF/BÇB×FBàƒBÓFFBÏFF8ƒBÓBÃFFƒBãBïBàƒBÓFFBÏBûBäƒFBãBüƒBóBÃFFB×Bä¸œ±É•ÑÉäéÉ•™É•Í ¤°(€€€™½È¡™¥¹…°‰±½¬¥¸}…µ•ÍÉ½ÕÁ•¡™¥±Ñ•É• ¤¤¥‰±½¬°(€€€M¥é•‘	½à¡¡•¥¡ĞèÈĞ¤°(€t¤¤ì((€]¥‘•Ğ}ÍÑ…¹‘¥¹A…” ¤ôùQ½ÕÉ¹…µ•¹ÑA…” (€€€µ…Ñ¡•Ìé…µ•Ì°(€€€Ñ•…µÌé±Õ‰Ì¹µ…À ¡Ñ•…´¤ôùÑ•…´¹™Õ±±9…µ”¤°(€€€Ñ•…µ1½¼è¡¹…µ”¤ôù™¥¹‘±Õˆ¡¹…µ”¤ü¹±½¼°(€€€½¹Q•…´è¡¹…µ”¥ì(€€€€€™¥¹…°±Õˆõ™¥¹‘±Õˆ¡¹…µ”¤ì(€€€€€¥˜¡±Õˆ„õ¹Õ±°¥½Á•¹±Õˆ¡±Õˆ¤ì(€€€ô°(€€€½¹5…Ñ é½Á•¹5…Ñ °(€€¤ì((€]¥‘•Ğ}Ñ•…µA…” ¥ì(€€€™¥¹…°±¥ÍĞõ±Õ‰Ì¹İ¡•É” ¡à¤ôùà¹™Õ±±9…µ”¹Ñ½1½İ•É…Í” ¤¹½¹Ñ…¥¹Ì¡Í•…É ¹Ñ½1½İ•É…Í” ¤¤¤¹Ñ½1¥ÍĞ ¤ì(€€€É•ÑÕÉ¸I•™É•Í¡%¹‘¥…Ñ½È¡½¹I•™É•Í é±½…‘±Õ‰Ì±¡¥±é1¥ÍÑY¥•Ü¡¡¥±‘É•¸él(€€€€€ÕÁM•Ñ¥½¸¡Ñ¥Ñ±”èŸBBŸBCB‡B‹BwBcBkB`œ±ÍÕ‰Ñ¥Ñ±”èœ‘í±Õ‰Ì¹±•¹Ñ¡ôƒBëBïFBÇBûBÈƒFƒBûFBãFBãBÃBïF3B÷F/BóBàƒFBûFFBÃBËBÃBóBàƒB“B—B€œ¤°(€€€€€A…‘‘¥¹œ¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹™É½µ1QI ÄÈ°À°ÄÈ°ÄÈ¤°(€€€€€€€¡¥±éQ•áÑ¥•±¡½¹¡…¹•è¡Ø¤ôùÍ•ÑMÑ…Ñ”  ¤ôùÍ•…É õØ¤°(€€€€€€€€€ÍÑå±”éQ•áÑMÑå±”¡™½¹ÑM¥é”èÄÌ¤°(€€€€€€€€€‘•½É…Ñ¥½¸é%¹ÁÕÑ•½É…Ñ¥½¸ (€€€€€€€€€€€ÁÉ•™¥á%½¸é%½¸¡%½¹Ì¹Í•…É ±½±½ÈéÕÁU¤¹µÕÑ•¤°(€€€€€€€€€€€¡¥¹ÑQ•áĞèŸBwBÃBçFBàƒBëBûBóBÃB÷BÓFœ±¡¥¹ÑMÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹‘¥´¤°(€€€€€€€€€€€™¥±±•éÑÉÕ”±™¥±±½±½ÈéÕÁU¤¹ÍÕÉ™…”°(€€€€€€€€€€€½¹Ñ•¹ÑA…‘‘¥¹œé‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡¡½É¥é½¹Ñ…°èÄÌ±Ù•ÉÑ¥…°èÄÄ¤°(€€€€€€€€€€€•¹…‰±•‘	½É‘•Èé=ÕÑ±¥¹•%¹ÁÕÑ	½É‘•È¡‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È ÄÄ¤°(€€€€€€€€€€€€€‰½É‘•ÉM¥‘”é	½É‘•ÉM¥‘”¡½±½ÈéÕÁU¤¹ÍÑÉ½­”¤¤°(€€€€€€€€€€€™½ÕÍ•‘	½É‘•Èé=ÕÑ±¥¹•%¹ÁÕÑ	½É‘•È¡‰½É‘•ÉI…‘¥ÕÌé	½É‘•ÉI…‘¥ÕÌ¹¥ÉÕ±…È ÄÄ¤°(€€€€€€€€€€€€€‰½É‘•ÉM¥‘”é	½É‘•ÉM¥‘”¡½±½ÈéÕÁU¤¹É•¤¤¤¤¤°(€€€€€¥˜¡±½…‘¥¹Q•…µÌ˜™±Õ‰Ì¹¥ÍµÁÑä¥A…‘‘¥¹œ¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹…±° Èà¤°(€€€€€€€¡¥±é•¹Ñ•È¡¡¥±é¥ÉÕ±…ÉAÉ½É•ÍÍ%¹‘¥…Ñ½È ¤¤¤°(€€€€€¥˜¡Ñ•…µÉÉ½È„õ¹Õ±°¥A…‘‘¥¹œ¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹…±° ÄÔ¤°(€€€€€€€¡¥±éQ•áĞ¡Ñ•…µÉÉ½È„±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹å•±±½Ü±™½¹ÑM¥é”èÄÄ¤¤¤°(€€€€€ÕÁ…É¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡Ù•ÉÑ¥…°èĞ¤±¡¥±é½±Õµ¸¡¡¥±‘É•¸él(€€€€€€€™½È¡Ù…È¤ôÀí¤ñ±¥ÍĞ¹±•¹Ñ í¤¬¬¤¸¸¹l(€€€€€€€€€%¹­]•±°¡½¹Q…Àè ¤ôù½Á•¹±Õˆ¡±¥ÍÑm¥t¤°(€€€€€€€€€€€¡¥±éA…‘‘¥¹œ¡Á…‘‘¥¹œé‘•%¹Í•ÑÌ¹Íåµµ•ÑÉ¥Œ¡¡½É¥é½¹Ñ…°èÄÈ±Ù•ÉÑ¥…°èÄÄ¤°(€€€€€€€€€€€€€¡¥±éI½Ü¡¡¥±‘É•¸él(€€€€€€€€€€€€€€€™¡ÉQ•…µ1½¼¡±¥ÍÑm¥t¹±½¼±Í¥é”èĞÀ¤±M¥é•‘	½à¡İ¥‘Ñ èÄÈ¤°(€€€€€€€€€€€€€€€áÁ…¹‘•¡¡¥±é½±Õµ¸¡É½ÍÍá¥Í±¥¹µ•¹ĞéÉ½ÍÍá¥Í±¥¹µ•¹Ğ¹ÍÑ…ÉĞ±¡¥±‘É•¸él(€€€€€€€€€€€€€€€€€Q•áĞ¡±¥ÍÑm¥t¹¹…µ”±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹İ¡¥Ñ”°(€€€€€€€€€€€€€€€€€€€™½¹ÑM¥é”èÄÌ±™½¹Ñ]•¥¡Ğé½¹Ñ]•¥¡Ğ¹ÜàÀÀ¤¤°(€€€€€€€€€€€€€€€€€M¥é•‘	½à¡¡•¥¡ĞèÌ¤°(€€€€€€€€€€€€€€€€€Q•áĞ¡±¥ÍÑm¥t¹¥Ñä±ÍÑå±”éQ•áÑMÑå±”¡½±½ÈéÕÁU¤¹µÕÑ•±™½¹ÑM¥é”èÄÄ¤¤°(€€€€€€€€€€€€€€€t¤¤°(€€€€€€€€€€€€€€€%½¸¡%½¹Ì¹¡•ÙÉ½¹}É¥¡Ñ}É½Õ¹‘•±½±½ÈéÕÁU¤¹‘¥´±Í¥é”èÄä¤°(€€€€€€€€€€€€€t¤¤¤°(€€€€€€€€€¥˜¡¤¬Äñ±¥ÍĞ¹±•¹Ñ ¥ÕÁ¥Ø¡¥¹‘•¹ĞèØÀ¤°(€€€€€€€t°(€€€€€t¤¤°(€€€€€¥˜¡±Õ‰Ì¹¥ÍµÁÑä˜˜…±½…‘¥¹Q•…µÌ¥ÕÁ5•ÍÍ…”¡Ñ¥Ñ±”èŸBkBûBóBÃB÷BÓF,ƒB÷BÔƒBßBÃBÏFFBÛB×B÷F,œ°(€€€€€€€µ•ÍÍ…”èŸBSBÃB÷B÷F/BÔƒBëBïFBÇBÀƒBàƒFBûFBøƒBãBÏFBûBëBûBÈƒBÇB×FFFFF<ƒFBûBïF3BëBøƒBãBÜƒB“B—B€ƒBSBÛFB÷BãBûF ¸œ±É•ÑÉäé±½…‘±Õ‰Ì¤°(€€€€€M¥é•‘	½à¡¡•¥¡ĞèÈĞ¤°(€€€t¤¤ì(€ô((€]¥‘•Ğ}™…Ù½É¥Ñ•ÍA…” ¥ì(€€€™¥¹…°±¥ÍĞõ…µ•Ì¹İ¡•É” ¡”¤ôù™…Ù½É¥Ñ•Ì¹½¹Ñ…¥¹Ì¡”¹­•ä¤¤¹Ñ½1¥ÍĞ ¤ì(€€€É•ÑÕÉ¸I•™É•Í¡%¹‘¥…Ñ½È¡½¹I•™É•Í éÉ•™É•Í ±¡¥±é1¥ÍÑY¥•Ü¡¡¥±‘É•¸él(€€€€€ÕÁM•Ñ¥½¸¡Ñ¥Ñ±”èŸBcB_BGBƒBCBwBwB¯BTƒBsBCB‹BŸB`œ±ÍÕ‰Ñ¥Ñ±”èœ‘í±¥ÍĞ¹±•¹Ñ¡ôƒFBûFFBÃB÷B×B÷BøƒB÷BÀƒF7FBûBğƒFFFFBûBçFFBËBÔœ¤°(€€€€€¥˜¡±¥ÍĞ¹¥ÍµÁÑä¥ÕÁ5•ÍÍ…” (€€€€€€€¥½¸é%½¹Ì¹ÍÑ…É}‰½É‘•É}É½Õ¹‘•±Ñ¥Ñ±”èŸBcBßBÇFBÃB÷B÷BûBÔƒBÿBûBëBÀƒBÿFFFBøœ°(€€€€€€€µ•ÍÍ…”èŸBwBÃBÛBãBóBÃBäƒB÷BÀƒBßBËFGBßBÓBûFBëFƒBËBûBßBïBÔƒBóBÃFFBÀ¸ƒB{BôƒBÿBûF?BËBãFFF<ƒBßBÓB×FF0ƒBàƒBûFFBÃB÷B×FFF<ƒBÿBûFBïBÔƒBÿB×FB×BßBÃBÿFFBëBÀ¸œ¤°(€€€€€™½È¡™¥¹…°‰±½¬¥¸}…µ•ÍÉ½ÕÁ•¡±¥ÍĞ¤¥‰±½¬°(€€€€€M¥é•‘	½à¡¡•¥¡ĞèÈÀ¤°(€€€t¤¤ì(€ô((€½Ù•ÉÉ¥‘”]¥‘•Ğ‰Õ¥±¡	Õ¥±‘½¹Ñ•áĞ½¹Ñ•áĞ¤ôùM…™™½± (€€€‰…­É½Õ¹‘½±½ÈéÕÁU¤¹‰…­É½Õ¹°(€€€‰½‘äé½±Õµ¸¡¡¥±‘É•¸él(€€€€€}¡•…‘•È ¤±}Íå¹	…È ¤°(€€€€€¥˜¡•ÉÉ½È„õ¹Õ±°¥5…Ñ•É¥…±	…¹¹•È¡½¹Ñ•¹ĞéQ•áĞ¡•ÉÉ½È„±ÍÑå±”é½¹ÍĞQ•áÑMÑå±”¡™½¹ÑM¥é”èÄÈ¤¤±…Ñ¥½¹ÌémQ•áÑ	ÕÑÑ½¸¡½¹AÉ•ÍÍ•é±½…‘¥¹œı¹Õ±°éÉ•™É•Í ±¡¥±é½¹ÍĞQ•áĞ ŸBBûBËFBûFBãFF0œ¤¥t¤°(€€€€€áÁ…¹‘•¡¡¥±é%¹‘•á•‘MÑ…¬¡¥¹‘•àéÑ…ˆ±¡¥±‘É•¸él(€€€€€€€…µ•Ì¹¥ÍµÁÑä˜™±½…‘¥¹œı½¹ÍĞ1½…‘¥¹…É‘Ì ¤é}¡½µ•A…” ¤°(€€€€€€€Ù¥Í¥Ñ•¹½¹Ñ…¥¹Ì Ä¤ı}µ…Ñ¡•ÍA…” ¤é½¹ÍĞM¥é•‘	½à¹Í¡É¥¹¬ ¤°(€€€€€€€Ù¥Í¥Ñ•¹½¹Ñ…¥¹Ì È¤ı}ÍÑ…¹‘¥¹A…” ¤é½¹ÍĞM¥é•‘	½à¹Í¡É¥¹¬ ¤°(€€€€€€€Ù¥Í¥Ñ•¹½¹Ñ…¥¹Ì Ì¤ı½¹ÍĞA±…å•ÉMÑ…Ñ¥ÍÑ¥ÍA…” ¤é½¹ÍĞM¥é•‘	½à¹Í¡É¥¹¬ ¤°(€€€€€€€Ù¥Í¥Ñ•¹½¹Ñ…¥¹Ì Ğ¤ı}Ñ•…µA…” ¤é½¹ÍĞM¥é•‘	½à¹Í¡É¥¹¬ ¤°(€€€€€€€Ù¥Í¥Ñ•¹½¹Ñ…¥¹Ì Ô¤ı}™…Ù½É¥Ñ•ÍA…” ¤é½¹ÍĞM¥é•‘	½à¹Í¡É¥¹¬ ¤°(€€€€€t¤¤°(€€€t¤°(€€€‰½ÑÑ½µ9…Ù¥…Ñ¥½¹	…Èé}¹…Ø ¤°(€€¤ì)ô(((
+class _JuniorAppState extends State<JuniorApp>{
+  bool light=false;
+  @override void initState(){
+    super.initState();
+    CupUi.light=false;
+    SharedPreferences.getInstance().then((p){
+      if(mounted){
+        setState((){
+          light=p.getBool('junior_u16_light_theme')??false;
+          CupUi.light=light;
+        });
+      }
+    });
+  }
+  void switchTheme(){
+    setState((){light=!light;CupUi.light=light;});
+    SharedPreferences.getInstance().then((p)=>p.setBool('junior_u16_light_theme',light));
+  }
+  @override Widget build(BuildContext context){
+    CupUi.light=light;
+    final brightness=light?Brightness.light:Brightness.dark;
+    return MaterialApp(
+      debugShowCheckedModeBanner:false,title:'JUNIOR U16 Â· ĞšÑƒĞ±Ğ¾Ğº Ğ Ğ¾ÑÑĞ¸Ğ¸',
+      themeAnimationDuration:const Duration(milliseconds:480),
+      themeAnimationCurve:Curves.easeInOutCubic,
+      theme:ThemeData(
+        useMaterial3:true,brightness:brightness,fontFamily:'Manrope',
+        scaffoldBackgroundColor:CupUi.background,
+        colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness).copyWith(
+          primary:CupUi.red,secondary:CupUi.ice,surface:CupUi.surface,
+          onSurface:CupUi.white,error:const Color(0xFFFF6978)),
+        appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
+          foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent,
+          centerTitle:false,toolbarHeight:62,
+          titleTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.white,fontSize:17,fontWeight:FontWeight.w800,letterSpacing:-.3)),
+        dividerColor:CupUi.stroke,
+        splashColor:CupUi.ice.withValues(alpha:.08),
+        highlightColor:CupUi.ice.withValues(alpha:.05),
+        textTheme:ThemeData(brightness:brightness).textTheme.apply(
+          fontFamily:'Manrope',bodyColor:CupUi.white,displayColor:CupUi.white),
+        inputDecorationTheme:InputDecorationTheme(
+          filled:true,fillColor:CupUi.raised,
+          hintStyle:TextStyle(color:CupUi.dim,fontSize:13),
+          labelStyle:TextStyle(color:CupUi.muted,fontSize:13),
+          contentPadding:const EdgeInsets.symmetric(horizontal:15,vertical:14),
+          border:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.stroke)),
+          enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.stroke)),
+          focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+            borderSide:BorderSide(color:CupUi.red,width:1.5))),
+        cardTheme:CardThemeData(color:CupUi.surface,elevation:0,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20),
+            side:BorderSide(color:CupUi.stroke))),
+        dialogTheme:DialogThemeData(
+          backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(24))),
+        snackBarTheme:SnackBarThemeData(backgroundColor:CupUi.raised,
+          contentTextStyle:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700),
+          behavior:SnackBarBehavior.floating,
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15))),
+        progressIndicatorTheme:ProgressIndicatorThemeData(color:CupUi.red,
+          linearTrackColor:CupUi.stroke,circularTrackColor:CupUi.stroke),
+        pageTransitionsTheme:const PageTransitionsTheme(builders:{
+          TargetPlatform.android:FadeUpwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS:CupertinoPageTransitionsBuilder(),
+        }),
+        tabBarTheme:TabBarThemeData(labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
+          indicatorColor:CupUi.red,dividerColor:CupUi.stroke,
+          labelStyle:const TextStyle(fontSize:12,fontWeight:FontWeight.w800),
+          indicatorSize:TabBarIndicatorSize.label),
+        filledButtonTheme:FilledButtonThemeData(style:FilledButton.styleFrom(
+          backgroundColor:CupUi.red,foregroundColor:Colors.white,
+          textStyle:const TextStyle(fontWeight:FontWeight.w800),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          padding:const EdgeInsets.symmetric(horizontal:18,vertical:13))),
+        outlinedButtonTheme:OutlinedButtonThemeData(style:OutlinedButton.styleFrom(
+          foregroundColor:CupUi.white,side:BorderSide(color:CupUi.stroke),
+          textStyle:const TextStyle(fontWeight:FontWeight.w800),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          padding:const EdgeInsets.symmetric(horizontal:18,vertical:12))),
+        iconButtonTheme:IconButtonThemeData(style:IconButton.styleFrom(
+          foregroundColor:CupUi.soft,highlightColor:CupUi.ice.withValues(alpha:.12))),
+      ),
+      home:ScoresHome(light:light,onSwitchTheme:switchTheme),
+    );
+  }
+}
+class ScoresHome extends StatefulWidget{
+  final bool light;
+  final VoidCallback onSwitchTheme;
+  const ScoresHome({super.key,required this.light,required this.onSwitchTheme});
+  @override State<ScoresHome> createState()=>_ScoresHomeState();
+}
+
+class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
+  final api=FhrApiClient(http.Client());
+  Timer? timer;
+  bool foreground=true;
+  final visited=<int>{0};
+  int tab=0,filter=0;
+  bool loading=false,loadingTeams=false,cached=false,dateFilter=false;
+  DateTime date=DateTime.now().toUtc().add(Duration(hours:3));
+  DateTime? updatedAt;
+  String? error,teamError;
+  String search='';
+  List<Match> games=[];
+  List<TeamInfo> clubs=[];
+  Set<String> favorites={};
+  static const filters=['Ğ’Ğ¡Ğ•','LIVE','Ğ Ğ•Ğ—Ğ£Ğ›Ğ¬Ğ¢ĞĞ¢Ğ«','Ğ ĞĞ¡ĞŸĞ˜Ğ¡ĞĞĞ˜Ğ•'];
+  static const sections=[
+    (Icons.home_outlined,Icons.home_rounded,'Ğ“Ğ»Ğ°Ğ²Ğ½Ğ°Ñ'),
+    (Icons.sports_hockey_outlined,Icons.sports_hockey,'ĞœĞ°Ñ‚Ñ‡Ğ¸'),
+    (Icons.leaderboard_outlined,Icons.leaderboard_rounded,'Ğ¢ÑƒÑ€Ğ½Ğ¸Ñ€'),
+    (Icons.bar_chart_outlined,Icons.bar_chart_rounded,'Ğ˜Ğ³Ñ€Ğ¾ĞºĞ¸'),
+    (Icons.shield_outlined,Icons.shield_rounded,'ĞšĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹'),
+    (Icons.star_border_rounded,Icons.star_rounded,'Ğ˜Ğ·Ğ±Ñ€Ğ°Ğ½Ğ½Ğ¾Ğµ'),
+  ];
+  @override void initState(){
+    super.initState();WidgetsBinding.instance.addObserver(this);
+    _loadLocal().then((_){refresh();loadClubs();});
+    _startPolling();
+  }
+  @override void didChangeAppLifecycleState(AppLifecycleState state){
+    foreground=state==AppLifecycleState.resumed;
+    timer?.cancel();
+    if(foreground){refresh();loadClubs();_startPolling();}
+  }
+  void _startPolling(){
+    timer?.cancel();
+    timer=Timer.periodic(const Duration(seconds:25),(_){
+      if(foreground && (ModalRoute.of(context)?.isCurrent??true))refresh();
+    });
+  }
+  void selectTab(int value){
+    setState((){tab=value;visited.add(value);});
+    SharedPreferences.getInstance().then((p)=>p.setInt('junior_tab',value));
+  }
+  @override void dispose(){
+    timer?.cancel();WidgetsBinding.instance.removeObserver(this);api.client.close();super.dispose();
+  }
+
+  Future<void> _loadLocal() async {
+    try{
+      final p=await SharedPreferences.getInstance();
+      final f=p.getStringList('junior_favorites')??[];
+      final savedTab=(p.getInt('junior_tab')??0).clamp(0,5);
+      final savedClubs=await FeedCache.read('/api/v1/teams');
+      if(!mounted)return;
+      setState((){tab=savedTab;visited.add(tab);
+        if(savedClubs?['teams'] is List)clubs=(savedClubs!['teams'] as List).whereType<Map>().map((t)=>TeamInfo.fromApi(Map<String,dynamic>.from(t))).toList();
+      });
+      final content=p.getString('junior_u16_calendar_v9');
+      if(!mounted)return;
+      if(content!=null){
+        final obj=jsonDecode(content);
+        if(obj is Map) {
+          final feed=FhrFeed.fromApi(Map<String,dynamic>.from(obj));
+          setState((){games=feed.matches;updatedAt=feed.updatedAt;cached=true;favorites=f.toSet();});
+          return;
+        }
+      }
+      setState(()=>favorites=f.toSet());
+    }catch(_){/* Unsupported/corrupt saved state must not block network fetch. */}
+  }
+
+  Future<void> refresh() async {
+    if(loading)return;
+    if(mounted)setState(()=>loading=true);
+    try{
+      final feed=await api.calendar();
+      final indexed=<String,Match>{for(final m in feed.matches)m.key:m};
+      try{
+        final details=await api.liveCheck();
+        for(final e in details){
+          final id=e['gameId']?.toString();
+          if(id==null||indexed[id]==null)continue;
+          indexed[id]=indexed[id]!.withDetail(e);
+        }
+      }catch(_){/* LIVE is unverified when detail fetch fails, never infer it. */}
+      final partial=feed.issues.isNotEmpty||
+        (indexed.isEmpty&&games.isNotEmpty);
+      final rows=reconcileCalendar(games,indexed.values.toList(),partial:partial)
+        ..sort((a,b){final d=b.date.compareTo(a.date);
+          return d!=0?d:b.timeMsk.compareTo(a.timeMsk);});
+      if(!mounted)return;
+      setState((){
+        games=rows;updatedAt=feed.updatedAt;cached=false;error=feed.issues.isEmpty?null:
+          'Ğ”Ğ°Ğ½Ğ½Ñ‹Ğµ Ğ¤Ğ¥Ğ  Ñ‡Ğ°ÑÑ‚Ğ¸Ñ‡Ğ½Ñ‹Ğµ: ${feed.issues.first}';
+      });
+      final p=await SharedPreferences.getInstance();
+      await p.setString('junior_u16_calendar_v9',jsonEncode(FhrFeed(rows,feed.updatedAt,feed.issues,feed.groupsFetched,feed.allStagesComplete,feed.expectedMatchCount).toCache()));
+    }catch(e){
+      Diagnostics.record('calendar',e);
+      if(mounted)setState((){cached=games.isNotEmpty;error='ĞĞµ ÑƒĞ´Ğ°Ğ»Ğ¾ÑÑŒ Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ¸Ñ‚ÑŒ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ. ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑŒ Ğ¸Ğ½Ñ‚ĞµÑ€Ğ½ĞµÑ‚ Ğ¸ Ğ¿Ğ¾Ğ²Ñ‚Ğ¾Ñ€Ğ¸.';});
+    }finally{if(mounted)setState(()=>loading=false);}
+  }
+
+  Future<void> loadClubs() async {
+    if(loadingTeams)return;
+    if(mounted)setState(()=>loadingTeams=true);
+    try{
+      final data=await api.teams();
+      if(!mounted)return;
+      setState((){
+        clubs=data;teamError=data.length<20?'Ğ¡Ğ¿Ğ¸ÑĞ¾Ğº Ğ¤Ğ¥Ğ  Ğ½ĞµĞ¿Ğ¾Ğ»Ğ½Ñ‹Ğ¹: ${data.length} ĞºĞ»ÑƒĞ±Ğ¾Ğ²':null;
+      });
+    }catch(e){if(mounted)setState(()=>teamError='ĞšĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹ Ğ¤Ğ¥Ğ  Ğ½ĞµĞ´Ğ¾ÑÑ‚ÑƒĞ¿Ğ½Ñ‹: $e');}
+    finally{if(mounted)setState(()=>loadingTeams=false);}
+  }
+
+  String normalize(String s)=>s.toUpperCase().replaceAll('Ğ','Ğ•')
+    .replaceAll(RegExp(r'\s+'),' ').trim();
+  TeamInfo? findClub(String team){
+    final key=normalize(team);
+    for(final t in clubs){
+      if(normalize(t.fullName)==key||normalize(t.name)==key)return t;
+    }
+    return null;
+  }
+  void openCommandCenter()=>Navigator.of(context).push(MaterialPageRoute(
+    builder:(_)=>CommandCenterPage(matches:games,clubs:clubs,
+      onTeam:(name){final club=findClub(name);if(club!=null)openClub(club);},
+      onMatch:openMatch)));
+  void openMatch(Match m)=>Navigator.of(context).push(MaterialPageRoute(
+    builder:(_)=>MatchCenterPage(match:m,homeTeam:findClub(m.home),awayTeam:findClub(m.away),matches:games)));
+  void openClub(TeamInfo t)=>Navigator.of(context).push(MaterialPageRoute(
+    builder:(_)=>TeamHubPage(team:t,matches:games,teams:clubs)));
+  Future<void> toggleFavorite(Match m) async {
+    setState((){
+      if(favorites.contains(m.key)){favorites.remove(m.key);}else{favorites.add(m.key);}
+    });
+    final p=await SharedPreferences.getInstance();
+    await p.setStringList('junior_favorites',favorites.toList());
+  }
+
+  String shortDate(DateTime d)=>'${d.day.toString().padLeft(2,'0')}.${d.month.toString().padLeft(2,'0')}';
+  String weekday(DateTime d)=>const ['ĞŸĞ','Ğ’Ğ¢','Ğ¡Ğ ','Ğ§Ğ¢','ĞŸĞ¢','Ğ¡Ğ‘','Ğ’Ğ¡'][d.weekday-1];
+  String refreshTime(){
+    if(updatedAt==null)return 'ĞĞ¶Ğ¸Ğ´Ğ°Ğ½Ğ¸Ğµ Ğ¤Ğ¥Ğ ';
+    final t=updatedAt!.toUtc().add(Duration(hours:3));
+    return 'Ğ¤Ğ¥Ğ  Â· ${t.hour.toString().padLeft(2,'0')}:${t.minute.toString().padLeft(2,'0')} ĞœĞ¡Ğš';
+  }
+
+  Widget _header()=>SafeArea(bottom:false,child:Container(
+    padding:const EdgeInsets.fromLTRB(15,10,10,10),
+    decoration:BoxDecoration(
+      color:CupUi.background,
+      border:Border(bottom:BorderSide(color:CupUi.stroke.withValues(alpha:.7)))),
+    child:Row(children:[
+      Container(width:43,height:43,padding:const EdgeInsets.all(5),
+        decoration:BoxDecoration(
+          gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+            colors:[CupUi.red.withValues(alpha:.55),CupUi.raised]),
+          borderRadius:BorderRadius.circular(15),
+          border:Border.all(color:CupUi.ice.withValues(alpha:.22)),
+          boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.20),blurRadius:18)]),
+        child:Image.network(fhrCupLogo,fit:BoxFit.contain,
+          errorBuilder:(_,__,___)=>Icon(Icons.sports_hockey,color:CupUi.ice))),
+      const SizedBox(width:11),
+      Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Text('JUNIOR U16',maxLines:1,overflow:TextOverflow.ellipsis,
+          style:TextStyle(color:CupUi.white,letterSpacing:-.55,
+            fontWeight:FontWeight.w900,fontSize:19,height:1)),
+        const SizedBox(height:6),
+        Row(children:[
+          Container(width:6,height:6,decoration:BoxDecoration(
+            color:error==null?CupUi.green:CupUi.yellow,shape:BoxShape.circle,
+            boxShadow:[BoxShadow(color:(error==null?CupUi.green:CupUi.yellow).withValues(alpha:.4),blurRadius:8)])),
+          const SizedBox(width:6),
+          Flexible(child:Text('ARENA 2.0  /  ĞšĞ£Ğ‘ĞĞš Ğ ĞĞ¡Ğ¡Ğ˜Ğ˜ 2026Â·27',
+            maxLines:1,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:CupUi.muted,
+              fontWeight:FontWeight.w900,letterSpacing:.85,fontSize:8))),
+        ]),
+      ])),
+      if(games.any((m)=>m.isLive))Padding(padding:const EdgeInsets.only(right:3),
+        child:CupTag(text:'LIVE',color:CupUi.green,filled:true)),
+      _headerAction(icon:widget.light?Icons.dark_mode_outlined:Icons.light_mode_outlined,
+        tooltip:widget.light?'Ğ¢Ñ‘Ğ¼Ğ½Ğ°Ñ Ñ‚ĞµĞ¼Ğ°':'Ğ¡Ğ²ĞµÑ‚Ğ»Ğ°Ñ Ñ‚ĞµĞ¼Ğ°',onTap:widget.onSwitchTheme),
+      PopupMenuButton<String>(
+        tooltip:'Ğ•Ñ‰Ñ‘',icon:Icon(Icons.more_horiz_rounded,color:CupUi.soft,size:23),
+        color:CupUi.surface,
+        onSelected:(value){
+          if(value=='settings')Navigator.push(context,MaterialPageRoute(builder:(_)=>const AppSettingsPage()));
+          if(value=='refresh')refresh();
+        },
+        itemBuilder:(_)=>[
+          const PopupMenuItem(value:'settings',child:Row(children:[
+            Icon(Icons.tune_rounded),SizedBox(width:12),Text('ĞĞ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ¸')])),
+          PopupMenuItem(value:'refresh',child:Row(children:[
+            loading?const SizedBox(width:24,height:24,child:CircularProgressIndicator(strokeWidth:2)):
+              const Icon(Icons.refresh_rounded),const SizedBox(width:12),const Text('ĞĞ±Ğ½Ğ¾Ğ²Ğ¸Ñ‚ÑŒ Ğ¤Ğ¥Ğ ')])),
+        ]),
+    ]),
+  ));
+  Widget _headerAction({required IconData icon,required String tooltip,VoidCallback? onTap})=>
+    IconButton(tooltip:tooltip,onPressed:onTap,visualDensity:VisualDensity.compact,
+      constraints:const BoxConstraints.tightFor(width:34,height:34),padding:EdgeInsets.zero,
+      style:IconButton.styleFrom(backgroundColor:CupUi.surface,foregroundColor:CupUi.soft,
+        side:BorderSide(color:CupUi.stroke),shape:RoundedRectangleBorder(
+          borderRadius:BorderRadius.circular(12))),
+      icon:Icon(icon,size:18));
+
+  Widget _syncBar()=>Container(
+    padding:const EdgeInsets.fromLTRB(16,9,16,10),
+    decoration:BoxDecoration(color:CupUi.surface,
+      border:Border(bottom:BorderSide(color:CupUi.stroke.withValues(alpha:.5)))),
+    child:Row(children:[
+      if(loading)SizedBox(width:10,height:10,child:CircularProgressIndicator(
+        strokeWidth:1.7,color:CupUi.ice))
+      else Container(width:7,height:7,decoration:BoxDecoration(shape:BoxShape.circle,
+        color:cached?CupUi.yellow:(error==null?CupUi.green:CupUi.yellow))),
+      const SizedBox(width:8),
+      Expanded(child:Text(cached?'ĞšĞ­Ğ¨ Â· ${refreshTime()}':refreshTime(),
+        maxLines:1,overflow:TextOverflow.ellipsis,
+        style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w700))),
+      Container(width:1,height:13,color:CupUi.stroke),
+      const SizedBox(width:9),
+      Text('${games.length} Ğ˜Ğ“Ğ   /  ${clubs.length} ĞšĞ›Ğ£Ğ‘ĞĞ’',
+        style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w900,
+          letterSpacing:.25)),
+    ]),
+  );
+
+  Widget _nav()=>SafeArea(top:false,child:Container(
+    margin:const EdgeInsets.fromLTRB(11,2,11,7),
+    padding:const EdgeInsets.symmetric(horizontal:3,vertical:5),
+    decoration:BoxDecoration(
+      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
+        colors:[CupUi.raised,CupUi.surface]),
+      borderRadius:BorderRadius.circular(26),
+      border:Border.all(color:CupUi.stroke),
+      boxShadow:[
+        BoxShadow(color:Colors.black.withValues(alpha:.42),blurRadius:32,
+          offset:const Offset(0,10)),
+        BoxShadow(color:CupUi.red.withValues(alpha:.10),blurRadius:24),
+      ]),
+    child:Row(children:[
+      for(var i=0;i<sections.length;i++)Expanded(child:Semantics(
+        button:true,selected:tab==i,label:sections[i].$3,
+        child:InkWell(
+          onTap:()=>selectTab(i),
+          borderRadius:BorderRadius.circular(20),
+          child:AnimatedContainer(
+            duration:const Duration(milliseconds:290),curve:Curves.easeOutCubic,
+            margin:const EdgeInsets.symmetric(horizontal:1,vertical:1),
+            padding:const EdgeInsets.symmetric(vertical:8),
+            decoration:BoxDecoration(
+              gradient:i==tab?LinearGradient(
+                begin:Alignment.topLeft,end:Alignment.bottomRight,
+                colors:[CupUi.red,CupUi.red.withValues(alpha:.73)]):null,
+              borderRadius:BorderRadius.circular(19),
+              boxShadow:i==tab?[BoxShadow(color:CupUi.red.withValues(alpha:.25),
+                blurRadius:16,offset:const Offset(0,3))]:null),
+            child:Column(mainAxisSize:MainAxisSize.min,children:[
+              AnimatedSwitcher(
+                duration:const Duration(milliseconds:250),
+                transitionBuilder:(child,anim)=>ScaleTransition(
+                  scale:Tween<double>(begin:.72,end:1).animate(anim),
+                  child:FadeTransition(opacity:anim,child:child)),
+                child:Icon(i==tab?sections[i].$2:sections[i].$1,
+                  key:ValueKey('${i}-${i==tab}'),size:22,
+                  color:i==tab?Colors.white:CupUi.muted)),
+              const SizedBox(height:4),
+              Text(sections[i].$3,maxLines:1,overflow:TextOverflow.ellipsis,
+                style:TextStyle(color:i==tab?Colors.white:CupUi.muted,
+                  fontSize:8,fontWeight:i==tab?FontWeight.w900:FontWeight.w700)),
+            ]),
+          )))),
+    ]),
+  ));
+
+  Widget _filterChip(String text,bool active,VoidCallback tap)=>InkWell(
+    onTap:tap,borderRadius:BorderRadius.circular(99),
+    child:AnimatedContainer(duration:Duration(milliseconds:150),
+      margin:EdgeInsets.only(right:8),
+      padding:EdgeInsets.symmetric(horizontal:15,vertical:10),
+      decoration:BoxDecoration(
+        color:active?CupUi.red:CupUi.surface,
+        borderRadius:BorderRadius.circular(99),
+        border:Border.all(color:active?CupUi.red:CupUi.stroke)),
+      child:Text(text,style:TextStyle(fontSize:10,letterSpacing:.3,
+        color:active?Colors.white:CupUi.muted,fontWeight:FontWeight.w800))),
+  );
+
+  Widget _dateSelector(){
+    final now=DateTime.now().toUtc().add(Duration(hours:3));
+    return Container(color:CupUi.background,
+      child:Column(children:[
+        Padding(padding:EdgeInsets.fromLTRB(13,10,10,10),
+          child:Row(children:[
+            Icon(Icons.calendar_month_outlined,color:CupUi.muted,size:18),
+            SizedBox(width:8),
+            Expanded(child:Text(dateFilter?'Ğ’Ğ«Ğ‘Ğ ĞĞĞĞĞ¯ Ğ”ĞĞ¢Ğ: ${shortDate(date)}':'Ğ’Ğ«Ğ‘Ğ•Ğ Ğ˜ Ğ”Ğ•ĞĞ¬ ĞœĞĞ¢Ğ§Ğ',
+              style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800,letterSpacing:.5))),
+            InkWell(onTap:()=>setState(()=>dateFilter=false),
+              child:Padding(padding:EdgeInsets.all(6),
+                child:Text('Ğ’Ğ¡Ğ• Ğ”ĞĞ¢Ğ«',style:TextStyle(color:dateFilter?CupUi.red:CupUi.muted,
+                  fontSize:10,fontWeight:FontWeight.w800)))),
+            SizedBox(width:4),
+            IconButton(icon:Icon(Icons.calendar_today_rounded,size:17,color:CupUi.soft),
+              onPressed:()async{
+                final selected=await showDatePicker(context:context,
+                  firstDate:DateTime(2026,8,1),lastDate:DateTime(2027,12,31),
+                  initialDate:date.isBefore(DateTime(2026,8,1))?DateTime(2026,9,10):date);
+                if(selected!=null&&mounted)setState((){date=selected;dateFilter=true;});
+              }),
+          ])),
+        SizedBox(height:57,child:ListView.builder(
+          padding:EdgeInsets.symmetric(horizontal:9),scrollDirection:Axis.horizontal,
+          itemCount:11,itemBuilder:(context,i){
+            final current=now.add(Duration(days:i-5));
+            final active=dateFilter&&current.year==date.year&&current.month==date.month&&current.day==date.day;
+            return InkWell(onTap:()=>setState((){date=current;dateFilter=true;}),
+              borderRadius:BorderRadius.circular(8),
+              child:Container(width:59,margin:EdgeInsets.symmetric(horizontal:2),
+                decoration:BoxDecoration(
+                  gradient:active?LinearGradient(begin:Alignment.topLeft,
+                    end:Alignment.bottomRight,colors:[
+                      CupUi.red.withValues(alpha:.95),CupUi.red.withValues(alpha:.48)]):null,
+                  color:active?null:CupUi.surface,
+                  borderRadius:BorderRadius.circular(15),
+                  border:Border.all(color:active
+                    ?CupUi.ice.withValues(alpha:.45)
+                    :CupUi.stroke.withValues(alpha:.55))),
+                child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+                  Text(i==5?'Ğ¡Ğ•Ğ“ĞĞ”ĞĞ¯':weekday(current),
+                    style:TextStyle(fontSize:i==5?9:10,color:active?Colors.white:CupUi.muted,
+                      fontWeight:FontWeight.w800)),
+                  SizedBox(height:5),
+                  Text(shortDate(current),style:TextStyle(color:active?Colors.white:CupUi.soft,
+                    fontSize:11,fontWeight:FontWeight.w800)),
+                ])),
+            );
+          },
+        )),
+        SizedBox(height:5),
+      ]));
+  }
+
+  List<Match> filtered({bool onlyFavorites=false}){
+    return games.where((m){
+      if(onlyFavorites&&!favorites.contains(m.key))return false;
+      if(filter==1&&!m.isLive)return false;
+      if(filter==2&&!m.finished)return false;
+      if(filter==3&&(m.finished||m.isLive))return false;
+      if(dateFilter){
+        final parsed=m.matchDate;
+        if(parsed==null||parsed.year!=date.year||parsed.month!=date.month||parsed.day!=date.day)return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  Widget _matchLine(Match game){
+    final h=findClub(game.home),a=findClub(game.away);
+    final goals=game.goals;
+    final live=game.isLive;
+    final played=game.finished;
+    return InkWell(onTap:()=>openMatch(game),
+      child:Padding(padding:EdgeInsets.fromLTRB(12,11,7,11),
+        child:Row(children:[
+          SizedBox(width:49,child:Column(children:[
+            Row(mainAxisAlignment:MainAxisAlignment.center,children:[
+              if(live)...[const CupLivePulse(),const SizedBox(width:3)],
+            Text(live?'LIVE':played?'ĞšĞĞ.':game.timeMsk.isNotEmpty?game.timeMsk:'â€“',
+              style:TextStyle(fontWeight:FontWeight.w900,fontSize:11,
+                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow)))]),
+            SizedBox(height:6),
+            Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
+          ])),
+          Container(height:43,width:3,decoration:BoxDecoration(
+            color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow),
+            borderRadius:BorderRadius.circular(4))),
+          SizedBox(width:10),
+          Expanded(child:Column(children:[
+            _teamLine(game.home,h?.logo),
+            SizedBox(height:9),
+            _teamLine(game.away,a?.logo),
+          ])),
+          Container(width:43,padding:const EdgeInsets.symmetric(vertical:5),
+            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.12):CupUi.raised,
+              borderRadius:BorderRadius.circular(11),border:Border.all(
+                color:live?CupUi.green.withValues(alpha:.38):CupUi.stroke)),
+            child:Column(children:[
+              _animatedGoal(goals==null?'â€“':'${goals[0]}',played||live),
+              const SizedBox(height:5),Container(height:1,width:19,color:CupUi.stroke),const SizedBox(height:5),
+              _animatedGoal(goals==null?'â€“':'${goals[1]}',played||live),
+            ])),
+          IconButton(
+            onPressed:()=>toggleFavorite(game),
+            tooltip:'Ğ˜Ğ·Ğ±Ñ€Ğ°Ğ½Ğ½Ğ¾Ğµ',
+            icon:Icon(favorites.contains(game.key)?Icons.star_rounded:Icons.star_border_rounded,
+              color:favorites.contains(game.key)?CupUi.yellow:CupUi.dim,size:21)),
+        ])));
+  }
+  Widget _animatedGoal(String value,bool active)=>AnimatedSwitcher(
+    duration:const Duration(milliseconds:360),switchInCurve:Curves.easeOutCubic,
+    transitionBuilder:(child,animation)=>FadeTransition(opacity:animation,
+      child:SlideTransition(position:Tween<Offset>(begin:const Offset(0,.25),end:Offset.zero).animate(animation),child:child)),
+    child:Text(value,key:ValueKey(value),style:TextStyle(color:active?CupUi.white:CupUi.soft,
+      fontWeight:FontWeight.w900,fontSize:17,height:1)));
+  Widget _teamLine(String name,String? logo)=>Row(children:[
+    fhrTeamLogo(logo,size:25),SizedBox(width:9),
+    Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
+      style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w800))),
+  ]);
+
+  Widget _leagueBlock(String label,List<Match> list)=>CupCard(
+    margin:EdgeInsets.fromLTRB(12,5,12,6),
+    child:Column(children:[
+      Container(
+        decoration:BoxDecoration(gradient:LinearGradient(
+          begin:Alignment.topLeft,end:Alignment.bottomRight,
+          colors:[CupUi.raised,CupUi.surface])),
+        padding:EdgeInsets.symmetric(horizontal:13,vertical:13),
+        child:Row(children:[
+          Container(width:27,height:27,decoration:BoxDecoration(color:CupUi.redMuted,
+            borderRadius:BorderRadius.circular(8)),
+            child:Icon(Icons.sports_hockey,size:17,color:CupUi.red)),
+          SizedBox(width:10),
+          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Text('Ğ ĞĞ¡Ğ¡Ğ˜Ğ¯ Â· ĞšĞ£Ğ‘ĞĞš U16',style:TextStyle(color:CupUi.muted,fontSize:9,letterSpacing:.5)),
+            SizedBox(height:3),
+            Text(label.toUpperCase(),style:TextStyle(color:CupUi.white,fontSize:11,fontWeight:FontWeight.w800)),
+          ])),
+          CupTag(text:'${list.length}',color:CupUi.soft),
+        ])),
+      for(var i=0;i<list.length;i++)...[
+        _matchLine(list[i]),
+        if(i+1<list.length)CupDiv(indent:15),
+      ],
+    ]),
+  );
+
+  Widget _filters()=>SingleChildScrollView(scrollDirection:Axis.horizontal,
+    padding:EdgeInsets.fromLTRB(13,8,8,10),
+    child:Row(children:[
+      for(var i=0;i<filters.length;i++)_filterChip(filters[i],filter==i,()=>setState(()=>filter=i)),
+    ]));
+
+  List<Widget> _gamesGrouped(List<Match> visible,{int? limit}){
+    final selected=limit==null?visible:visible.take(limit).toList();
+    final groups=<String,List<Match>>{};
+    for(final m in selected){groups.putIfAbsent(m.stage,()=>[]).add(m);}
+    return [for(final group in groups.entries)_leagueBlock(group.key,group.value)];
+  }
+
+  Widget _homeHero(){
+    final completed=games.where((m)=>m.finished).length;
+    final progress=games.isEmpty?0.0:completed/games.length;
+    final live=games.where((m)=>m.isLive).length;
+    return CupArena(
+      margin:const EdgeInsets.fromLTRB(12,14,12,10),
+      padding:const EdgeInsets.fromLTRB(22,23,22,24),
+      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Row(children:[
+          Container(width:32,height:32,decoration:BoxDecoration(
+            color:Colors.white.withValues(alpha:.10),
+            borderRadius:BorderRadius.circular(11),
+            border:Border.all(color:Colors.white.withValues(alpha:.12))),
+            child:const Icon(Icons.sports_hockey_rounded,color:CupUi.ice,size:19)),
+          const SizedBox(width:10),
+          const Expanded(child:Text('JUNIOR  /  TOURNAMENT',
+            style:TextStyle(color:CupUi.ice,fontSize:10,
+              letterSpacing:1.3,fontWeight:FontWeight.w900))),
+          CupTag(text:live>0?'â— LIVE':'SEASON 26/27',
+            color:live>0?CupUi.green:CupUi.ice,filled:true),
+        ]),
+        const SizedBox(height:27),
+        const Text('ĞšĞ£Ğ‘ĞĞš',style:TextStyle(fontSize:43,height:.93,
+          letterSpacing:-2.1,fontWeight:FontWeight.w900,color:Colors.white)),
+        const Text('Ğ ĞĞ¡Ğ¡Ğ˜Ğ˜',style:TextStyle(fontSize:43,height:1,
+          letterSpacing:-2.1,fontWeight:FontWeight.w900,color:Colors.white)),
+        const SizedBox(height:12),
+        Text('U16  â€¢  20 ĞšĞĞœĞĞĞ”  â€¢  Ğ¡Ğ•Ğ—ĞĞ 2026/27',
+          style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800,
+            letterSpacing:.5)),
+        const SizedBox(height:25),
+        Container(padding:const EdgeInsets.all(13),
+          decoration:BoxDecoration(color:Colors.white.withValues(alpha:.07),
+            borderRadius:BorderRadius.circular(18),
+            border:Border.all(color:Colors.white.withValues(alpha:.1))),
+          child:Column(children:[
+            Row(children:[
+              Text('Ğ¢Ğ£Ğ ĞĞ˜Ğ  Ğ’ Ğ”Ğ’Ğ˜Ğ–Ğ•ĞĞ˜Ğ˜',
+                style:TextStyle(color:CupUi.soft,fontSize:9,
+                  letterSpacing:.8,fontWeight:FontWeight.w900)),
+              const Spacer(),
+              Text('${(progress*100).round()}%',style:const TextStyle(
+                color:Colors.white,fontSize:15,fontWeight:FontWeight.w900)),
+            ]),
+            const SizedBox(height:9),
+            ClipRRect(borderRadius:BorderRadius.circular(10),
+              child:LinearProgressIndicator(value:progress,minHeight:5,
+                backgroundColor:Colors.white.withValues(alpha:.13),
+                valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
+            const SizedBox(height:9),
+            Row(children:[
+              Text('${completed} Ğ·Ğ°Ğ²ĞµÑ€ÑˆĞµĞ½Ğ¾',style:TextStyle(color:CupUi.muted,fontSize:10)),
+              const Spacer(),
+              Text('${games.length} Ğ² ĞºĞ°Ğ»ĞµĞ½Ğ´Ğ°Ñ€Ğµ',
+                style:TextStyle(color:CupUi.muted,fontSize:10)),
+            ]),
+          ])),
+        const SizedBox(height:17),
+        Row(children:[
+          Expanded(child:FilledButton.icon(
+            onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(
+              matches:games,teams:clubs.map((t)=>t.fullName).toList(),
+              teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
+            style:FilledButton.styleFrom(
+              backgroundColor:Colors.white,
+              foregroundColor:const Color(0xFF13234A),
+              padding:const EdgeInsets.symmetric(horizontal:5,vertical:12)),
+            icon:const Icon(Icons.auto_awesome_rounded,size:17),
+            label:const Text('ĞŸĞ Ğ•Ğ”Ğ˜ĞšĞ¢Ğ«',
+              style:TextStyle(fontWeight:FontWeight.w900,fontSize:10)))),
+          const SizedBox(width:9),
+          Expanded(child:OutlinedButton.icon(
+            onPressed:()=>selectTab(2),
+            style:OutlinedButton.styleFrom(
+              foregroundColor:Colors.white,
+              side:BorderSide(color:Colors.white.withValues(alpha:.3)),
+              padding:const EdgeInsets.symmetric(horizontal:5,vertical:12)),
+            icon:const Icon(Icons.leaderboard_rounded,size:17),
+            label:const Text('Ğ¢ĞĞ‘Ğ›Ğ˜Ğ¦Ğ',
+              style:TextStyle(fontWeight:FontWeight.w900,fontSize:10)))),
+        ]),
+      ]),
+    );
+  }
+
+  Widget _homePage(){
+    final recent=filtered();
+    final live=games.where((m)=>m.isLive).toList();
+    return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
+      CupReveal(child:_homeHero()),
+      CupArena(margin:const EdgeInsets.fromLTRB(12,4,12,11),
+        padding:EdgeInsets.zero,child:Material(color:Colors.transparent,
+          child:InkWell(onTap:openCommandCenter,
+            borderRadius:BorderRadius.circular(22),
+            child:Padding(padding:const EdgeInsets.fromLTRB(18,18,17,19),
+              child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                Row(children:[
+                  Icon(Icons.radar_rounded,color:CupUi.ice,size:24),
+                  const SizedBox(width:10),
+                  const Expanded(child:Text('COMMAND CENTER',style:TextStyle(
+                    color:Colors.white,fontSize:13,fontWeight:FontWeight.w900,
+                    letterSpacing:1))),
+                  CupTag(text:'v28',color:CupUi.gold,filled:true),
+                ]),
+                const SizedBox(height:14),
+                const Text('ĞĞ Ğ•ĞĞ ĞšĞ£Ğ‘ĞšĞ.\nĞŸĞĞ›ĞĞ«Ğ™ ĞšĞĞĞ¢Ğ ĞĞ›Ğ¬.',
+                  style:TextStyle(color:Colors.white,fontSize:21,
+                    fontWeight:FontWeight.w900,height:1.1)),
+                const SizedBox(height:11),
+                Text('ĞŸÑ€Ğ¾Ğ³Ğ½Ğ¾Ğ·Ñ‹ Â· Ğ Ğ°ÑÑĞµĞ² Â· ĞĞ½Ğ°Ğ»Ğ¸Ñ‚Ğ¸ĞºĞ° Â· ĞœĞ¾Ğ¸ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹',
+                  style:TextStyle(color:CupUi.soft,fontSize:11)),
+                const SizedBox(height:16),
+                Row(children:[
+                  Expanded(child:Container(height:1,
+                    color:CupUi.ice.withValues(alpha:.35))),
+                  const SizedBox(width:13),
+                  const Text('ĞĞ¢ĞšĞ Ğ«Ğ¢Ğ¬ ĞĞĞĞ›Ğ˜Ğ¢Ğ˜ĞšĞ£',style:TextStyle(
+                    color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)),
+                  const SizedBox(width:7),
+                  const Icon(Icons.arrow_forward_rounded,
+                    color:Colors.white,size:17),
+                ]),
+              ]))))),
+      MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
+      CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
+        child:Row(children:[
+          _metric('${games.where((m)=>m.finished).length}','Ğ¡Ğ«Ğ“Ğ ĞĞĞ',Icons.check_circle_outline_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${games.where((m)=>!m.finished&&!m.isLive).length}','Ğ’ĞŸĞ•Ğ Ğ•Ğ”Ğ˜',Icons.schedule_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${live.length}','LIVE',Icons.radio_button_checked_rounded),
+        ])),
+      if(live.isNotEmpty)...[
+        CupSection(title:'ĞŸĞ Ğ¯ĞœĞ Ğ¡Ğ•Ğ™Ğ§ĞĞ¡'),
+        for(final block in _gamesGrouped(live))block,
+      ],
+      CupSection(title:'ĞœĞĞ¢Ğ§Ğ˜ ĞšĞ£Ğ‘ĞšĞ',subtitle:'Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸ Ğ´Ğ°Ñ‚Ñƒ Ğ¸Ğ»Ğ¸ Ğ¾Ñ‚ĞºÑ€Ğ¾Ğ¹ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚'),
+      _dateSelector(),_filters(),
+      if(recent.isEmpty)CupMessage(
+        icon:Icons.sports_hockey,title:'ĞŸĞ¾ĞºĞ° Ğ½ĞµÑ‚ Ğ¼Ğ°Ñ‚Ñ‡ĞµĞ¹',
+        message:games.isEmpty?'Ğ—Ğ°Ğ¿Ñ€Ğ°ÑˆĞ¸Ğ²Ğ°Ñ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ñ‹ Ñ Ğ¤Ğ¥Ğ . ĞŸĞ¾Ñ‚ÑĞ½Ğ¸ Ğ²Ğ½Ğ¸Ğ·, Ñ‡Ñ‚Ğ¾Ğ±Ñ‹ Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ¸Ñ‚ÑŒ.':
+        'ĞĞ° Ğ²Ñ‹Ğ±Ñ€Ğ°Ğ½Ğ½ÑƒÑ Ğ´Ğ°Ñ‚Ñƒ Ğ¸Ğ»Ğ¸ Ğ´Ğ»Ñ ÑÑ‚Ğ¾Ğ³Ğ¾ Ñ„Ğ¸Ğ»ÑŒÑ‚Ñ€Ğ° Ğ¸Ğ³Ñ€ Ğ½ĞµÑ‚.',
+        retry:refresh),
+      for(final block in _gamesGrouped(recent,limit:22))block,
+      if(recent.length>22)Padding(padding:EdgeInsets.fromLTRB(12,6,12,20),
+        child:FilledButton.tonal(onPressed:()=>selectTab(1),
+          child:Text('ĞŸĞĞšĞĞ—ĞĞ¢Ğ¬ Ğ’Ğ¡Ğ• ĞœĞĞ¢Ğ§Ğ˜'))),
+      SizedBox(height:20),
+    ]));
+  }
+
+  Widget _metric(String value,String label,IconData icon)=>Expanded(child:Column(children:[
+    Icon(icon,color:label=='LIVE'?CupUi.green:CupUi.ice,size:17),const SizedBox(height:5),
+    Text(value,style:TextStyle(color:CupUi.white,fontSize:20,fontWeight:FontWeight.w900,height:1)),
+    const SizedBox(height:4),Text(label,style:TextStyle(color:CupUi.muted,fontSize:8,fontWeight:FontWeight.w900,letterSpacing:.6)),
+  ]));
+
+  Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('matches'),children:[
+    CupSection(title:'Ğ’Ğ¡Ğ• ĞœĞĞ¢Ğ§Ğ˜',subtitle:'ĞšĞ°Ğ»ĞµĞ½Ğ´Ğ°Ñ€ÑŒ ĞšÑƒĞ±ĞºĞ° Ğ Ğ¾ÑÑĞ¸Ğ¸ U16'),
+    _dateSelector(),_filters(),
+    if(filtered().isEmpty)CupMessage(icon:Icons.calendar_month_outlined,title:'ĞĞ¸Ñ‡ĞµĞ³Ğ¾ Ğ½Ğµ Ğ½Ğ°Ğ¹Ğ´ĞµĞ½Ğ¾',
+      message:'Ğ’Ñ‹Ğ±ĞµÑ€Ğ¸ Ğ´Ñ€ÑƒĞ³ÑƒÑ Ğ´Ğ°Ñ‚Ñƒ Ğ¸Ğ»Ğ¸ Ğ´Ñ€ÑƒĞ³Ğ¾Ğ¹ Ñ‚Ğ¸Ğ¿ Ğ¼Ğ°Ñ‚Ñ‡ĞµĞ¹.',retry:refresh),
+    for(final block in _gamesGrouped(filtered()))block,
+    SizedBox(height:24),
+  ]));
+
+  Widget _standingPage()=>TournamentPage(
+    matches:games,
+    teams:clubs.map((team)=>team.fullName),
+    teamLogo:(name)=>findClub(name)?.logo,
+    onTeam:(name){
+      final club=findClub(name);
+      if(club!=null)openClub(club);
+    },
+    onMatch:openMatch,
+  );
+
+  Widget _teamPage(){
+    final list=clubs.where((x)=>x.fullName.toLowerCase().contains(search.toLowerCase())).toList();
+    return RefreshIndicator(onRefresh:loadClubs,child:ListView(children:[
+      CupSection(title:'Ğ£Ğ§ĞĞ¡Ğ¢ĞĞ˜ĞšĞ˜',subtitle:'${clubs.length} ĞºĞ»ÑƒĞ±Ğ¾Ğ² Ñ Ğ¾Ñ„Ğ¸Ñ†Ğ¸Ğ°Ğ»ÑŒĞ½Ñ‹Ğ¼Ğ¸ ÑĞ¾ÑÑ‚Ğ°Ğ²Ğ°Ğ¼Ğ¸ Ğ¤Ğ¥Ğ '),
+      Padding(padding:EdgeInsets.fromLTRB(12,0,12,12),
+        child:TextField(onChanged:(v)=>setState(()=>search=v),
+          style:TextStyle(fontSize:13),
+          decoration:InputDecoration(
+            prefixIcon:Icon(Icons.search,color:CupUi.muted),
+            hintText:'ĞĞ°Ğ¹Ñ‚Ğ¸ ĞºĞ¾Ğ¼Ğ°Ğ½Ğ´Ñƒ',hintStyle:TextStyle(color:CupUi.dim),
+            filled:true,fillColor:CupUi.surface,
+            contentPadding:EdgeInsets.symmetric(horizontal:13,vertical:11),
+            enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(11),
+              borderSide:BorderSide(color:CupUi.stroke)),
+            focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(11),
+              borderSide:BorderSide(color:CupUi.red))))),
+      if(loadingTeams&&clubs.isEmpty)Padding(padding:EdgeInsets.all(28),
+        child:Center(child:CircularProgressIndicator())),
+      if(teamError!=null)Padding(padding:EdgeInsets.all(15),
+        child:Text(teamError!,style:TextStyle(color:CupUi.yellow,fontSize:11))),
+      CupCard(padding:EdgeInsets.symmetric(vertical:4),child:Column(children:[
+        for(var i=0;i<list.length;i++)...[
+          InkWell(onTap:()=>openClub(list[i]),
+            child:Padding(padding:EdgeInsets.symmetric(horizontal:12,vertical:11),
+              child:Row(children:[
+                fhrTeamLogo(list[i].logo,size:40),SizedBox(width:12),
+                Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                  Text(list[i].name,style:TextStyle(color:CupUi.white,
+                    fontSize:13,fontWeight:FontWeight.w800)),
+                  SizedBox(height:3),
+                  Text(list[i].city,style:TextStyle(color:CupUi.muted,fontSize:11)),
+                ])),
+                Icon(Icons.chevron_right_rounded,color:CupUi.dim,size:19),
+              ]))),
+          if(i+1<list.length)CupDiv(indent:60),
+        ],
+      ])),
+      if(clubs.isEmpty&&!loadingTeams)CupMessage(title:'ĞšĞ¾Ğ¼Ğ°Ğ½Ğ´Ñ‹ Ğ½Ğµ Ğ·Ğ°Ğ³Ñ€ÑƒĞ¶ĞµĞ½Ñ‹',
+        message:'Ğ”Ğ°Ğ½Ğ½Ñ‹Ğµ ĞºĞ»ÑƒĞ±Ğ° Ğ¸ Ñ„Ğ¾Ñ‚Ğ¾ Ğ¸Ğ³Ñ€Ğ¾ĞºĞ¾Ğ² Ğ±ĞµÑ€ÑƒÑ‚ÑÑ Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ Ğ¸Ğ· Ğ¤Ğ¥Ğ  Ğ”Ğ¶ÑƒĞ½Ğ¸Ğ¾Ñ€.',retry:loadClubs),
+      SizedBox(height:24),
+    ]));
+  }
+
+  Widget _favoritesPage(){
+    final list=games.where((e)=>favorites.contains(e.key)).toList();
+    return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
+      CupSection(title:'Ğ˜Ğ—Ğ‘Ğ ĞĞĞĞ«Ğ• ĞœĞĞ¢Ğ§Ğ˜',subtitle:'${list.length} ÑĞ¾Ñ…Ñ€Ğ°Ğ½ĞµĞ½Ğ¾ Ğ½Ğ° ÑÑ‚Ğ¾Ğ¼ ÑƒÑÑ‚Ñ€Ğ¾Ğ¹ÑÑ‚Ğ²Ğµ'),
+      if(list.isEmpty)CupMessage(
+        icon:Icons.star_border_rounded,title:'Ğ˜Ğ·Ğ±Ñ€Ğ°Ğ½Ğ½Ğ¾Ğµ Ğ¿Ğ¾ĞºĞ° Ğ¿ÑƒÑÑ‚Ğ¾',
+        message:'ĞĞ°Ğ¶Ğ¸Ğ¼Ğ°Ğ¹ Ğ½Ğ° Ğ·Ğ²Ñ‘Ğ·Ğ´Ğ¾Ñ‡ĞºÑƒ Ğ²Ğ¾Ğ·Ğ»Ğµ Ğ¼Ğ°Ñ‚Ñ‡Ğ°. ĞĞ½ Ğ¿Ğ¾ÑĞ²Ğ¸Ñ‚ÑÑ Ğ·Ğ´ĞµÑÑŒ Ğ¸ Ğ¾ÑÑ‚Ğ°Ğ½ĞµÑ‚ÑÑ Ğ¿Ğ¾ÑĞ»Ğµ Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ¿ÑƒÑĞºĞ°.'),
+      for(final block in _gamesGrouped(list))block,
+      SizedBox(height:20),
+    ]));
+  }
+
+  @override Widget build(BuildContext context)=>Scaffold(
+    backgroundColor:CupUi.background,
+    body:Column(children:[
+      _header(),_syncBar(),
+      if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:loading?null:refresh,child:const Text('ĞŸĞ¾Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ñ‚ÑŒ'))]),
+      Expanded(child:IndexedStack(index:tab,children:[
+        games.isEmpty&&loading?const LoadingCards():_homePage(),
+        visited.contains(1)?_matchesPage():const SizedBox.shrink(),
+        visited.contains(2)?_standingPage():const SizedBox.shrink(),
+        visited.contains(3)?const PlayerStatisticsPage():const SizedBox.shrink(),
+        visited.contains(4)?_teamPage():const SizedBox.shrink(),
+        visited.contains(5)?_favoritesPage():const SizedBox.shrink(),
+      ])),
+    ]),
+    bottomNavigationBar:_nav(),
+  );
+}
+
+
