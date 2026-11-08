@@ -776,3 +776,132 @@ class _CommandCenterPageState extends State<CommandCenterPage>
       CupArena(padding:const EdgeInsets.all(20),child:Column(
         crossAxisAlignment:CrossAxisAlignment.start,children:[
           Row(children:[
+            Container(width:44,height:44,decoration:BoxDecoration(
+              color:CupUi.yellow.withValues(alpha:.14),
+              borderRadius:BorderRadius.circular(15)),
+              child:Icon(Icons.auto_awesome_rounded,color:CupUi.yellow)),
+            const SizedBox(width:12),
+            const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,
+              children:[Text('GOLD ODDS PRO',style:TextStyle(color:Colors.white,
+                fontSize:15,fontWeight:FontWeight.w900)),
+                SizedBox(height:4),Text('Модель исходов и ожидаемых голов',
+                  style:TextStyle(color:Color(0xFFD1DFF6),fontSize:10))])),
+          ]),
+          const SizedBox(height:16),
+          Text('Модель использует только подтверждённые результаты квалификации. '
+            'Маленькая выборка сглаживается к среднему турнира; при равном счёте '
+            'в основное время вероятность делится по разнице ожидаемых голов.',
+            style:TextStyle(color:CupUi.soft,fontSize:10,height:1.55)),
+        ])),
+      if(report==null)CupCard(padding:const EdgeInsets.all(14),child:Row(children:[
+        Expanded(child:Text('Посчитай положение команд и шансы на топ-8 во всех оставшихся сценариях.',
+          style:TextStyle(color:CupUi.soft,fontSize:10,height:1.4))),
+        const SizedBox(width:8),FilledButton(
+          onPressed:simulating?null:simulate,
+          child:Text(simulating?'СЧИТАЮ':'РАССЧИТАТЬ',style:const TextStyle(fontSize:9))),
+      ])),
+      if(report!=null)...[
+        CupSection(title:'ШАНСЫ НА ИТОГОВЫЙ ТОП-8',
+          subtitle:'Монте-Карло · ${report!.iterations} сценариев${_simulationStale?' · данные обновились':''}'),
+        CupCard(padding:const EdgeInsets.all(13),child:Column(children:[
+            for(final row in (teamNames.toList()
+            ..sort((a,b)=>(report!.topEight[b]??0).compareTo(report!.topEight[a]??0))))
+            Builder(builder:(context){
+              final top=report!.topEight[row]??0;
+              final places=report!.placeDistribution[row]??const <int,double>{};
+              final champ=places[1]??0;
+              final avg=report!.averagePlace[row]??0;
+              return Padding(padding:const EdgeInsets.symmetric(vertical:8),child:Row(children:[
+                Expanded(flex:5,child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                  Text(row,maxLines:1,overflow:TextOverflow.ellipsis,
+                    style:TextStyle(color:CupUi.white,fontSize:10,fontWeight:FontWeight.w800)),
+                  const SizedBox(height:5),ClipRRect(borderRadius:BorderRadius.circular(5),
+                    child:LinearProgressIndicator(value:top,minHeight:5,
+                      backgroundColor:CupUi.raised,
+                      valueColor:AlwaysStoppedAnimation<Color>(top>=.5?CupUi.green:CupUi.ice))),
+                ])),
+                const SizedBox(width:10),
+                Expanded(flex:2,child:Text('${(top*100).toStringAsFixed(0)}% ТОП-8',
+                  textAlign:TextAlign.right,style:TextStyle(color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900))),
+                const SizedBox(width:8),
+                Expanded(flex:2,child:Text('${(champ*100).toStringAsFixed(0)}% · ${(avg).toStringAsFixed(1)} м.',
+                  textAlign:TextAlign.right,style:TextStyle(color:CupUi.gold,fontSize:8,fontWeight:FontWeight.w800))),
+              ]));
+            }),
+        ])),
+        if(chosen!=null)CupCard(padding:const EdgeInsets.all(13),child:Row(children:[
+          Icon(Icons.route_rounded,color:CupUi.violet,size:18),
+          const SizedBox(width:8),Expanded(child:Text('III тур: ${chosen!} чаще попадает в группу ${report!.thirdGroups[chosen!] == null?'—':((report!.thirdGroups[chosen!]!.entries.toList()..sort((a,b)=>b.value.compareTo(a.value))).first.key)}',
+            style:TextStyle(color:CupUi.soft,fontSize:10))),
+        ])),
+      ],
+      if(fixtures.isEmpty)const CupMessage(title:'Нет предстоящих матчей',
+        message:'Когда ФХР опубликует новые игры, здесь появятся расчёты вероятностей.'),
+      for(final match in fixtures.take(40))_oddsCard(match),
+      CupCard(padding:const EdgeInsets.all(14),child:Row(
+        crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Icon(Icons.info_outline_rounded,color:CupUi.yellow,size:18),
+          const SizedBox(width:9),
+          Expanded(child:Text('Это статистическая оценка, а не официальный прогноз ФХР. '
+            'Доля матчей для каждой команды и число учтённых игр показаны отдельно.',
+            style:TextStyle(color:CupUi.muted,fontSize:9,height:1.5))),
+        ])),
+    ]);
+  }
+
+  Widget _oddsCard(Match match){
+    final odds=GoldOdds.forMatch(games,match);
+    final home=(odds.homeWin*100).round(),away=100-home;
+    return CupCard(padding:const EdgeInsets.all(15),child:Column(
+      crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Row(children:[
+          Expanded(child:Text('${match.home}  —  ${match.away}',
+            maxLines:2,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:CupUi.white,fontSize:11,fontWeight:FontWeight.w900))),
+          const SizedBox(width:8),
+          Text('${match.dayLabel} · ${match.timeMsk}',
+            style:TextStyle(color:CupUi.muted,fontSize:9)),
+        ]),
+        const SizedBox(height:13),
+        Row(children:[
+          Text('$home%',style:TextStyle(color:CupUi.ice,fontSize:22,fontWeight:FontWeight.w900)),
+          const SizedBox(width:6),
+          Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(8),
+            child:SizedBox(height:9,child:Row(children:[
+              Expanded(flex:home,child:Container(color:CupUi.ice)),
+              Expanded(flex:away,child:Container(color:CupUi.yellow)),
+            ])))),
+          const SizedBox(width:6),
+          Text('$away%',style:TextStyle(color:CupUi.yellow,fontSize:22,fontWeight:FontWeight.w900)),
+        ]),
+        const SizedBox(height:6),
+        Row(children:[
+          Expanded(child:Text(match.home,maxLines:1,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:CupUi.soft,fontSize:9))),
+          Text('ПОБЕДА',style:TextStyle(color:CupUi.muted,fontSize:8,
+            fontWeight:FontWeight.w900,letterSpacing:.7)),
+          Expanded(child:Text(match.away,textAlign:TextAlign.right,maxLines:1,
+            overflow:TextOverflow.ellipsis,style:TextStyle(color:CupUi.soft,fontSize:9))),
+        ]),
+        const SizedBox(height:12),
+        Container(padding:const EdgeInsets.symmetric(horizontal:10,vertical:9),
+          decoration:BoxDecoration(color:CupUi.raised,borderRadius:BorderRadius.circular(13)),
+          child:Row(children:[
+            Expanded(child:_oddsMetric('ОЖИД. ГОЛЫ','${odds.homeGoals.toStringAsFixed(1)} : ${odds.awayGoals.toStringAsFixed(1)}')),
+            Expanded(child:_oddsMetric('ВЫБОРКА','${odds.homeGames} / ${odds.awayGames} игр')),
+            Expanded(child:_oddsMetric('СЧЁТ · ОСН. ВРЕМЯ',odds.mostLikelyScore)),
+          ])),
+        Align(alignment:Alignment.centerRight,child:TextButton.icon(
+          onPressed:()=>widget.onMatch(match),
+          icon:const Icon(Icons.insights_rounded,size:15),
+          label:const Text('MATCH CENTER ULTRA',style:TextStyle(fontSize:9)),
+        )),
+      ]));
+  }
+  Widget _oddsMetric(String label,String value)=>Column(
+    crossAxisAlignment:CrossAxisAlignment.start,children:[
+      Text(label,style:TextStyle(color:CupUi.dim,fontSize:7,fontWeight:FontWeight.w900)),
+      const SizedBox(height:4),Text(value,maxLines:1,overflow:TextOverflow.ellipsis,
+        style:TextStyle(color:CupUi.white,fontSize:9,fontWeight:FontWeight.w800)),
+    ]);
+}

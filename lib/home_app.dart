@@ -709,4 +709,135 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
                   const Text('ОТКРЫТЬ АНАЛИТИКУ',style:TextStyle(
                     color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)),
                   const SizedBox(width:7),
-               
+                  const Icon(Icons.arrow_forward_rounded,
+                    color:Colors.white,size:17),
+                ]),
+              ]))))),
+      MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
+      CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
+        child:Row(children:[
+          _metric('${games.where((m)=>m.finished).length}','СЫГРАНО',Icons.check_circle_outline_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${games.where((m)=>!m.finished&&!m.isLive).length}','ВПЕРЕДИ',Icons.schedule_rounded),
+          Container(width:1,height:37,color:CupUi.stroke),
+          _metric('${live.length}','LIVE',Icons.radio_button_checked_rounded),
+        ])),
+      if(live.isNotEmpty)...[
+        CupSection(title:'ПРЯМО СЕЙЧАС'),
+        for(final block in _gamesGrouped(live))block,
+      ],
+      CupSection(title:'МАТЧИ КУБКА',subtitle:'Выбери дату или открой результат'),
+      _dateSelector(),_filters(),
+      if(recent.isEmpty)CupMessage(
+        icon:Icons.sports_hockey,title:'Пока нет матчей',
+        message:games.isEmpty?'Запрашиваю результаты с ФХР. Потяни вниз, чтобы обновить.':
+        'На выбранную дату или для этого фильтра игр нет.',
+        retry:refresh),
+      for(final block in _gamesGrouped(recent,limit:22))block,
+      if(recent.length>22)Padding(padding:EdgeInsets.fromLTRB(12,6,12,20),
+        child:FilledButton.tonal(onPressed:()=>selectTab(1),
+          child:Text('ПОКАЗАТЬ ВСЕ МАТЧИ'))),
+      SizedBox(height:20),
+    ]));
+  }
+
+  Widget _metric(String value,String label,IconData icon)=>Expanded(child:Column(children:[
+    Icon(icon,color:label=='LIVE'?CupUi.green:CupUi.ice,size:17),const SizedBox(height:5),
+    Text(value,style:TextStyle(color:CupUi.white,fontSize:20,fontWeight:FontWeight.w900,height:1)),
+    const SizedBox(height:4),Text(label,style:TextStyle(color:CupUi.muted,fontSize:8,fontWeight:FontWeight.w900,letterSpacing:.6)),
+  ]));
+
+  Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('matches'),children:[
+    CupSection(title:'ВСЕ МАТЧИ',subtitle:'Календарь Кубка России U16'),
+    _dateSelector(),_filters(),
+    if(filtered().isEmpty)CupMessage(icon:Icons.calendar_month_outlined,title:'Ничего не найдено',
+      message:'Выбери другую дату или другой тип матчей.',retry:refresh),
+    for(final block in _gamesGrouped(filtered()))block,
+    SizedBox(height:24),
+  ]));
+
+  Widget _standingPage()=>TournamentPage(
+    matches:games,
+    teams:clubs.map((team)=>team.fullName),
+    teamLogo:(name)=>findClub(name)?.logo,
+    onTeam:(name){
+      final club=findClub(name);
+      if(club!=null)openClub(club);
+    },
+    onMatch:openMatch,
+  );
+
+  Widget _teamPage(){
+    final list=clubs.where((x)=>x.fullName.toLowerCase().contains(search.toLowerCase())).toList();
+    return RefreshIndicator(onRefresh:loadClubs,child:ListView(children:[
+      CupSection(title:'УЧАСТНИКИ',subtitle:'${clubs.length} клубов с официальными составами ФХР'),
+      Padding(padding:EdgeInsets.fromLTRB(12,0,12,12),
+        child:TextField(onChanged:(v)=>setState(()=>search=v),
+          style:TextStyle(fontSize:13),
+          decoration:InputDecoration(
+            prefixIcon:Icon(Icons.search,color:CupUi.muted),
+            hintText:'Найти команду',hintStyle:TextStyle(color:CupUi.dim),
+            filled:true,fillColor:CupUi.surface,
+            contentPadding:EdgeInsets.symmetric(horizontal:13,vertical:11),
+            enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(11),
+              borderSide:BorderSide(color:CupUi.stroke)),
+            focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(11),
+              borderSide:BorderSide(color:CupUi.red))))),
+      if(loadingTeams&&clubs.isEmpty)Padding(padding:EdgeInsets.all(28),
+        child:Center(child:CircularProgressIndicator())),
+      if(teamError!=null)Padding(padding:EdgeInsets.all(15),
+        child:Text(teamError!,style:TextStyle(color:CupUi.yellow,fontSize:11))),
+      CupCard(padding:EdgeInsets.symmetric(vertical:4),child:Column(children:[
+        for(var i=0;i<list.length;i++)...[
+          InkWell(onTap:()=>openClub(list[i]),
+            child:Padding(padding:EdgeInsets.symmetric(horizontal:12,vertical:11),
+              child:Row(children:[
+                fhrTeamLogo(list[i].logo,size:40),SizedBox(width:12),
+                Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+                  Text(list[i].name,style:TextStyle(color:CupUi.white,
+                    fontSize:13,fontWeight:FontWeight.w800)),
+                  SizedBox(height:3),
+                  Text(list[i].city,style:TextStyle(color:CupUi.muted,fontSize:11)),
+                ])),
+                Icon(Icons.chevron_right_rounded,color:CupUi.dim,size:19),
+              ]))),
+          if(i+1<list.length)CupDiv(indent:60),
+        ],
+      ])),
+      if(clubs.isEmpty&&!loadingTeams)CupMessage(title:'Команды не загружены',
+        message:'Данные клуба и фото игроков берутся только из ФХР Джуниор.',retry:loadClubs),
+      SizedBox(height:24),
+    ]));
+  }
+
+  Widget _favoritesPage(){
+    final list=games.where((e)=>favorites.contains(e.key)).toList();
+    return RefreshIndicator(onRefresh:refresh,child:ListView(children:[
+      CupSection(title:'ИЗБРАННЫЕ МАТЧИ',subtitle:'${list.length} сохранено на этом устройстве'),
+      if(list.isEmpty)CupMessage(
+        icon:Icons.star_border_rounded,title:'Избранное пока пусто',
+        message:'Нажимай на звёздочку возле матча. Он появится здесь и останется после перезапуска.'),
+      for(final block in _gamesGrouped(list))block,
+      SizedBox(height:20),
+    ]));
+  }
+
+  @override Widget build(BuildContext context)=>Scaffold(
+    backgroundColor:CupUi.background,
+    body:Column(children:[
+      _header(),_syncBar(),
+      if(error!=null)MaterialBanner(content:Text(error!,style:const TextStyle(fontSize:12)),actions:[TextButton(onPressed:loading?null:refresh,child:const Text('Повторить'))]),
+      Expanded(child:IndexedStack(index:tab,children:[
+        games.isEmpty&&loading?const LoadingCards():_homePage(),
+        visited.contains(1)?_matchesPage():const SizedBox.shrink(),
+        visited.contains(2)?_standingPage():const SizedBox.shrink(),
+        visited.contains(3)?const PlayerStatisticsPage():const SizedBox.shrink(),
+        visited.contains(4)?_teamPage():const SizedBox.shrink(),
+        visited.contains(5)?_favoritesPage():const SizedBox.shrink(),
+      ])),
+    ]),
+    bottomNavigationBar:_nav(),
+  );
+}
+
+
