@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-/// JUNIOR U16 / ARENA DESIGN SYSTEM — v24.
+/// JUNIOR U16 / ARENA DESIGN SYSTEM — v28.
 /// The tokens deliberately support both palettes; match data is not themed.
 class CupUi {
   static bool light = false;
 
-  static Color get background => light ? const Color(0xFFF3F6FC) : const Color(0xFF070B15);
-  static Color get surface => light ? const Color(0xFFFFFFFF) : const Color(0xFF101827);
-  static Color get raised => light ? const Color(0xFFE8EEF9) : const Color(0xFF1A2740);
-  static Color get stroke => light ? const Color(0xFFD5E0F0) : const Color(0xFF2A3A55);
+  static Color get background => light ? const Color(0xFFF3F6FC) : const Color(0xFF060A12);
+  static Color get surface => light ? const Color(0xFFFFFFFF) : const Color(0xFF0D1522);
+  static Color get raised => light ? const Color(0xFFE8EEF9) : const Color(0xFF152234);
+  static Color get stroke => light ? const Color(0xFFD5E0F0) : const Color(0xFF26374C);
 
   /// Primary action. Historical name is retained for backwards compatibility.
   static const red = Color(0xFF516DFA);
-  static const ice = Color(0xFF79E8FF);
+  static const ice = Color(0xFF8CEAFF);
+  static const gold = Color(0xFFFFD47A);
   static Color get redMuted => light ? const Color(0xFFE5EAFF) : const Color(0xFF1F2D61);
   static Color get green => light ? const Color(0xFF087D56) : const Color(0xFF4DE6AD);
   static Color get yellow => light ? const Color(0xFF91600F) : const Color(0xFFFFD47A);
@@ -22,7 +23,7 @@ class CupUi {
   static Color get dim => light ? const Color(0xFF8796AA) : const Color(0xFF657795);
   static List<Color> get heroGradient => light
       ? const [Color(0xFF183C79), Color(0xFF142B59), Color(0xFF263A82)]
-      : const [Color(0xFF162D65), Color(0xFF0A1730), Color(0xFF191533)];
+      : const [Color(0xFF17356C), Color(0xFF0A172A), Color(0xFF151A32)];
 }
 
 /// Arena poster: quiet rink geometry, two light sources, high-contrast content.
@@ -41,14 +42,14 @@ class CupArena extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     margin: margin ?? const EdgeInsets.fromLTRB(12, 12, 12, 9),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(26),
       boxShadow: [
         BoxShadow(color: CupUi.red.withValues(alpha: .18),
             blurRadius: 36, offset: const Offset(0, 14)),
       ],
     ),
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(26),
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -130,7 +131,7 @@ class CupCard extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [Color.lerp(base, CupUi.raised, .27)!, base])
             : null,
-        borderRadius: BorderRadius.circular(23),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: CupUi.stroke.withValues(alpha: CupUi.light ? .94 : .75)),
         boxShadow: CupUi.light
