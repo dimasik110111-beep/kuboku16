@@ -440,7 +440,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final goals=events.where((e)=>str(e,'type')=='GOAL').toList();
     final penalties=events.where((e)=>str(e,'type')=='PENALTY').toList();
     return Column(crossAxisAlignment:CrossAxisAlignment.stretch,children:[
-      if(!match.finished&&!match.isLive&&match.isQualifier&&matches.isNotEmpty)
+      if(!match.finished&&!match.isLive&&match.isQualifier&&widget.matches.isNotEmpty)
         _preGameModel(),
       _periodRow(),
       _matchStory(),
@@ -479,7 +479,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
   }
 
   Widget _preGameModel(){
-    final model=GoldOdds.forMatch(matches,match);
+    final model=GoldOdds.forMatch(widget.matches,match);
     final home=(model.homeWin*100).round(),away=100-home;
     return Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       CupSection(title:'GOLD ODDS PRO',

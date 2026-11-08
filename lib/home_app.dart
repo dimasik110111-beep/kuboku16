@@ -86,7 +86,7 @@ class _JuniorAppState extends State<JuniorApp>{
           linearTrackColor:CupUi.stroke,circularTrackColor:CupUi.stroke),
         pageTransitionsTheme:const PageTransitionsTheme(builders:{
           TargetPlatform.android:FadeUpwardsPageTransitionsBuilder(),
-          TargetPlatform.iOS:CupertinoPageTransitionsBuilder(),
+          TargetPlatform.iOS:FadeUpwardsPageTransitionsBuilder(),
         }),
         tabBarTheme:TabBarThemeData(labelColor:CupUi.white,unselectedLabelColor:CupUi.muted,
           indicatorColor:CupUi.red,dividerColor:CupUi.stroke,

@@ -755,7 +755,7 @@ class _CommandCenterPageState extends State<CommandCenterPage>
             Container(width:44,height:44,decoration:BoxDecoration(
               color:CupUi.yellow.withValues(alpha:.14),
               borderRadius:BorderRadius.circular(15)),
-              child:const Icon(Icons.auto_awesome_rounded,color:CupUi.yellow)),
+              child:Icon(Icons.auto_awesome_rounded,color:CupUi.yellow)),
             const SizedBox(width:12),
             const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,
               children:[Text('GOLD ODDS PRO',style:TextStyle(color:Colors.white,
