@@ -20,11 +20,8 @@ void main(){
       ..addFont(rootBundle.load('assets/fonts/arena/OpenSans-Regular.ttf'));
     final display=FontLoader('ArenaCondensed')
       ..addFont(rootBundle.load('assets/fonts/arena/OpenSans-CondBold.ttf'));
-    final icons=FontLoader('MaterialIcons')
-      ..addFont(rootBundle.load('fonts/MaterialIcons.ttf'));
     await body.load();
     await display.load();
-    await icons.load();
     const match=Match('2026-11-10','Крылья Советов Москва',
       'Авангард Омск','4:2','Группа В-II','',
       status:'FINAL',timeMsk:'18:00');
