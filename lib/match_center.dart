@@ -86,47 +86,49 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     final lineups=GameLineups.fromDetail(data);
     final raw=data?['statusText']?.toString();
     final status=raw!=null&&raw.isNotEmpty?raw:
-      match.isLive?'LIVE':match.finished?'Завершён':'По расписанию';
-    return Column(children:[
-      Container(color:CupUi.raised,padding:const EdgeInsets.fromLTRB(20,12,20,12),
-        child:Row(children:[
-          const Text('🇷🇺',style:TextStyle(fontSize:17)),const SizedBox(width:9),
-          Expanded(child:Text('РОССИЯ: ${match.stage.toUpperCase()}',
-            maxLines:1,overflow:TextOverflow.ellipsis,
-            style:TextStyle(color:CupUi.muted,fontSize:11,
-              fontWeight:FontWeight.w900))),
-          Icon(Icons.chevron_right_rounded,color:CupUi.muted),
+      match.isLive?'ПРЯМО СЕЙЧАС':match.finished?'МАТЧ ЗАВЕРШЁН':'СКОРО';
+    return CupArena(margin:const EdgeInsets.fromLTRB(12,12,12,9),
+      padding:const EdgeInsets.fromLTRB(15,17,15,20),child:Column(children:[
+      Row(children:[
+        const Icon(Icons.sports_hockey_rounded,color:CupUi.signal,size:17),
+        const SizedBox(width:7),
+        Expanded(child:Text(match.stage.toUpperCase(),maxLines:1,
+          overflow:TextOverflow.ellipsis,style:const TextStyle(
+            color:Color(0xFFB8D6DC),fontSize:10,fontWeight:FontWeight.w800))),
+        Container(width:8,height:8,decoration:BoxDecoration(
+          color:match.isLive?CupUi.signal:Colors.white54,shape:BoxShape.circle)),
+      ]),
+      const SizedBox(height:21),
+      Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
+        Expanded(child:_heroTeam(match.home,
+          homeTeam?.logo??lineups.side('home')?.logo)),
+        SizedBox(width:122,child:Column(children:[
+          Text('${match.dayLabel}  ·  ${match.timeMsk} МСК',
+            style:const TextStyle(color:Color(0xFFB8D6DC),fontSize:9,
+              fontWeight:FontWeight.w700)),
+          const SizedBox(height:8),
+          Text(match.hasScore?match.score.replaceAll(':',' : '):'– : –',
+            key:ValueKey(match.score),style:const TextStyle(color:Colors.white,
+              fontFamily:'ArenaCondensed',fontSize:41,fontWeight:FontWeight.w700,height:1)),
+          const SizedBox(height:7),
+          Text(status,textAlign:TextAlign.center,style:const TextStyle(
+            color:CupUi.signal,fontSize:9,fontWeight:FontWeight.w900,
+            letterSpacing:.5)),
+          if(match.scoreNote.isNotEmpty)Text(match.scoreNote,
+            style:const TextStyle(color:Colors.white70,fontSize:10)),
         ])),
-      Container(color:CupUi.raised,padding:const EdgeInsets.fromLTRB(15,21,15,22),
-        child:Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
-          Expanded(child:_heroTeam(match.home,
-            homeTeam?.logo??lineups.side('home')?.logo)),
-          SizedBox(width:116,child:Column(children:[
-            Text('${match.dayLabel}  ${match.timeMsk}',
-              style:TextStyle(color:CupUi.muted,fontSize:10,
-                fontWeight:FontWeight.w700)),
-            const SizedBox(height:7),
-            Text(match.hasScore?match.score.replaceAll(':',' : '):'– : –',
-              key:ValueKey(match.score),style:TextStyle(color:CupUi.white,
-                fontSize:34,fontWeight:FontWeight.w900,height:1)),
-            const SizedBox(height:7),
-            Text(status,style:TextStyle(color:match.isLive?CupUi.red:CupUi.muted,
-              fontSize:10,fontWeight:FontWeight.w700)),
-            if(match.scoreNote.isNotEmpty)Text(match.scoreNote,
-              style:TextStyle(color:CupUi.red,fontSize:10)),
-          ])),
-          Expanded(child:_heroTeam(match.away,
-            awayTeam?.logo??lineups.side('away')?.logo)),
-        ])),
-    ]);
+        Expanded(child:_heroTeam(match.away,
+          awayTeam?.logo??lineups.side('away')?.logo)),
+      ]),
+    ]));
   }
   Widget _heroTeam(String name,String? logo)=>Column(children:[
     Container(width:56,height:56,alignment:Alignment.center,
-      decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(13)),
+      decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(13)),
       child:fhrTeamLogo(logo,size:44)),
     const SizedBox(height:9),
     Text(name,maxLines:2,overflow:TextOverflow.ellipsis,
-      textAlign:TextAlign.center,style:TextStyle(color:CupUi.white,
+      textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,
         fontWeight:FontWeight.w800,height:1.15,fontSize:11)),
   ]);
 
@@ -632,7 +634,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     appBar:AppBar(
       backgroundColor:CupUi.navy,
       title:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text('Хоккей',style:TextStyle(fontSize:18,fontWeight:FontWeight.w900,color:Colors.white)),
+        Text('МАТЧ-ЦЕНТР',style:TextStyle(fontFamily:'ArenaCondensed',fontSize:22,fontWeight:FontWeight.w700,color:Colors.white)),
         Text('КУБОК РОССИИ · ПРОТОКОЛ',style:TextStyle(fontSize:9,color:Colors.white70,letterSpacing:.8)),
       ]),
       actions:[

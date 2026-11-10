@@ -219,31 +219,31 @@ class _PlayerStatisticsPageState extends State<PlayerStatisticsPage>{
         padding:const EdgeInsets.fromLTRB(20,20,20,21),
         child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Row(children:[
-            const Icon(Icons.workspace_premium_rounded,color:CupUi.ice,size:21),
+            const Icon(Icons.workspace_premium_rounded,color:CupUi.signal,size:21),
             const SizedBox(width:9),
             const Expanded(child:Text('ЛИДЕРЫ ЛЬДА',
-              style:TextStyle(color:Colors.white,fontWeight:FontWeight.w900,
-                fontSize:13,letterSpacing:1.1))),
+              style:TextStyle(color:Colors.white,fontFamily:'ArenaCondensed',
+                fontWeight:FontWeight.w700,fontSize:22,letterSpacing:.5))),
             CupTag(text:'OFFICIAL FHR',color:CupUi.green,filled:true),
           ]),
           const SizedBox(height:20),
           Row(children:[
             Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
               Text('${data.skaters.length}',style:const TextStyle(
-                color:Colors.white,fontSize:33,letterSpacing:-1,
-                fontWeight:FontWeight.w900)),
+                color:Colors.white,fontFamily:'ArenaCondensed',fontSize:37,
+                fontWeight:FontWeight.w700)),
               const Text('ПОЛЕВЫХ',style:TextStyle(
-                color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900,
+                color:CupUi.signal,fontSize:9,fontWeight:FontWeight.w900,
                 letterSpacing:1)),
             ])),
             Container(width:1,height:49,color:Colors.white.withValues(alpha:.15)),
             const SizedBox(width:20),
             Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
               Text('${data.goalies.length}',style:const TextStyle(
-                color:Colors.white,fontSize:33,letterSpacing:-1,
-                fontWeight:FontWeight.w900)),
+                color:Colors.white,fontFamily:'ArenaCondensed',fontSize:37,
+                fontWeight:FontWeight.w700)),
               const Text('ВРАТАРЕЙ',style:TextStyle(
-                color:CupUi.ice,fontSize:9,fontWeight:FontWeight.w900,
+                color:CupUi.signal,fontSize:9,fontWeight:FontWeight.w900,
                 letterSpacing:1)),
             ])),
           ]),

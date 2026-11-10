@@ -45,21 +45,23 @@ class _TournamentPageState extends State<TournamentPage>{
       valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red)));
   }
 
-  Widget _summary(CupTournament cup)=>Container(
-    color:CupUi.raised,padding:const EdgeInsets.fromLTRB(20,15,20,18),
+  Widget _summary(CupTournament cup)=>CupArena(
+    margin:const EdgeInsets.fromLTRB(12,12,12,12),
+    padding:const EdgeInsets.fromLTRB(17,17,17,17),
     child:Row(children:[
       Container(width:58,height:58,alignment:Alignment.center,
-        decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(13)),
-        child:Icon(Icons.emoji_events_rounded,color:CupUi.ice,size:32)),
+        decoration:BoxDecoration(color:Colors.white.withValues(alpha:.11),
+          borderRadius:BorderRadius.circular(14)),
+        child:const Icon(Icons.emoji_events_rounded,color:CupUi.signal,size:32)),
       const SizedBox(width:16),
       Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text('РОССИЯ  ·  U16',style:TextStyle(color:CupUi.muted,fontSize:10,
+        const Text('ТУРНИРНЫЙ ЦЕНТР  ·  U16',style:TextStyle(color:CupUi.signal,fontSize:9,
           fontWeight:FontWeight.w900)),
         const SizedBox(height:4),
-        Text('Кубок России',style:TextStyle(color:CupUi.white,fontSize:20,
-          fontWeight:FontWeight.w900)),
+        const Text('Кубок России',style:TextStyle(color:Colors.white,
+          fontFamily:'ArenaCondensed',fontSize:25,fontWeight:FontWeight.w700)),
         Text('2026/2027  ·  ${cup.completedQualifyingGames} матчей отбора',
-          style:TextStyle(color:CupUi.muted,fontSize:11)),
+          style:const TextStyle(color:Color(0xFFB8D6DC),fontSize:10)),
       ])),
     ]));
 
@@ -179,9 +181,12 @@ class _TournamentPageState extends State<TournamentPage>{
                 i==8?CupUi.orange:Colors.transparent,width:3))),
             padding:EdgeInsets.symmetric(horizontal:9,vertical:11),
             child:Row(children:[
-              SizedBox(width:26,child:Text('${(i+1).toString().padLeft(2,'0')}',
-                style:TextStyle(color:general&&i<8?CupUi.ice:CupUi.muted,
-                fontFamily:'monospace',fontSize:11,fontWeight:FontWeight.w900))),
+              Container(width:26,height:25,alignment:Alignment.center,
+                decoration:BoxDecoration(color:general&&i<8?CupUi.navy:CupUi.raised,
+                  borderRadius:BorderRadius.circular(6)),
+                child:Text('${i+1}',style:TextStyle(
+                  color:general&&i<8?CupUi.signal:CupUi.muted,
+                  fontFamily:'ArenaCondensed',fontSize:14,fontWeight:FontWeight.w700))),
               fhrTeamLogo(widget.teamLogo(rows[i].team),size:22),
               SizedBox(width:6),
               Expanded(child:Row(children:[

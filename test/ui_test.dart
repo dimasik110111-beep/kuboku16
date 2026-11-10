@@ -24,12 +24,15 @@ void main(){
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('App opens reference navigation and retains player and team access',(tester) async {
+  testWidgets('Ice Signal navigation retains player and team access',(tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
-    expect(find.text('Хоккей'),findsOneWidget);
-    expect(find.text('Все игры'),findsNWidgets(2));
+    expect(find.text('JUNIOR'),findsOneWidget);
+    expect(tester.widget<Text>(find.text('JUNIOR')).style?.fontFamily,'ArenaCondensed');
+    expect(Theme.of(tester.element(find.text('JUNIOR'))).textTheme.bodyMedium?.fontFamily,
+      'ArenaSans');
+    expect(find.text('Матчи'),findsOneWidget);
     expect(find.text('LIVE'),findsOneWidget);
     expect(find.text('Турниры'),findsOneWidget);
     expect(find.text('Избранное'),findsOneWidget);

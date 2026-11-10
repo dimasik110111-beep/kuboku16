@@ -1,7 +1,7 @@
 name: junior_u16
 description: JUNIOR U16 FHR scores app
 publish_to: 'none'
-version: 0.33.0+34
+version: 0.34.0+35
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
@@ -18,6 +18,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   fonts:
+    - family: ArenaSans
+      fonts:
+        - asset: assets/fonts/arena/OpenSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/arena/OpenSans-Semibold.ttf
+          weight: 600
+    - family: ArenaCondensed
+      fonts:
+        - asset: assets/fonts/arena/OpenSans-CondBold.ttf
+          weight: 700
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope.ttf
