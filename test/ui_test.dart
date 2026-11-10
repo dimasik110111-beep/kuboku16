@@ -13,7 +13,7 @@ void main(){
     const game=Match('2026-09-10','ЦСКА Москва','НЕФТЕХИМИК Нижнекамск',
       '4:2','Группа Г-I','МАУ ЛК Владимир',timeMsk:'18:00');
     await tester.pumpWidget(const MaterialApp(home:MatchCenterPage(match:game)));
-    expect(find.text('MATCH CENTER ULTRA · U16'),findsOneWidget);
+    expect(find.text('LIVE DESK · ПРОТОКОЛ МАТЧА'),findsOneWidget);
     expect(find.text('ОБЗОР'),findsOneWidget);
     expect(find.text('СОБЫТИЯ'),findsOneWidget);
     expect(find.text('СОСТАВЫ'),findsOneWidget);
