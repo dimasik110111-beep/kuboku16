@@ -28,7 +28,7 @@ void main(){
     const match=Match('2026-11-10','Крылья Советов Москва',
       'Авангард Омск','4:2','Группа В-II','',
       status:'FINAL',timeMsk:'18:00');
-    await tester.pumpWidget(const RepaintBoundary(key:ValueKey('arena-preview'),
+    await tester.pumpWidget(RepaintBoundary(key:const ValueKey('arena-preview'),
       child:MaterialApp(theme:ThemeData(fontFamily:'ArenaSans'),
         home:MatchCenterPage(match:match))));
     await tester.pump(const Duration(milliseconds:500));
