@@ -367,45 +367,39 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
 
   Widget _nav()=>SafeArea(top:false,child:Container(
     margin:const EdgeInsets.fromLTRB(11,2,11,7),
-    padding:const EdgeInsets.symmetric(horizontal:3,vertical:5),
+    padding:const EdgeInsets.all(4),
     decoration:BoxDecoration(
       color:CupUi.surface,
-      borderRadius:BorderRadius.circular(10),
+      borderRadius:BorderRadius.circular(9),
       border:Border.all(color:CupUi.stroke),
       boxShadow:[
         BoxShadow(color:Colors.black.withValues(alpha:.25),blurRadius:14,
           offset:const Offset(0,5)),
       ]),
-    child:Row(children:[
-      for(var i=0;i<sections.length;i++)Expanded(child:Semantics(
-        button:true,selected:tab==i,label:sections[i].$3,
-        child:InkWell(
-          onTap:()=>selectTab(i),
-          borderRadius:BorderRadius.circular(7),
-          child:AnimatedContainer(
-            duration:const Duration(milliseconds:290),curve:Curves.easeOutCubic,
-            margin:const EdgeInsets.symmetric(horizontal:1,vertical:1),
-            padding:const EdgeInsets.symmetric(vertical:8),
-            decoration:BoxDecoration(
-              color:i==tab?CupUi.red:Colors.transparent,
-              borderRadius:BorderRadius.circular(6)),
-            child:Column(mainAxisSize:MainAxisSize.min,children:[
-              AnimatedSwitcher(
-                duration:const Duration(milliseconds:250),
-                transitionBuilder:(child,anim)=>ScaleTransition(
-                  scale:Tween<double>(begin:.72,end:1).animate(anim),
-                  child:FadeTransition(opacity:anim,child:child)),
-                child:Icon(i==tab?sections[i].$2:sections[i].$1,
-                  key:ValueKey('${i}-${i==tab}'),size:22,
-                  color:i==tab?Colors.white:CupUi.muted)),
-              const SizedBox(height:4),
-              Text(sections[i].$3,maxLines:1,overflow:TextOverflow.ellipsis,
-                style:TextStyle(color:i==tab?Colors.white:CupUi.muted,
-                  fontSize:8,fontWeight:i==tab?FontWeight.w900:FontWeight.w700)),
-            ]),
-          )))),
+    child:Column(mainAxisSize:MainAxisSize.min,children:[
+      for(var row=0;row<2;row++)Row(children:[
+        for(var column=0;column<3;column++)Expanded(child:_navItem(row*3+column)),
+      ]),
     ]),
   ));
+
+  Widget _navItem(int i)=>Semantics(button:true,selected:tab==i,
+    label:sections[i].$3,child:InkWell(onTap:()=>selectTab(i),
+      borderRadius:BorderRadius.circular(5),child:AnimatedContainer(
+        duration:const Duration(milliseconds:220),
+        margin:const EdgeInsets.all(2),padding:const EdgeInsets.symmetric(
+          horizontal:7,vertical:9),
+        decoration:BoxDecoration(color:tab==i?CupUi.red:CupUi.raised,
+          borderRadius:BorderRadius.circular(5)),
+        child:Row(children:[
+          Icon(tab==i?sections[i].$2:sections[i].$1,size:18,
+            color:tab==i?Colors.white:CupUi.muted),
+          const SizedBox(width:7),
+          Expanded(child:Text(sections[i].$3,maxLines:1,
+            overflow:TextOverflow.ellipsis,style:TextStyle(
+              color:tab==i?Colors.white:CupUi.soft,fontSize:10,
+              fontWeight:FontWeight.w800))),
+        ]))));
 
   Widget _filterChip(String text,bool active,VoidCallback tap)=>InkWell(
     onTap:tap,borderRadius:BorderRadius.circular(99),
@@ -494,54 +488,56 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     final goals=game.goals;
     final live=game.isLive;
     final played=game.finished;
-    return InkWell(onTap:()=>openMatch(game),
-      child:Padding(padding:EdgeInsets.fromLTRB(12,11,7,11),
-        child:Row(children:[
-          SizedBox(width:49,child:Column(children:[
-            Row(mainAxisAlignment:MainAxisAlignment.center,children:[
-              if(live)...[const CupLivePulse(),const SizedBox(width:3)],
-            Text(live?'LIVE':played?'КОН.':game.timeMsk.isNotEmpty?game.timeMsk:'–',
-              style:TextStyle(fontWeight:FontWeight.w900,fontSize:11,
-                color:live?CupUi.green:(played?CupUi.muted:CupUi.yellow)))]),
-            SizedBox(height:6),
-            Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
-          ])),
-          Container(height:43,width:3,color:live?CupUi.green:
-            played?CupUi.ice:CupUi.orange),
-          SizedBox(width:10),
-          Expanded(child:Column(children:[
-            _teamLine(game.home,h?.logo),
-            SizedBox(height:9),
-            _teamLine(game.away,a?.logo),
-          ])),
-          Container(width:43,padding:const EdgeInsets.symmetric(vertical:5),
-            decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.12):CupUi.raised,
-              borderRadius:BorderRadius.circular(5),border:Border.all(
-                color:live?CupUi.green.withValues(alpha:.38):CupUi.stroke)),
-            child:Column(children:[
-              _animatedGoal(goals==null?'–':'${goals[0]}',played||live),
-              const SizedBox(height:5),Container(height:1,width:19,color:CupUi.stroke),const SizedBox(height:5),
-              _animatedGoal(goals==null?'–':'${goals[1]}',played||live),
-            ])),
-          IconButton(
-            onPressed:()=>toggleFavorite(game),
-            tooltip:'Избранное',
+    final tone=live?CupUi.green:played?CupUi.ice:CupUi.orange;
+    return InkWell(onTap:()=>openMatch(game),child:Container(
+      margin:const EdgeInsets.fromLTRB(9,4,9,4),
+      padding:const EdgeInsets.fromLTRB(10,10,5,11),
+      decoration:BoxDecoration(color:CupUi.background.withValues(alpha:.42),
+        border:Border.all(color:live?tone.withValues(alpha:.45):CupUi.stroke.withValues(alpha:.55)),
+        borderRadius:BorderRadius.circular(6)),
+      child:Column(children:[
+        Row(children:[
+          Container(width:5,height:5,decoration:BoxDecoration(color:tone,shape:BoxShape.circle)),
+          const SizedBox(width:6),
+          Text(live?'LIVE':played?'ФИНАЛ':'СКОРО',style:TextStyle(
+            color:tone,fontSize:9,fontWeight:FontWeight.w900,letterSpacing:.9)),
+          const SizedBox(width:8),
+          Expanded(child:Text('${game.dayLabel}  ·  ${game.timeMsk} МСК',
+            maxLines:1,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w700))),
+          SizedBox(width:33,height:27,child:IconButton(
+            padding:EdgeInsets.zero,visualDensity:VisualDensity.compact,
+            onPressed:()=>toggleFavorite(game),tooltip:'Избранное',
             icon:Icon(favorites.contains(game.key)?Icons.star_rounded:Icons.star_border_rounded,
-              color:favorites.contains(game.key)?CupUi.yellow:CupUi.dim,size:21)),
-        ])));
+              color:favorites.contains(game.key)?CupUi.yellow:CupUi.dim,size:19))),
+        ]),
+        const SizedBox(height:9),
+        Row(children:[
+          Expanded(child:_scoreboardSide(game.home,h?.logo)),
+          Container(width:65,padding:const EdgeInsets.symmetric(vertical:7),
+            alignment:Alignment.center,
+            decoration:BoxDecoration(color:tone.withValues(alpha:.12),
+              border:Border.all(color:tone.withValues(alpha:.26)),
+              borderRadius:BorderRadius.circular(4)),
+            child:Text(goals==null?'VS':'${goals[0]} : ${goals[1]}',
+              style:TextStyle(color:goals==null?CupUi.soft:CupUi.white,
+                fontFamily:'monospace',fontSize:15,fontWeight:FontWeight.w900))),
+          Expanded(child:_scoreboardSide(game.away,a?.logo,away:true)),
+        ]),
+      ])));
   }
-  Widget _animatedGoal(String value,bool active)=>AnimatedSwitcher(
-    duration:const Duration(milliseconds:360),switchInCurve:Curves.easeOutCubic,
-    transitionBuilder:(child,animation)=>FadeTransition(opacity:animation,
-      child:SlideTransition(position:Tween<Offset>(begin:const Offset(0,.25),end:Offset.zero).animate(animation),child:child)),
-    child:Text(value,key:ValueKey(value),style:TextStyle(color:active?CupUi.white:CupUi.soft,
-      fontFamily:'monospace',fontWeight:FontWeight.w900,fontSize:18,height:1)));
-  Widget _teamLine(String name,String? logo)=>Row(children:[
-    fhrTeamLogo(logo,size:25),SizedBox(width:9),
-    Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
-      style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w800))),
-  ]);
-
+  Widget _scoreboardSide(String name,String? logo,{bool away=false})=>Padding(
+    padding:const EdgeInsets.symmetric(horizontal:5),
+    child:Row(children:[
+      if(away)const SizedBox(width:3),
+      if(!away)fhrTeamLogo(logo,size:26),
+      if(!away)const SizedBox(width:6),
+      Expanded(child:Text(name,textAlign:away?TextAlign.right:TextAlign.left,
+        maxLines:2,overflow:TextOverflow.ellipsis,
+        style:TextStyle(color:CupUi.white,fontSize:10,fontWeight:FontWeight.w800,height:1.15))),
+      if(away)const SizedBox(width:6),
+      if(away)fhrTeamLogo(logo,size:26),
+    ]));
   Widget _leagueBlock(String label,List<Match> list)=>CupCard(
     margin:EdgeInsets.fromLTRB(12,5,12,6),
     child:Column(children:[
@@ -584,126 +580,116 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   Widget _homeHero(){
     final completed=games.where((m)=>m.finished).length;
     final progress=games.isEmpty?0.0:completed/games.length;
-    final live=games.where((m)=>m.isLive).length;
+    final live=games.where((m)=>m.isLive).toList();
+    final upcoming=games.where((m)=>!m.finished&&!m.isLive).toList()
+      ..sort((a,b)=>'${a.date} ${a.timeMsk}'.compareTo('${b.date} ${b.timeMsk}'));
+    final played=games.where((m)=>m.finished).toList()
+      ..sort((a,b)=>'${b.date} ${b.timeMsk}'.compareTo('${a.date} ${a.timeMsk}'));
+    final Match? feature=live.isNotEmpty?live.first:
+      upcoming.isNotEmpty?upcoming.first:played.isNotEmpty?played.first:null;
     return CupArena(
-      margin:const EdgeInsets.fromLTRB(12,14,12,10),
-      padding:const EdgeInsets.fromLTRB(22,23,22,24),
+      margin:const EdgeInsets.fromLTRB(12,11,12,9),
+      padding:const EdgeInsets.fromLTRB(18,18,18,19),
       child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Row(children:[
-          Container(width:32,height:32,decoration:BoxDecoration(
-            color:Colors.white.withValues(alpha:.10),
-            borderRadius:BorderRadius.circular(11),
-            border:Border.all(color:Colors.white.withValues(alpha:.12))),
-            child:const Icon(Icons.sports_hockey_rounded,color:CupUi.ice,size:19)),
-          const SizedBox(width:10),
-          const Expanded(child:Text('JUNIOR  /  TOURNAMENT',
+          const Icon(Icons.sports_hockey_rounded,color:CupUi.ice,size:17),
+          const SizedBox(width:8),
+          const Expanded(child:Text('JUNIOR U16  /  GAME DAY',
             style:TextStyle(color:CupUi.ice,fontSize:10,
-              letterSpacing:1.3,fontWeight:FontWeight.w900))),
-          CupTag(text:live>0?'● LIVE':'SEASON 26/27',
-            color:live>0?CupUi.green:CupUi.ice,filled:true),
+              letterSpacing:1.4,fontWeight:FontWeight.w900))),
+          CupTag(text:live.isNotEmpty?'● LIVE':'26 / 27',
+            color:live.isNotEmpty?CupUi.green:CupUi.gold,filled:true),
         ]),
-        const SizedBox(height:27),
-        const Text('КУБОК',style:TextStyle(fontSize:43,height:.93,
-          letterSpacing:-2.1,fontWeight:FontWeight.w900,color:Colors.white)),
-        const Text('РОССИИ',style:TextStyle(fontSize:43,height:1,
-          letterSpacing:-2.1,fontWeight:FontWeight.w900,color:Colors.white)),
-        const SizedBox(height:12),
-        Text('U16  •  20 КОМАНД  •  СЕЗОН 2026/27',
-          style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w800,
-            letterSpacing:.5)),
-        const SizedBox(height:25),
-        Container(padding:const EdgeInsets.all(13),
-          decoration:BoxDecoration(color:Colors.white.withValues(alpha:.07),
-            borderRadius:BorderRadius.circular(18),
-            border:Border.all(color:Colors.white.withValues(alpha:.1))),
-          child:Column(children:[
-            Row(children:[
-              Text('ТУРНИР В ДВИЖЕНИИ',
-                style:TextStyle(color:CupUi.soft,fontSize:9,
-                  letterSpacing:.8,fontWeight:FontWeight.w900)),
-              const Spacer(),
-              Text('${(progress*100).round()}%',style:const TextStyle(
-                color:Colors.white,fontSize:15,fontWeight:FontWeight.w900)),
-            ]),
-            const SizedBox(height:9),
-            ClipRRect(borderRadius:BorderRadius.circular(10),
-              child:LinearProgressIndicator(value:progress,minHeight:5,
-                backgroundColor:Colors.white.withValues(alpha:.13),
-                valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
-            const SizedBox(height:9),
-            Row(children:[
-              Text('${completed} завершено',style:TextStyle(color:CupUi.muted,fontSize:10)),
-              const Spacer(),
-              Text('${games.length} в календаре',
-                style:TextStyle(color:CupUi.muted,fontSize:10)),
-            ]),
-          ])),
+        const SizedBox(height:16),
+        Text(feature==null?'КАЛЕНДАРЬ ЗАГРУЖАЕТСЯ':
+          feature.isLive?'ПРЯМО СЕЙЧАС':feature.finished?'ПОСЛЕДНИЙ РЕЗУЛЬТАТ':'СЛЕДУЮЩИЙ МАТЧ',
+          style:TextStyle(color:CupUi.soft,fontSize:10,fontWeight:FontWeight.w900,
+            letterSpacing:1.2)),
         const SizedBox(height:17),
+        if(feature!=null)...[
+          Row(crossAxisAlignment:CrossAxisAlignment.center,children:[
+            Expanded(child:_broadcastTeam(feature.home,findClub(feature.home)?.logo)),
+            Padding(padding:const EdgeInsets.symmetric(horizontal:7),child:Column(children:[
+              Text(feature.hasScore?feature.score.replaceAll(':',' : '):'VS',
+                style:const TextStyle(color:Colors.white,fontFamily:'monospace',
+                  fontSize:30,fontWeight:FontWeight.w900,letterSpacing:-2)),
+              const SizedBox(height:4),
+              Text(feature.isLive?'LIVE':feature.finished?'ФИНАЛ':feature.timeMsk,
+                style:TextStyle(color:feature.isLive?CupUi.green:CupUi.gold,
+                  fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1)),
+            ])),
+            Expanded(child:_broadcastTeam(feature.away,findClub(feature.away)?.logo)),
+          ]),
+          const SizedBox(height:16),
+          Text('${feature.dayLabel}  /  ${feature.stage.toUpperCase()}',
+            maxLines:1,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:CupUi.soft,fontSize:9,letterSpacing:.5)),
+        ],
+        const SizedBox(height:15),
+        Container(height:1,color:Colors.white.withValues(alpha:.22)),
+        const SizedBox(height:13),
+        Row(children:[
+          Text('СЕЗОН',style:TextStyle(color:CupUi.muted,fontSize:9,
+            fontWeight:FontWeight.w900,letterSpacing:1)),
+          const SizedBox(width:10),
+          Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(2),
+            child:LinearProgressIndicator(value:progress,minHeight:4,
+              backgroundColor:Colors.white.withValues(alpha:.12),
+              valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red)))),
+          const SizedBox(width:10),
+          Text('$completed/${games.length}',style:const TextStyle(
+            color:Colors.white,fontFamily:'monospace',fontSize:11,
+            fontWeight:FontWeight.w900)),
+        ]),
+        const SizedBox(height:16),
         Row(children:[
           Expanded(child:FilledButton.icon(
+            onPressed:feature==null?null:()=>openMatch(feature),
+            icon:const Icon(Icons.arrow_forward_rounded,size:17),
+            label:const Text('МАТЧ',style:TextStyle(fontSize:10,
+              fontWeight:FontWeight.w900)))),
+          const SizedBox(width:9),
+          Expanded(child:OutlinedButton.icon(
             onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(
               matches:games,teams:clubs.map((t)=>t.fullName).toList(),
               teamLogos:{for(final t in clubs)t.fullName:t.logo}))),
-            style:FilledButton.styleFrom(
-              backgroundColor:Colors.white,
-              foregroundColor:const Color(0xFF13234A),
-              padding:const EdgeInsets.symmetric(horizontal:5,vertical:12)),
             icon:const Icon(Icons.auto_awesome_rounded,size:17),
             label:const Text('ПРЕДИКТЫ',
-              style:TextStyle(fontWeight:FontWeight.w900,fontSize:10)))),
-          const SizedBox(width:9),
-          Expanded(child:OutlinedButton.icon(
-            onPressed:()=>selectTab(2),
-            style:OutlinedButton.styleFrom(
-              foregroundColor:Colors.white,
-              side:BorderSide(color:Colors.white.withValues(alpha:.3)),
-              padding:const EdgeInsets.symmetric(horizontal:5,vertical:12)),
-            icon:const Icon(Icons.leaderboard_rounded,size:17),
-            label:const Text('ТАБЛИЦА',
               style:TextStyle(fontWeight:FontWeight.w900,fontSize:10)))),
         ]),
       ]),
     );
   }
 
+  Widget _broadcastTeam(String name,String? logo)=>Column(children:[
+    fhrTeamLogo(logo,size:48),const SizedBox(height:9),
+    Text(name,maxLines:2,overflow:TextOverflow.ellipsis,
+      textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,
+        fontSize:10,fontWeight:FontWeight.w900,height:1.2)),
+  ]);
+
   Widget _homePage(){
     final recent=filtered();
     final live=games.where((m)=>m.isLive).toList();
     return RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('home'),children:[
       CupReveal(child:_homeHero()),
-      CupArena(margin:const EdgeInsets.fromLTRB(12,4,12,11),
-        padding:EdgeInsets.zero,child:Material(color:Colors.transparent,
-          child:InkWell(onTap:openCommandCenter,
-            borderRadius:BorderRadius.circular(22),
-            child:Padding(padding:const EdgeInsets.fromLTRB(18,18,17,19),
-              child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-                Row(children:[
-                  Icon(Icons.radar_rounded,color:CupUi.ice,size:24),
-                  const SizedBox(width:10),
-                  const Expanded(child:Text('COMMAND CENTER',style:TextStyle(
-                    color:Colors.white,fontSize:13,fontWeight:FontWeight.w900,
-                    letterSpacing:1))),
-                  CupTag(text:'v29',color:CupUi.gold,filled:true),
-                ]),
-                const SizedBox(height:14),
-                const Text('АРЕНА КУБКА.\nПОЛНЫЙ КОНТРОЛЬ.',
-                  style:TextStyle(color:Colors.white,fontSize:21,
-                    fontWeight:FontWeight.w900,height:1.1)),
-                const SizedBox(height:11),
-                Text('Прогнозы · Рассев · Аналитика · Мои команды',
-                  style:TextStyle(color:CupUi.soft,fontSize:11)),
-                const SizedBox(height:16),
-                Row(children:[
-                  Expanded(child:Container(height:1,
-                    color:CupUi.ice.withValues(alpha:.35))),
-                  const SizedBox(width:13),
-                  const Text('ОТКРЫТЬ АНАЛИТИКУ',style:TextStyle(
-                    color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)),
-                  const SizedBox(width:7),
-                  const Icon(Icons.arrow_forward_rounded,
-                    color:Colors.white,size:17),
-                ]),
-              ]))))),
+      CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,11),
+        padding:EdgeInsets.zero,child:InkWell(onTap:openCommandCenter,
+          child:Padding(padding:const EdgeInsets.all(16),child:Row(children:[
+            Container(width:46,height:46,alignment:Alignment.center,
+              decoration:BoxDecoration(color:CupUi.violet.withValues(alpha:.17),
+                borderRadius:BorderRadius.circular(7)),
+              child:const Icon(Icons.radar_rounded,color:CupUi.violet,size:24)),
+            const SizedBox(width:12),
+            Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+              Text('COMMAND CENTER',style:TextStyle(color:CupUi.white,
+                fontSize:13,fontWeight:FontWeight.w900,letterSpacing:.7)),
+              const SizedBox(height:4),
+              Text('LIVE RACE  /  GOLD ODDS  /  ПУТЬ В ФИНАЛ',
+                maxLines:2,style:TextStyle(color:CupUi.muted,fontSize:9,height:1.35)),
+            ])),
+            const Icon(Icons.arrow_outward_rounded,color:CupUi.violet,size:21),
+          ])))),
       MyTeamCard(teams:clubs,matches:games,onTeam:openClub,onMatch:openMatch),
       CupCard(margin:const EdgeInsets.fromLTRB(12,3,12,10),padding:const EdgeInsets.symmetric(vertical:16,horizontal:7),
         child:Row(children:[

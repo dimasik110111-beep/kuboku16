@@ -142,27 +142,30 @@ class CupSection extends StatelessWidget {
     super.key, required this.title, this.subtitle, this.trailing,
   });
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 25, 16, 11),
-    child: Row(children: [
-      Container(width: 5, height: 27,
-        decoration: BoxDecoration(
-          color:CupUi.red,
-          borderRadius: BorderRadius.circular(1))),
-      const SizedBox(width: 10),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyle(color: CupUi.white,
-            fontWeight: FontWeight.w900, fontSize: 14, letterSpacing: 1.1)),
-          if (subtitle != null) Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(subtitle!, style: TextStyle(
-              color: CupUi.muted, fontSize: 10)),
-          ),
-        ])),
-      if (trailing != null) trailing!,
-    ]),
-  );
+  Widget build(BuildContext context) {
+    final tone=CupUi.featureAccents[title.runes.fold<int>(0,(sum,rune)=>sum+rune)%CupUi.featureAccents.length];
+    return Padding(padding:const EdgeInsets.fromLTRB(16,24,16,11),
+      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Container(height:2,decoration:BoxDecoration(gradient:LinearGradient(
+          colors:[tone,tone.withValues(alpha:.05)]))),
+        const SizedBox(height:10),
+        Row(children:[
+          Container(padding:const EdgeInsets.symmetric(horizontal:7,vertical:5),
+            decoration:BoxDecoration(color:tone.withValues(alpha:.14),
+              borderRadius:BorderRadius.circular(3)),
+            child:Text('U16',style:TextStyle(color:tone,fontSize:9,
+              fontWeight:FontWeight.w900,letterSpacing:1))),
+          const SizedBox(width:10),
+          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,
+              fontSize:14,letterSpacing:.4)),
+            if(subtitle!=null)Padding(padding:const EdgeInsets.only(top:3),
+              child:Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:10))),
+          ])),
+          if(trailing!=null)trailing!,
+        ]),
+      ]));
+  }
 }
 
 class CupTag extends StatelessWidget {

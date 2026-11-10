@@ -688,53 +688,52 @@ class _CommandCenterPageState extends State<CommandCenterPage>
             child:CircularProgressIndicator(strokeWidth:2)):
             const Icon(Icons.refresh_rounded))]),
       body:Column(children:[
-        Padding(padding:const EdgeInsets.fromLTRB(12,9,12,8),
-          child:LayoutBuilder(builder:(context,constraints){
-            final gap=7.0;
-            final buttonWidth=(constraints.maxWidth-gap*2)/3;
-            return Wrap(spacing:gap,runSpacing:7,children:[
-              for(var i=0;i<tabs.length;i++)SizedBox(width:i==6?constraints.maxWidth:buttonWidth,
-                child:Semantics(button:true,selected:screen==i,label:tabs[i],
-                  child:Material(color:Colors.transparent,child:InkWell(
-                    key:ValueKey('command-tab-$i'),
-                    onTap:()=>select(i),
-                    borderRadius:BorderRadius.circular(14),
-                    child:AnimatedContainer(duration:const Duration(milliseconds:220),
-                      curve:Curves.easeOutCubic,
-                      padding:const EdgeInsets.symmetric(horizontal:4,vertical:11),
-                      decoration:BoxDecoration(
-                      color:screen==i?null:CupUi.surface,
-                      gradient:screen==i?LinearGradient(begin:Alignment.topLeft,
-                        end:Alignment.bottomRight,
-                        colors:[CupUi.featureAccents[i].withValues(alpha:.72),CupUi.red]):null,
-                        borderRadius:BorderRadius.circular(14),
-                      border:Border.all(color:screen==i
-                        ?CupUi.featureAccents[i].withValues(alpha:.78):CupUi.stroke),
-                      ),
-                      child:i==6?Row(children:[
-                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.featureAccents[i]),
-                        const SizedBox(width:10),
-                        Expanded(child:Text('GOLD ODDS PRO',
-                          style:TextStyle(color:screen==i?Colors.white:CupUi.soft,
-                            fontSize:10,fontWeight:FontWeight.w900,letterSpacing:.35))),
-                        Text('ВЕРОЯТНОСТИ · ОЖИДАЕМЫЕ ГОЛЫ',
-                          style:TextStyle(color:screen==i?Colors.white.withValues(alpha:.75):CupUi.muted,
-                            fontSize:8,fontWeight:FontWeight.w800)),
-                        const SizedBox(width:8),
-                        Icon(Icons.chevron_right_rounded,size:17,
-                          color:screen==i?Colors.white:CupUi.muted),
-                      ]):Column(mainAxisSize:MainAxisSize.min,children:[
-                        Icon(tabIcons[i],size:19,color:screen==i?Colors.white:CupUi.featureAccents[i]),
-                        const SizedBox(height:6),
-                        Text(tabs[i],textAlign:TextAlign.center,maxLines:1,
-                          overflow:TextOverflow.ellipsis,
-                          style:TextStyle(color:screen==i?Colors.white:CupUi.soft,
-                            fontSize:9,fontWeight:FontWeight.w900)),
-                      ]),
-                    )))),
-              ),
-            ]);
-          })),
+        Container(margin:const EdgeInsets.fromLTRB(12,10,12,7),
+          padding:const EdgeInsets.fromLTRB(13,12,13,11),
+          decoration:BoxDecoration(color:CupUi.surface,
+            border:Border.all(color:CupUi.stroke),
+            borderRadius:BorderRadius.circular(9)),
+          child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+            Row(children:[
+              Text('АНАЛИТИЧЕСКИЙ ПУЛЬТ',style:TextStyle(color:CupUi.muted,
+                fontSize:9,fontWeight:FontWeight.w900,letterSpacing:1)),
+              const Spacer(),
+              Text('${(screen+1).toString().padLeft(2,'0')} / 07',
+                style:TextStyle(color:CupUi.ice,fontFamily:'monospace',
+                  fontSize:10,fontWeight:FontWeight.w900)),
+            ]),
+            const SizedBox(height:9),
+            Row(children:[
+              Icon(tabIcons[screen],color:CupUi.featureAccents[screen],size:24),
+              const SizedBox(width:9),
+              Expanded(child:Text(screen==6?'GOLD ODDS PRO':tabs[screen],
+                style:TextStyle(color:CupUi.white,fontSize:18,
+                  fontWeight:FontWeight.w900,letterSpacing:.3))),
+            ]),
+          ])),
+        SizedBox(height:58,child:ListView(scrollDirection:Axis.horizontal,
+          padding:const EdgeInsets.symmetric(horizontal:12),children:[
+          for(var i=0;i<tabs.length;i++)Padding(
+            padding:const EdgeInsets.only(right:7),child:Semantics(
+              button:true,selected:screen==i,label:tabs[i],
+              child:InkWell(key:ValueKey('command-tab-$i'),
+                onTap:()=>select(i),borderRadius:BorderRadius.circular(6),
+                child:AnimatedContainer(duration:const Duration(milliseconds:180),
+                  width:i==6?146:119,padding:const EdgeInsets.symmetric(horizontal:10),
+                  decoration:BoxDecoration(
+                    color:screen==i?CupUi.featureAccents[i].withValues(alpha:.18):CupUi.surface,
+                    border:Border.all(color:screen==i?CupUi.featureAccents[i]:CupUi.stroke,
+                      width:screen==i?1.5:1),
+                    borderRadius:BorderRadius.circular(6)),
+                  child:Row(children:[
+                    Icon(tabIcons[i],size:18,color:CupUi.featureAccents[i]),
+                    const SizedBox(width:7),
+                    Expanded(child:Text(i==6?'GOLD ODDS PRO':tabs[i],maxLines:2,
+                      style:TextStyle(color:screen==i?CupUi.white:CupUi.soft,
+                        fontSize:9,fontWeight:FontWeight.w900))),
+                  ]))),
+            )),
+        ])),
         if(syncError!=null)Padding(padding:const EdgeInsets.fromLTRB(13,4,13,9),
           child:Container(padding:const EdgeInsets.symmetric(horizontal:11,vertical:9),
             decoration:BoxDecoration(color:CupUi.yellow.withValues(alpha:.10),

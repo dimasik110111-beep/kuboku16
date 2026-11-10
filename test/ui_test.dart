@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:junior_u16/home_app.dart';
 import 'package:junior_u16/match_center.dart';
 import 'package:junior_u16/cup_data.dart';
+import 'package:junior_u16/command_center_page.dart';
 
 void main(){
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -36,4 +37,30 @@ void main(){
     expect(find.text('Избранное'),findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets('Arena navigation and match center fit a narrow phone',(tester) async {
+    tester.view.physicalSize=const Size(360,780);
+    tester.view.devicePixelRatio=1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    SharedPreferences.setMockInitialValues({});
+    await tester.pumpWidget(const JuniorApp());
+    await tester.pump();
+    expect(find.text('Избранное'),findsOneWidget);
+    expect(tester.takeException(),isNull);
+    await tester.pumpWidget(const MaterialApp(home:CommandCenterPage(
+      matches:[],clubs:[],onTeam:_ignoreTeam,onMatch:_ignoreMatch)));
+    await tester.pump();
+    expect(find.text('АНАЛИТИЧЕСКИЙ ПУЛЬТ'),findsOneWidget);
+    await tester.drag(find.byType(ListView).first,const Offset(-1100,0));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('command-tab-6')));
+    await tester.pump();
+    expect(find.text('07 / 07'),findsOneWidget);
+    expect(tester.takeException(),isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 }
+
+void _ignoreTeam(String team){}
+void _ignoreMatch(Match match){}

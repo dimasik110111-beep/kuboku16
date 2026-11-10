@@ -217,18 +217,22 @@ class _TournamentPageState extends State<TournamentPage>{
         Container(color:CupUi.raised,
           padding:EdgeInsets.symmetric(horizontal:10,vertical:11),
           child:Row(children:[
-            SizedBox(width:22,child:Text('№',style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800))),
+            SizedBox(width:29,child:Text('№',style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800))),
             Expanded(child:Text('КОМАНДА',style:TextStyle(color:CupUi.muted,fontSize:10,fontWeight:FontWeight.w800))),
             SizedBox(width:28,child:Text('И',textAlign:TextAlign.center,style:TextStyle(color:CupUi.muted,fontSize:10))),
             SizedBox(width:36,child:Text('РШ',textAlign:TextAlign.center,style:TextStyle(color:CupUi.muted,fontSize:10))),
             SizedBox(width:29,child:Text('О',textAlign:TextAlign.center,style:TextStyle(color:CupUi.muted,fontSize:10))),
           ])),
         for(var i=0;i<rows.length;i++)...[
-          InkWell(onTap:()=>widget.onTeam(rows[i].team),child:Padding(
-            padding:EdgeInsets.symmetric(horizontal:9,vertical:10),
+          InkWell(onTap:()=>widget.onTeam(rows[i].team),child:Container(
+            decoration:BoxDecoration(color:i.isEven?CupUi.raised.withValues(alpha:.34):Colors.transparent,
+              border:Border(left:BorderSide(color:general&&i<8?CupUi.green:
+                i==8?CupUi.orange:Colors.transparent,width:3))),
+            padding:EdgeInsets.symmetric(horizontal:9,vertical:11),
             child:Row(children:[
-              SizedBox(width:22,child:Text('${i+1}',style:TextStyle(color:general&&i<8?CupUi.green:CupUi.muted,
-                fontSize:11,fontWeight:FontWeight.w800))),
+              SizedBox(width:26,child:Text('${(i+1).toString().padLeft(2,'0')}',
+                style:TextStyle(color:general&&i<8?CupUi.green:CupUi.muted,
+                fontFamily:'monospace',fontSize:11,fontWeight:FontWeight.w900))),
               fhrTeamLogo(widget.teamLogo(rows[i].team),size:22),
               SizedBox(width:6),
               Expanded(child:Row(children:[
@@ -238,11 +242,16 @@ class _TournamentPageState extends State<TournamentPage>{
                   child:Icon(Icons.warning_amber_rounded,color:CupUi.yellow,size:13)),
               ])),
               SizedBox(width:28,child:Text('${rows[i].gp}',textAlign:TextAlign.center,
-                style:TextStyle(color:CupUi.soft,fontSize:11))),
+                style:TextStyle(color:CupUi.soft,fontFamily:'monospace',fontSize:11))),
               SizedBox(width:36,child:Text('${rows[i].diff}',textAlign:TextAlign.center,
-                style:TextStyle(color:CupUi.muted,fontSize:11))),
-              SizedBox(width:29,child:Text('${rows[i].pts}',textAlign:TextAlign.center,
-                style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w900))),
+                style:TextStyle(color:CupUi.muted,fontFamily:'monospace',fontSize:11))),
+              Container(width:29,height:26,alignment:Alignment.center,
+                decoration:BoxDecoration(color:general&&i<8
+                  ?CupUi.green.withValues(alpha:.13):CupUi.raised,
+                  borderRadius:BorderRadius.circular(4)),
+                child:Text('${rows[i].pts}',textAlign:TextAlign.center,
+                  style:TextStyle(color:general&&i<8?CupUi.green:CupUi.white,
+                    fontFamily:'monospace',fontSize:13,fontWeight:FontWeight.w900))),
             ]),
           )),
           if(i+1<rows.length)CupDiv(indent:9),
