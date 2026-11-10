@@ -41,6 +41,24 @@ void main() {
     expect(game('A','B','4:1','Группа A-I').isResultAt(now),isTrue);
   });
 
+  test('published score finishes on match day after scheduled game window',(){
+    const game=Match('2026-11-10','A','B','3:2','Группа А-II','',
+      timeMsk:'12:00',status:'SCORE_AVAILABLE');
+    expect(game.isResultAt(DateTime.utc(2026,11,10,10,59)),isFalse);
+    expect(game.isResultAt(DateTime.utc(2026,11,10,11,30)),isTrue);
+    const live=Match('2026-11-10','A','B','3:2','Группа А-II','',
+      timeMsk:'12:00',status:'LIVE');
+    expect(live.isResultAt(DateTime.utc(2026,11,10,14)),isFalse);
+  });
+
+  test('official final wording overrides ambiguous calendar status',(){
+    const game=Match('2026-11-10','A','B','','Группа А-II','',
+      timeMsk:'12:00',status:'SCHEDULED',gameId:123);
+    final result=game.withDetail({'ok':true,'gameId':123,'homeScore':4,
+      'awayScore':2,'status':'SCORE_AVAILABLE','statusText':'Матч завершён'});
+    expect(result.isResultAt(DateTime.utc(2026,11,10,10)),isTrue);
+  });
+
   test('head-to-head result breaks equal points when the teams played',() {
     final games=[
       game('A','B','3:1','Группа A-I'),

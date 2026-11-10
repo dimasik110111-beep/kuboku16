@@ -50,12 +50,13 @@ class _JuniorAppState extends State<JuniorApp>{
         useMaterial3:true,brightness:brightness,fontFamily:'Manrope',
         scaffoldBackgroundColor:CupUi.background,
         colorScheme:ColorScheme.fromSeed(seedColor:CupUi.red,brightness:brightness).copyWith(
-          primary:CupUi.red,secondary:CupUi.ice,surface:CupUi.surface,
-          onSurface:CupUi.white,error:const Color(0xFFFF6978)),
+          primary:CupUi.red,onPrimary:Colors.white,
+          secondary:CupUi.ice,surface:CupUi.surface,
+          onSurface:CupUi.white,error:const Color(0xFFFF8274)),
         appBarTheme:AppBarTheme(backgroundColor:CupUi.background,
           foregroundColor:CupUi.white,surfaceTintColor:Colors.transparent,
           centerTitle:false,toolbarHeight:62,
-          titleTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.white,fontSize:17,fontWeight:FontWeight.w800,letterSpacing:-.3)),
+          titleTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.white,fontSize:16,fontWeight:FontWeight.w900,letterSpacing:.35)),
         dividerColor:CupUi.stroke,
         splashColor:CupUi.ice.withValues(alpha:.08),
         highlightColor:CupUi.ice.withValues(alpha:.05),
@@ -66,36 +67,36 @@ class _JuniorAppState extends State<JuniorApp>{
           hintStyle:TextStyle(color:CupUi.dim,fontSize:13),
           labelStyle:TextStyle(color:CupUi.muted,fontSize:13),
           contentPadding:const EdgeInsets.symmetric(horizontal:15,vertical:14),
-          border:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+          border:OutlineInputBorder(borderRadius:BorderRadius.circular(8),
             borderSide:BorderSide(color:CupUi.stroke)),
-          enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+          enabledBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(8),
             borderSide:BorderSide(color:CupUi.stroke)),
-          focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(15),
+          focusedBorder:OutlineInputBorder(borderRadius:BorderRadius.circular(8),
             borderSide:BorderSide(color:CupUi.red,width:1.5))),
         cardTheme:CardThemeData(color:CupUi.surface,elevation:0,
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(20),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(10),
             side:BorderSide(color:CupUi.stroke))),
         dialogTheme:DialogThemeData(
           backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
           elevation:0,alignment:Alignment.center,
           titleTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.white,
-            fontSize:17,fontWeight:FontWeight.w900,letterSpacing:-.25),
+            fontSize:17,fontWeight:FontWeight.w900,letterSpacing:.5),
           contentTextStyle:TextStyle(fontFamily:'Manrope',color:CupUi.soft,
             fontSize:12,height:1.5),
           actionsPadding:const EdgeInsets.fromLTRB(18,4,18,16),
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(25),
-            side:BorderSide(color:CupUi.ice.withValues(alpha:.20)))),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(9),
+            side:BorderSide(color:CupUi.red.withValues(alpha:.55)))),
         bottomSheetTheme:BottomSheetThemeData(
           backgroundColor:CupUi.surface,surfaceTintColor:Colors.transparent,
           modalBackgroundColor:CupUi.surface,elevation:0,
           shape:const RoundedRectangleBorder(borderRadius:BorderRadius.vertical(
-            top:Radius.circular(26))),
+            top:Radius.circular(12))),
           showDragHandle:true,dragHandleColor:CupUi.muted,
           dragHandleSize:const Size(38,4)),
         snackBarTheme:SnackBarThemeData(backgroundColor:CupUi.raised,
           contentTextStyle:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w700),
           behavior:SnackBarBehavior.floating,
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(15))),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(8))),
         progressIndicatorTheme:ProgressIndicatorThemeData(color:CupUi.red,
           linearTrackColor:CupUi.stroke,circularTrackColor:CupUi.stroke),
         pageTransitionsTheme:const PageTransitionsTheme(builders:{
@@ -109,7 +110,7 @@ class _JuniorAppState extends State<JuniorApp>{
         filledButtonTheme:FilledButtonThemeData(style:FilledButton.styleFrom(
           backgroundColor:CupUi.red,foregroundColor:Colors.white,
           textStyle:const TextStyle(fontWeight:FontWeight.w800),
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(7)),
           padding:const EdgeInsets.symmetric(horizontal:18,vertical:13))),
         textButtonTheme:TextButtonThemeData(style:TextButton.styleFrom(
           foregroundColor:CupUi.red,
@@ -120,7 +121,7 @@ class _JuniorAppState extends State<JuniorApp>{
         outlinedButtonTheme:OutlinedButtonThemeData(style:OutlinedButton.styleFrom(
           foregroundColor:CupUi.white,side:BorderSide(color:CupUi.stroke),
           textStyle:const TextStyle(fontWeight:FontWeight.w800),
-          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(14)),
+          shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(7)),
           padding:const EdgeInsets.symmetric(horizontal:18,vertical:12))),
         iconButtonTheme:IconButtonThemeData(style:IconButton.styleFrom(
           foregroundColor:CupUi.soft,highlightColor:CupUi.ice.withValues(alpha:.12))),
@@ -293,11 +294,9 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     child:Row(children:[
       Container(width:43,height:43,padding:const EdgeInsets.all(5),
         decoration:BoxDecoration(
-          gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
-            colors:[CupUi.red.withValues(alpha:.55),CupUi.raised]),
-          borderRadius:BorderRadius.circular(15),
-          border:Border.all(color:CupUi.ice.withValues(alpha:.22)),
-          boxShadow:[BoxShadow(color:CupUi.red.withValues(alpha:.20),blurRadius:18)]),
+          color:CupUi.raised,
+          borderRadius:BorderRadius.circular(7),
+          border:Border.all(color:CupUi.ice.withValues(alpha:.35))),
         child:Image.network(fhrCupLogo,fit:BoxFit.contain,
           errorBuilder:(_,__,___)=>Icon(Icons.sports_hockey,color:CupUi.ice))),
       const SizedBox(width:11),
@@ -311,7 +310,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             color:error==null?CupUi.green:CupUi.yellow,shape:BoxShape.circle,
             boxShadow:[BoxShadow(color:(error==null?CupUi.green:CupUi.yellow).withValues(alpha:.4),blurRadius:8)])),
           const SizedBox(width:6),
-          Flexible(child:Text('ARENA 2.0  /  КУБОК РОССИИ 2026·27',
+          Flexible(child:Text('LIVE DESK  /  КУБОК РОССИИ 2026·27',
             maxLines:1,overflow:TextOverflow.ellipsis,
             style:TextStyle(color:CupUi.muted,
               fontWeight:FontWeight.w900,letterSpacing:.85,fontSize:8))),
@@ -370,32 +369,26 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     margin:const EdgeInsets.fromLTRB(11,2,11,7),
     padding:const EdgeInsets.symmetric(horizontal:3,vertical:5),
     decoration:BoxDecoration(
-      gradient:LinearGradient(begin:Alignment.topLeft,end:Alignment.bottomRight,
-        colors:[CupUi.raised,CupUi.surface]),
-      borderRadius:BorderRadius.circular(26),
+      color:CupUi.surface,
+      borderRadius:BorderRadius.circular(10),
       border:Border.all(color:CupUi.stroke),
       boxShadow:[
-        BoxShadow(color:Colors.black.withValues(alpha:.42),blurRadius:32,
-          offset:const Offset(0,10)),
-        BoxShadow(color:CupUi.red.withValues(alpha:.10),blurRadius:24),
+        BoxShadow(color:Colors.black.withValues(alpha:.25),blurRadius:14,
+          offset:const Offset(0,5)),
       ]),
     child:Row(children:[
       for(var i=0;i<sections.length;i++)Expanded(child:Semantics(
         button:true,selected:tab==i,label:sections[i].$3,
         child:InkWell(
           onTap:()=>selectTab(i),
-          borderRadius:BorderRadius.circular(20),
+          borderRadius:BorderRadius.circular(7),
           child:AnimatedContainer(
             duration:const Duration(milliseconds:290),curve:Curves.easeOutCubic,
             margin:const EdgeInsets.symmetric(horizontal:1,vertical:1),
             padding:const EdgeInsets.symmetric(vertical:8),
             decoration:BoxDecoration(
-              gradient:i==tab?LinearGradient(
-                begin:Alignment.topLeft,end:Alignment.bottomRight,
-                colors:[CupUi.red,CupUi.red.withValues(alpha:.73)]):null,
-              borderRadius:BorderRadius.circular(19),
-              boxShadow:i==tab?[BoxShadow(color:CupUi.red.withValues(alpha:.25),
-                blurRadius:16,offset:const Offset(0,3))]:null),
+              color:i==tab?CupUi.red:Colors.transparent,
+              borderRadius:BorderRadius.circular(6)),
             child:Column(mainAxisSize:MainAxisSize.min,children:[
               AnimatedSwitcher(
                 duration:const Duration(milliseconds:250),
@@ -513,9 +506,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             SizedBox(height:6),
             Text(game.dayLabel,style:TextStyle(color:CupUi.dim,fontSize:10)),
           ])),
-          Container(height:43,width:3,decoration:BoxDecoration(
-            color:live?CupUi.green:(played?CupUi.stroke:CupUi.yellow),
-            borderRadius:BorderRadius.circular(4))),
+          Container(height:43,width:3,color:live?CupUi.green:
+            played?CupUi.ice:CupUi.orange),
           SizedBox(width:10),
           Expanded(child:Column(children:[
             _teamLine(game.home,h?.logo),
@@ -524,7 +516,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
           ])),
           Container(width:43,padding:const EdgeInsets.symmetric(vertical:5),
             decoration:BoxDecoration(color:live?CupUi.green.withValues(alpha:.12):CupUi.raised,
-              borderRadius:BorderRadius.circular(11),border:Border.all(
+              borderRadius:BorderRadius.circular(5),border:Border.all(
                 color:live?CupUi.green.withValues(alpha:.38):CupUi.stroke)),
             child:Column(children:[
               _animatedGoal(goals==null?'–':'${goals[0]}',played||live),
@@ -543,7 +535,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     transitionBuilder:(child,animation)=>FadeTransition(opacity:animation,
       child:SlideTransition(position:Tween<Offset>(begin:const Offset(0,.25),end:Offset.zero).animate(animation),child:child)),
     child:Text(value,key:ValueKey(value),style:TextStyle(color:active?CupUi.white:CupUi.soft,
-      fontWeight:FontWeight.w900,fontSize:17,height:1)));
+      fontFamily:'monospace',fontWeight:FontWeight.w900,fontSize:18,height:1)));
   Widget _teamLine(String name,String? logo)=>Row(children:[
     fhrTeamLogo(logo,size:25),SizedBox(width:9),
     Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
@@ -554,13 +546,12 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     margin:EdgeInsets.fromLTRB(12,5,12,6),
     child:Column(children:[
       Container(
-        decoration:BoxDecoration(gradient:LinearGradient(
-          begin:Alignment.topLeft,end:Alignment.bottomRight,
-          colors:[CupUi.raised,CupUi.surface])),
+        decoration:BoxDecoration(color:CupUi.raised,
+          border:Border(left:BorderSide(color:CupUi.red,width:4))),
         padding:EdgeInsets.symmetric(horizontal:13,vertical:13),
         child:Row(children:[
           Container(width:27,height:27,decoration:BoxDecoration(color:CupUi.redMuted,
-            borderRadius:BorderRadius.circular(8)),
+            borderRadius:BorderRadius.circular(3)),
             child:Icon(Icons.sports_hockey,size:17,color:CupUi.red)),
           SizedBox(width:10),
           Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[

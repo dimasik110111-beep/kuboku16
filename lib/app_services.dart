@@ -49,18 +49,19 @@ class LoadingCards extends StatelessWidget {
 Future<void> shareCard(BuildContext context,String title,List<String> lines)async{
   try{
     final recorder=ui.PictureRecorder();final canvas=Canvas(recorder);
-    canvas.drawRect(const Rect.fromLTWH(0,0,1080,1080),Paint()..color=const Color(0xFF0A1220));
-    canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(48,48,984,984),const Radius.circular(36)),Paint()..color=const Color(0xFF162338));
-    canvas.drawRect(const Rect.fromLTWH(90,105,7,62),Paint()..color=CupUi.red);
+    canvas.drawRect(const Rect.fromLTWH(0,0,1080,1080),Paint()..color=const Color(0xFF0B0F0D));
+    canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(48,48,984,984),const Radius.circular(12)),Paint()..color=const Color(0xFF1A2920));
+    canvas.drawRect(const Rect.fromLTWH(48,48,984,10),Paint()..color=CupUi.red);
+    canvas.drawRect(const Rect.fromLTWH(90,105,7,62),Paint()..color=CupUi.ice);
     void text(String value,double y,double size,Color color,{int maxLines=2}){
       final p=TextPainter(text:TextSpan(text:value,style:TextStyle(fontFamily:'Manrope',fontSize:size,color:color,fontWeight:FontWeight.w700)),textDirection:TextDirection.ltr,maxLines:maxLines,ellipsis:'…')..layout(maxWidth:880);
       p.paint(canvas,Offset(110,y));
     }
     text('JUNIOR U16',110,44,Colors.white);
-    text('КУБОК РОССИИ · 2026/27',178,24,const Color(0xFF9DB2CD));
+    text('LIVE DESK · КУБОК РОССИИ 2026/27',178,24,const Color(0xFF98E9BE));
     text(title,270,46,Colors.white,maxLines:3);
-    for(var i=0;i<lines.take(5).length;i++){text(lines[i],490+i*78,30,const Color(0xFFCCD9EB));}
-    text('Данные ФХР · ${DateTime.now().toIso8601String().substring(0,10)}',950,22,const Color(0xFF9DB2CD));
+    for(var i=0;i<lines.take(5).length;i++){text(lines[i],490+i*78,30,const Color(0xFFD5E2D3));}
+    text('Данные ФХР · ${DateTime.now().toIso8601String().substring(0,10)}',950,22,const Color(0xFF9DB5A3));
     final picture=recorder.endRecording();final image=await picture.toImage(1080,1080);
     final bytes=await image.toByteData(format:ui.ImageByteFormat.png);image.dispose();picture.dispose();
     if(bytes==null)throw StateError('PNG unavailable');

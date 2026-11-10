@@ -26,7 +26,7 @@ class GamePlayer {
   factory GamePlayer.fromApi(Map<String,dynamic> value)=>GamePlayer(
     name:value['name']?.toString()??'',
     number:value['number']?.toString()??'',
-    position:value['position']?.toString()??'',
+    position:_position(value['position']),
     assignment:value['assignment']?.toString()??'',
     captainRole:value['captainRole']?.toString(),
     photo:value['photo']?.toString(),
@@ -34,6 +34,13 @@ class GamePlayer {
     stats:value['stats'] is Map
       ?GamePlayerStats.fromApi(Map<String,dynamic>.from(value['stats'] as Map)):null,
   );
+  static String _position(dynamic raw){
+    final value=raw?.toString().trim().toUpperCase().replaceAll('Ё','Е')??'';
+    if(const {'GOALIE','GOALTENDER','GK','G','ВРАТАРЬ','ВР'}.contains(value))return 'GOALIE';
+    if(const {'DEFENDER','DEFENCE','D','ЗАЩИТНИК','ЗАЩ'}.contains(value))return 'DEFENDER';
+    if(const {'FORWARD','F','НАПАДАЮЩИЙ','НАПАДАЮЩАЯ','НАП'}.contains(value))return 'FORWARD';
+    return value;
+  }
   String get positionLabel {
     switch(position) {
       case 'GOALIE':return 'Вратарь';
@@ -62,8 +69,8 @@ class GameSide {
   final List<GamePlayer> players;
   final List<GameStaff> staff;
   const GameSide({required this.side,required this.players,required this.staff,this.logo,this.verified=false});
-  factory GameSide.fromApi(Map<String,dynamic> value)=>GameSide(
-    side:value['side']?.toString()??'',
+  factory GameSide.fromApi(Map<String,dynamic> value,{String fallbackSide=''})=>GameSide(
+    side:const {'home':'home','away':'away'}[value['side']?.toString().toLowerCase()]??fallbackSide,
     logo:value['logo']?.toString(),
     verified:value['verified']==true,
     players:value['players'] is List
@@ -86,7 +93,9 @@ class GameLineups {
     if(value is! Map)return GameLineups(available:false,partial:false,teams:[]);
     final obj=Map<String,dynamic>.from(value);
     final teams=obj['teams'] is List ?(obj['teams'] as List).whereType<Map>()
-      .map((x)=>GameSide.fromApi(Map<String,dynamic>.from(x))).toList():<GameSide>[];
+      .toList().asMap().entries.map((e)=>GameSide.fromApi(
+        Map<String,dynamic>.from(e.value),fallbackSide:e.key==0?'home':'away'))
+      .toList():<GameSide>[];
     return GameLineups(available:obj['available']==true&&teams.length==2,
       partial:obj['partial']==true,teams:teams);
   }

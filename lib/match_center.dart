@@ -192,20 +192,18 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
     margin:const EdgeInsets.fromLTRB(12,10,12,7),
     padding:const EdgeInsets.all(4),
     decoration:BoxDecoration(
-      color:CupUi.surface,borderRadius:BorderRadius.circular(19),
+      color:CupUi.surface,borderRadius:BorderRadius.circular(8),
       border:Border.all(color:CupUi.stroke)),
     child:Row(children:[
       for(var i=0;i<4;i++)Expanded(child:InkWell(
         onTap:()=>setState(()=>tab=i),
-        borderRadius:BorderRadius.circular(15),
+        borderRadius:BorderRadius.circular(5),
         child:AnimatedContainer(duration:const Duration(milliseconds:250),
           curve:Curves.easeOutCubic,
           padding:const EdgeInsets.symmetric(vertical:12,horizontal:1),
           decoration:BoxDecoration(
             color:tab==i?CupUi.red:Colors.transparent,
-            borderRadius:BorderRadius.circular(15),
-            boxShadow:tab==i?[BoxShadow(color:CupUi.red.withValues(alpha:.28),
-              blurRadius:14)]:null),
+            borderRadius:BorderRadius.circular(5)),
           child:Text(const ['ОБЗОР','СОБЫТИЯ','СОСТАВЫ','СТАТИСТИКА'][i],
             textAlign:TextAlign.center,maxLines:1,
             style:TextStyle(fontSize:9,fontWeight:FontWeight.w900,
@@ -445,6 +443,8 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       _periodRow(),
       _matchStory(),
       _matchPulse(),
+      if(GameLineups.fromDetail(data).allPlayers.any((p)=>p.position=='GOALIE'))
+        _keeperOverview(GameLineups.fromDetail(data)),
       CupSection(title:'ГОЛЫ И ПЕРЕДАЧИ',subtitle:'По официальному протоколу ФХР'),
       if(goals.isEmpty)CupMessage(title:'Шайбы пока не опубликованы',
         message:'Список голов появится после публикации событий ФХР.',icon:Icons.sports_hockey),
@@ -530,7 +530,8 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
   Widget _eventList(){
     if(data==null)return CupMessage(
       title:'Загружаю протокол',message:'Запрашиваю события матча ФХР.');
-    if(events.isEmpty)return CupMessage(
+    final lineups=GameLineups.fromDetail(data);
+    if(events.isEmpty&&lineups.allPlayers.isEmpty)return CupMessage(
       title:'События не опубликованы',
       message:'На странице ФХР пока нет подтверждённого протокола. Проверь позже.');
     final filterTypes=<String>['','GOAL','PENALTY','GOALKEEPER'];
@@ -570,8 +571,42 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
         ])),
       if(visible.isEmpty)CupMessage(title:'Нет событий в категории',
         message:'Попробуй другой фильтр хронологии.'),
+      if(eventFilter==3)_keeperOverview(lineups),
       ...out,
       SizedBox(height:20),
+    ]);
+  }
+
+  Widget _keeperOverview(GameLineups lineups){
+    Widget side(String key,String name,Color accent){
+      final keepers=lineups.side(key)?.players.where((p)=>p.position=='GOALIE').toList()
+        ??<GamePlayer>[];
+      return Expanded(child:Container(
+        padding:const EdgeInsets.all(14),
+        decoration:BoxDecoration(color:accent.withValues(alpha:.08),
+          border:Border.all(color:accent.withValues(alpha:.35)),
+          borderRadius:BorderRadius.circular(8)),
+        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text(name,maxLines:2,overflow:TextOverflow.ellipsis,
+            style:TextStyle(color:accent,fontSize:10,fontWeight:FontWeight.w900)),
+          const SizedBox(height:10),
+          if(keepers.isEmpty)Text('Вратарь не указан в заявке ФХР',
+            style:TextStyle(color:CupUi.muted,fontSize:11,height:1.3)),
+          for(final keeper in keepers)Padding(
+            padding:const EdgeInsets.only(bottom:6),
+            child:Text('№${keeper.number}  ${keeper.name}',
+              style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w800))),
+        ])));
+    }
+    return Column(children:[
+      const CupSection(title:'ВРАТАРИ ОБЕИХ КОМАНД',
+        subtitle:'По заявкам на этот матч · данные ФХР'),
+      Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:Row(
+        crossAxisAlignment:CrossAxisAlignment.start,children:[
+          side('home',match.home,CupUi.ice),const SizedBox(width:8),
+          side('away',match.away,CupUi.orange),
+        ])),
+      const SizedBox(height:8),
     ]);
   }
 
@@ -648,7 +683,7 @@ class _MatchCenterPageState extends State<MatchCenterPage> with WidgetsBindingOb
       backgroundColor:CupUi.background,
       title:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
         Text('КУБОК РОССИИ',style:TextStyle(fontSize:15,fontWeight:FontWeight.w900,color:CupUi.white)),
-        Text('MATCH CENTER ULTRA · U16',style:TextStyle(fontSize:9,color:CupUi.muted,letterSpacing:.8)),
+        Text('LIVE DESK · ПРОТОКОЛ МАТЧА',style:TextStyle(fontSize:9,color:CupUi.muted,letterSpacing:.8)),
       ]),
       actions:[
         IconButton(tooltip:'Поделиться',icon:const Icon(Icons.ios_share),onPressed:()=>shareCard(context,'${match.home} — ${match.away}',[match.hasScore?match.score:'Матч впереди','${match.dayLabel} · ${match.timeMsk}',match.stage])),

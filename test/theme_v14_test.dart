@@ -14,8 +14,8 @@ void main(){
     CupUi.light=true;
     expect(CupUi.background,isNot(darkBg));
     expect(CupUi.white,isNot(darkText));
-    expect(CupUi.surface,const Color(0xFFFFFFFF));
-    expect(CupUi.white,const Color(0xFF142235));
+    expect(CupUi.surface,const Color(0xFFFFFEFA));
+    expect(CupUi.white,const Color(0xFF17271E));
     CupUi.light=false;
   });
 

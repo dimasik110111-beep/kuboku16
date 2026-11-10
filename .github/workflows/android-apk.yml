@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 concurrency:
-  group: junior-u16-v30-1-apk
+  group: junior-u16-v31-apk
   cancel-in-progress: false
 
 permissions:
@@ -64,23 +64,23 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JUNIOR-U16-v30.1-APK
+          name: JUNIOR-U16-v31-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
-      - name: Publish verified v30.1 APK
+      - name: Publish verified v31 APK
         if: github.ref == 'refs/heads/main' && steps.signing.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v30.1.apk
-          sha256sum JUNIOR-U16-v30.1.apk > SHA256SUMS.txt
-          if gh release view v30.1.0 >/dev/null 2>&1; then
-            gh release upload v30.1.0 JUNIOR-U16-v30.1.apk SHA256SUMS.txt --clobber
-            gh release edit v30.1.0 --target "$GITHUB_SHA" --title "JUNIOR U16 v30.1 · РЕГЛАМЕНТ" --notes-file RELEASE_NOTES_v30_1.md
+          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v31.apk
+          sha256sum JUNIOR-U16-v31.apk > SHA256SUMS.txt
+          if gh release view v31.0.0 >/dev/null 2>&1; then
+            gh release upload v31.0.0 JUNIOR-U16-v31.apk SHA256SUMS.txt --clobber
+            gh release edit v31.0.0 --target "$GITHUB_SHA" --title "JUNIOR U16 v31 · LIVE DESK" --notes-file RELEASE_NOTES_v31.md
           else
-            gh release create v30.1.0 JUNIOR-U16-v30.1.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v30.1 · РЕГЛАМЕНТ" --notes-file RELEASE_NOTES_v30_1.md
+            gh release create v31.0.0 JUNIOR-U16-v31.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v31 · LIVE DESK" --notes-file RELEASE_NOTES_v31.md
           fi
       - name: Explain skipped publication
         if: steps.signing.outputs.ready != 'true'

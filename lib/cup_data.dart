@@ -49,9 +49,9 @@ class Match {
     return [int.parse(p[0]), int.parse(p[1])];
   }
   bool get isLive => status == 'LIVE' || status == 'LIVE_PAUSED';
-  bool get isFinalConfirmed => status == 'FINAL';
-  // Calendar SCORE_AVAILABLE alone is not proof of a finished game:
-  // for ranking, wait until the next calendar day (Moscow time).
+  bool get isFinalConfirmed => const {'FINAL','FINISHED','COMPLETED'}.contains(status.toUpperCase());
+  // A calendar score can be published during play. Treat it as final after
+  // the scheduled start plus a full game window unless FHR still reports LIVE.
   bool isResultAt(DateTime utcNow) {
     if (!hasScore || isLive) return false;
     if (isFinalConfirmed) return true;
@@ -59,8 +59,16 @@ class Match {
     final day = DateTime.tryParse(date);
     if (day == null) return false;
     final mskToday = utcNow.toUtc().add(const Duration(hours: 3));
-    final mskDay = DateTime.utc(mskToday.year, mskToday.month, mskToday.day);
-    return date.compareTo('${mskDay.year.toString().padLeft(4, '0')}-${mskDay.month.toString().padLeft(2, '0')}-${mskDay.day.toString().padLeft(2, '0')}') < 0;
+    final parts=timeMsk.split(':');
+    if(parts.length>=2){
+      final hour=int.tryParse(parts[0]),minute=int.tryParse(parts[1]);
+      if(hour!=null&&minute!=null&&hour>=0&&hour<24&&minute>=0&&minute<60){
+        final start=DateTime.utc(day.year,day.month,day.day,hour,minute);
+        return !mskToday.isBefore(start.add(const Duration(hours:2,minutes:30)));
+      }
+    }
+    final mskDay=DateTime.utc(mskToday.year,mskToday.month,mskToday.day);
+    return day.isBefore(mskDay);
   }
   bool get finished => isResultAt(DateTime.now().toUtc());
   bool get overtime {
@@ -108,7 +116,9 @@ class Match {
       hs != null && as != null ? '$hs:$as' : score,
       stage, arena,
       timeMsk: timeMsk, gameId: gameId, matchUrl: matchUrl,
-      status: detail['status']?.toString() ?? status,
+      status: RegExp(r'ЗАВЕРШ|ОКОНЧ|FINISH|FINAL|COMPLETED',caseSensitive:false)
+          .hasMatch(detail['statusText']?.toString()??'')
+        ? 'FINAL' : detail['status']?.toString() ?? status,
       scoreNote: detail['scoreNote']?.toString() ?? scoreNote);
   }
 }
