@@ -26,14 +26,14 @@ void main(){
     await tester.pump(const Duration(milliseconds:200));
     expect(CupUi.light,isTrue);
     await tester.tap(find.byTooltip('Разделы'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Сменить тему'));
     await tester.pump(const Duration(milliseconds:200));
     expect(CupUi.light,isFalse);
     final prefs=await SharedPreferences.getInstance();
     expect(prefs.getBool('junior_u16_light_theme'),isFalse);
     await tester.tap(find.byTooltip('Разделы'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Сменить тему'));
     await tester.pump(const Duration(milliseconds:200));
     expect(CupUi.light,isTrue);

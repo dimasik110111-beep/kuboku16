@@ -29,12 +29,12 @@ void main(){
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
     expect(find.text('Хоккей'),findsOneWidget);
-    expect(find.text('Все игры'),findsOneWidget);
+    expect(find.text('Все игры'),findsNWidgets(2));
     expect(find.text('LIVE'),findsOneWidget);
     expect(find.text('Турниры'),findsOneWidget);
     expect(find.text('Избранное'),findsOneWidget);
     await tester.tap(find.byTooltip('Разделы'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('Игроки'),findsOneWidget);
     expect(find.text('Команды'),findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());

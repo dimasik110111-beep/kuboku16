@@ -104,7 +104,7 @@ void main(){
       onMatch:(_){},onTeam:(_){},
     ))));
     expect(find.text('Кубок России'),findsOneWidget);
-    expect(find.text('ПЯТЬ ТУРОВ'),findsOneWidget);
+    expect(find.text('ТАБЛИЦЫ'),findsOneWidget);
     await tester.tap(find.text('ТАБЛИЦЫ'));
     await tester.pumpAndSettle();
     expect(find.text('ТАБЛИЦЫ ГРУПП'),findsOneWidget);
