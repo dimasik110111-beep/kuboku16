@@ -33,7 +33,7 @@ void main(){
     expect(Theme.of(tester.element(find.text('JUNIOR'))).textTheme.bodyMedium?.fontFamily,
       'ArenaSans');
     expect(find.text('Матчи'),findsOneWidget);
-    expect(find.text('LIVE'),findsOneWidget);
+    expect(find.text('LIVE'),findsNWidgets(2));
     expect(find.text('Турниры'),findsOneWidget);
     expect(find.text('Избранное'),findsOneWidget);
     await tester.tap(find.byTooltip('Разделы'));
