@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 concurrency:
-  group: junior-u16-v34-apk
+  group: junior-u16-v34-capture-fix
   cancel-in-progress: false
 
 permissions:
@@ -57,7 +57,7 @@ jobs:
       - name: Check standings and LIVE rules
         run: flutter test
       - name: Capture phone layout
-        run: flutter test --dart-define=DESIGN_CAPTURE=true test/design_capture_test.dart
+        run: timeout 90s flutter test --dart-define=DESIGN_CAPTURE=true test/design_capture_test.dart
       - name: Build release APK
         run: flutter build apk --release
       - name: Verify permanent signature

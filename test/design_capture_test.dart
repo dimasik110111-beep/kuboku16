@@ -24,10 +24,13 @@ void main(){
     expect(tester.takeException(),isNull);
     final boundary=tester.renderObject<RenderRepaintBoundary>(
       find.byKey(const ValueKey('arena-preview')));
-    final shot=await boundary.toImage(pixelRatio:1);
-    final bytes=await shot.toByteData(format:ui.ImageByteFormat.png);
-    expect(bytes,isNotNull);
-    print('ARENA_PNG:${base64Encode(bytes!.buffer.asUint8List())}');
+    final encoded=await tester.runAsync(()async{
+      final shot=await boundary.toImage(pixelRatio:1);
+      final bytes=await shot.toByteData(format:ui.ImageByteFormat.png);
+      return bytes==null?null:base64Encode(bytes.buffer.asUint8List());
+    }).timeout(const Duration(seconds:20));
+    expect(encoded,isNotNull);
+    print('ARENA_PNG:$encoded');
     await tester.pumpWidget(const SizedBox.shrink());
   });
 }
