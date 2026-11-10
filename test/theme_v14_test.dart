@@ -14,8 +14,8 @@ void main(){
     CupUi.light=true;
     expect(CupUi.background,isNot(darkBg));
     expect(CupUi.white,isNot(darkText));
-    expect(CupUi.surface,const Color(0xFFFFFEFA));
-    expect(CupUi.white,const Color(0xFF17271E));
+    expect(CupUi.surface,Colors.white);
+    expect(CupUi.white,CupUi.navy);
     CupUi.light=false;
   });
 
@@ -24,17 +24,19 @@ void main(){
     CupUi.light=false;
     await tester.pumpWidget(const JuniorApp());
     await tester.pump(const Duration(milliseconds:200));
+    expect(CupUi.light,isTrue);
+    await tester.tap(find.byTooltip('Разделы'));
+    await tester.pump();
+    await tester.tap(find.text('Сменить тему'));
+    await tester.pump(const Duration(milliseconds:200));
     expect(CupUi.light,isFalse);
-    expect(find.byIcon(Icons.light_mode_outlined),findsOneWidget);
-    await tester.tap(find.byIcon(Icons.light_mode_outlined));
+    final prefs=await SharedPreferences.getInstance();
+    expect(prefs.getBool('junior_u16_light_theme'),isFalse);
+    await tester.tap(find.byTooltip('Разделы'));
+    await tester.pump();
+    await tester.tap(find.text('Сменить тему'));
     await tester.pump(const Duration(milliseconds:200));
     expect(CupUi.light,isTrue);
-    expect(find.byIcon(Icons.dark_mode_outlined),findsOneWidget);
-    final prefs=await SharedPreferences.getInstance();
-    expect(prefs.getBool('junior_u16_light_theme'),isTrue);
-    await tester.tap(find.byIcon(Icons.dark_mode_outlined));
-    await tester.pump(const Duration(milliseconds:200));
-    expect(CupUi.light,isFalse);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 }

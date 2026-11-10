@@ -14,7 +14,7 @@ void main(){
     const game=Match('2026-09-10','ЦСКА Москва','НЕФТЕХИМИК Нижнекамск',
       '4:2','Группа Г-I','МАУ ЛК Владимир',timeMsk:'18:00');
     await tester.pumpWidget(const MaterialApp(home:MatchCenterPage(match:game)));
-    expect(find.text('LIVE DESK · ПРОТОКОЛ МАТЧА'),findsOneWidget);
+    expect(find.text('КУБОК РОССИИ · ПРОТОКОЛ'),findsOneWidget);
     expect(find.text('ОБЗОР'),findsOneWidget);
     expect(find.text('СОБЫТИЯ'),findsOneWidget);
     expect(find.text('СОСТАВЫ'),findsOneWidget);
@@ -24,17 +24,19 @@ void main(){
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('App opens six sports tabs including all player statistics',(tester) async {
+  testWidgets('App opens reference navigation and retains player and team access',(tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
-    expect(find.text('JUNIOR U16'),findsOneWidget);
-    expect(find.text('Главная'),findsOneWidget);
-    expect(find.text('Матчи'),findsOneWidget);
-    expect(find.text('Турнир'),findsOneWidget);
+    expect(find.text('Хоккей'),findsOneWidget);
+    expect(find.text('Все игры'),findsOneWidget);
+    expect(find.text('LIVE'),findsOneWidget);
+    expect(find.text('Турниры'),findsOneWidget);
+    expect(find.text('Избранное'),findsOneWidget);
+    await tester.tap(find.byTooltip('Разделы'));
+    await tester.pump();
     expect(find.text('Игроки'),findsOneWidget);
     expect(find.text('Команды'),findsOneWidget);
-    expect(find.text('Избранное'),findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 

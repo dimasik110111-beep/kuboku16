@@ -20,7 +20,7 @@ class TournamentPage extends StatefulWidget {
 }
 
 class _TournamentPageState extends State<TournamentPage>{
-  int section=0;
+  int section=1;
   CupTour selectedTour=CupTour.first;
   String? selectedGroup;
   CupTournament get model=>CupTournament(widget.matches,teams:widget.teams);
@@ -45,73 +45,22 @@ class _TournamentPageState extends State<TournamentPage>{
       valueColor:const AlwaysStoppedAnimation<Color>(CupUi.red)));
   }
 
-  Widget _summary(CupTournament cup){
-    final progress=(cup.completedQualifyingGames/expectedQualifyingGames).clamp(0.0,1.0);
-    return CupArena(
-      margin:const EdgeInsets.fromLTRB(12,9,12,12),
-      padding:const EdgeInsets.fromLTRB(19,21,19,21),
-      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Row(children:[
-          Container(height:34,width:34,decoration:BoxDecoration(
-            color:Colors.white.withValues(alpha:.11),
-            borderRadius:BorderRadius.circular(11)),
-            child:const Icon(Icons.hub_rounded,color:CupUi.ice,size:19)),
-          const SizedBox(width:10),
-          const Expanded(child:Text('ПУТЬ К ФИНАЛУ',
-            style:TextStyle(color:Colors.white,fontWeight:FontWeight.w900,
-              fontSize:13,letterSpacing:.5))),
-          CupTag(text:cup.qualificationComplete?'ОТБОР ЗАВЕРШЁН':'ОТБОР ИДЁТ',
-            color:cup.qualificationComplete?CupUi.green:CupUi.yellow,filled:true),
-        ]),
-        const SizedBox(height:22),
-        Row(children:[
-          SizedBox(width:91,height:91,child:Stack(
-            alignment:Alignment.center,children:[
-              SizedBox.expand(child:CircularProgressIndicator(
-                value:progress,strokeWidth:7,strokeCap:StrokeCap.round,
-                backgroundColor:Colors.white.withValues(alpha:.16),
-                valueColor:const AlwaysStoppedAnimation<Color>(CupUi.ice))),
-              Text('${(progress*100).round()}%',style:const TextStyle(
-                color:Colors.white,fontSize:24,fontWeight:FontWeight.w900)),
-            ])),
-          const SizedBox(width:19),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            const Text('КВАЛИФИКАЦИЯ',style:TextStyle(
-              color:CupUi.ice,fontSize:10,fontWeight:FontWeight.w900,
-              letterSpacing:1.1)),
-            const SizedBox(height:9),
-            Text('${cup.completedQualifyingGames} / $expectedQualifyingGames',
-              style:const TextStyle(color:Colors.white,fontSize:27,
-                fontWeight:FontWeight.w900,letterSpacing:-1)),
-            const SizedBox(height:6),
-            Text('матчей пройдено',style:TextStyle(
-              color:CupUi.soft,fontSize:11)),
-          ])),
-        ]),
-        const SizedBox(height:22),
-        Container(padding:const EdgeInsets.symmetric(vertical:14,horizontal:6),
-          decoration:BoxDecoration(
-            color:Colors.white.withValues(alpha:.075),
-            borderRadius:BorderRadius.circular(18),
-            border:Border.all(color:Colors.white.withValues(alpha:.10))),
-          child:Row(children:[
-            _smallMetric('20','КОМАНД'),
-            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
-            _smallMetric('3','ОТБОРА'),
-            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
-            _smallMetric('8','ЗОЛОТО'),
-            Container(width:1,height:27,color:Colors.white.withValues(alpha:.14)),
-            _smallMetric('12','СЕРЕБРО'),
-          ])),
-      ]),
-    );
-  }
-
-  Widget _smallMetric(String value,String label)=>Expanded(child:Column(
-    crossAxisAlignment:CrossAxisAlignment.center,children:[
-      Text(value,style:TextStyle(color:CupUi.white,fontSize:17,fontWeight:FontWeight.w900)),
-      SizedBox(height:4),
-      Text(label,style:TextStyle(color:CupUi.muted,fontSize:9,fontWeight:FontWeight.w800)),
+  Widget _summary(CupTournament cup)=>Container(
+    color:CupUi.raised,padding:const EdgeInsets.fromLTRB(20,15,20,18),
+    child:Row(children:[
+      Container(width:58,height:58,alignment:Alignment.center,
+        decoration:BoxDecoration(color:CupUi.surface,borderRadius:BorderRadius.circular(13)),
+        child:Icon(Icons.emoji_events_rounded,color:CupUi.ice,size:32)),
+      const SizedBox(width:16),
+      Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Text('РОССИЯ  ·  U16',style:TextStyle(color:CupUi.muted,fontSize:10,
+          fontWeight:FontWeight.w900)),
+        const SizedBox(height:4),
+        Text('Кубок России',style:TextStyle(color:CupUi.white,fontSize:20,
+          fontWeight:FontWeight.w900)),
+        Text('2026/2027  ·  ${cup.completedQualifyingGames} матчей отбора',
+          style:TextStyle(color:CupUi.muted,fontSize:11)),
+      ])),
     ]));
 
   Widget _stageCard(CupTournament cup,CupTour tour,int number){
@@ -231,7 +180,7 @@ class _TournamentPageState extends State<TournamentPage>{
             padding:EdgeInsets.symmetric(horizontal:9,vertical:11),
             child:Row(children:[
               SizedBox(width:26,child:Text('${(i+1).toString().padLeft(2,'0')}',
-                style:TextStyle(color:general&&i<8?CupUi.green:CupUi.muted,
+                style:TextStyle(color:general&&i<8?CupUi.ice:CupUi.muted,
                 fontFamily:'monospace',fontSize:11,fontWeight:FontWeight.w900))),
               fhrTeamLogo(widget.teamLogo(rows[i].team),size:22),
               SizedBox(width:6),
@@ -247,10 +196,10 @@ class _TournamentPageState extends State<TournamentPage>{
                 style:TextStyle(color:CupUi.muted,fontFamily:'monospace',fontSize:11))),
               Container(width:29,height:26,alignment:Alignment.center,
                 decoration:BoxDecoration(color:general&&i<8
-                  ?CupUi.green.withValues(alpha:.13):CupUi.raised,
+                  ?CupUi.ice.withValues(alpha:.13):CupUi.raised,
                   borderRadius:BorderRadius.circular(4)),
                 child:Text('${rows[i].pts}',textAlign:TextAlign.center,
-                  style:TextStyle(color:general&&i<8?CupUi.green:CupUi.white,
+                  style:TextStyle(color:general&&i<8?CupUi.ice:CupUi.white,
                     fontFamily:'monospace',fontSize:13,fontWeight:FontWeight.w900))),
             ]),
           )),
@@ -562,9 +511,7 @@ class _TournamentPageState extends State<TournamentPage>{
   @override Widget build(BuildContext context){
     final cup=model;
     return ListView(children:[
-      CupSection(title:'ТУРНИРНАЯ СИСТЕМА',
-        subtitle:'ФХР · сезон 2026/27 · 20 команд · 5 туров'),
-      CupReveal(child:_summary(cup)),
+      _summary(cup),
       Padding(padding:const EdgeInsets.symmetric(horizontal:12),child:OutlinedButton.icon(onPressed:()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>ScenarioPage(matches:widget.matches,teams:cup.participants.toList(),teamLogos:{for(final name in cup.participants)name:widget.teamLogo(name)}))),icon:const Icon(Icons.tune),label:const Text('Интерактивные расклады'))),
       SingleChildScrollView(scrollDirection:Axis.horizontal,
         padding:EdgeInsets.fromLTRB(12,0,12,7),

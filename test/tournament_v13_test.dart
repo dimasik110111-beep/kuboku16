@@ -103,7 +103,7 @@ void main(){
       teams:const ['A','B'],teamLogo:(_)=>null,
       onMatch:(_){},onTeam:(_){},
     ))));
-    expect(find.text('ТУРНИРНАЯ СИСТЕМА'),findsOneWidget);
+    expect(find.text('Кубок России'),findsOneWidget);
     expect(find.text('ПЯТЬ ТУРОВ'),findsOneWidget);
     await tester.tap(find.text('ТАБЛИЦЫ'));
     await tester.pumpAndSettle();

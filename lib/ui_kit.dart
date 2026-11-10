@@ -2,34 +2,35 @@ import 'package:flutter/material.dart';
 
 /// JUNIOR U16 / LIVE DESK — broadcast scoreboard design system.
 class CupUi {
-  static bool light = false;
+  static bool light = true;
+  static const navy = Color(0xFF00212D);
 
-  static Color get background => light ? const Color(0xFFF1F2EA) : const Color(0xFF0B0F0D);
-  static Color get surface => light ? const Color(0xFFFFFEFA) : const Color(0xFF151D19);
-  static Color get raised => light ? const Color(0xFFE6EBE3) : const Color(0xFF24312A);
-  static Color get stroke => light ? const Color(0xFFC5D0C5) : const Color(0xFF35483C);
+  static Color get background => light ? Colors.white : const Color(0xFF091820);
+  static Color get surface => light ? Colors.white : const Color(0xFF142830);
+  static Color get raised => light ? const Color(0xFFEDF0F1) : const Color(0xFF223740);
+  static Color get stroke => light ? const Color(0xFFE4E8EA) : const Color(0xFF334A53);
 
   /// Primary action. Historical name is retained for backwards compatibility.
-  static const red = Color(0xFFC84820);
-  static const ice = Color(0xFF98E9BE);
+  static const red = Color(0xFFEB0050);
+  static const ice = Color(0xFF005481);
   static const gold = Color(0xFFFFD47A);
   static const violet = Color(0xFFB7A7EE);
   static const coral = Color(0xFFFF9C81);
   static const teal = Color(0xFF6ED4B8);
   static const orange = Color(0xFFFFAE72);
   static List<Color> get featureAccents => light
-      ? const [Color(0xFF187353), Color(0xFF674AC2), Color(0xFF136D65),
-          Color(0xFFB44F38), Color(0xFFA85818), Color(0xFF176849), Color(0xFF91600F)]
+      ? const [red, ice, Color(0xFF158A83),
+          Color(0xFF7A56B5), Color(0xFFCB7215), Color(0xFF156D54), Color(0xFF92650D)]
       : const [ice, violet, teal, coral, orange, Color(0xFF4DE6AD), gold];
-  static Color get redMuted => light ? const Color(0xFFFFE5D8) : const Color(0xFF45281D);
+  static Color get redMuted => light ? const Color(0xFFFFE6EF) : const Color(0xFF45212F);
   static Color get green => light ? const Color(0xFF16714A) : const Color(0xFF83E8A6);
   static Color get yellow => light ? const Color(0xFF91600F) : const Color(0xFFFFD47A);
-  static Color get white => light ? const Color(0xFF17271E) : const Color(0xFFF3F4E9);
-  static Color get soft => light ? const Color(0xFF34473D) : const Color(0xFFD5E2D3);
-  static Color get muted => light ? const Color(0xFF5F7465) : const Color(0xFF9DB5A3);
-  static Color get dim => light ? const Color(0xFF7E9582) : const Color(0xFF789181);
+  static Color get white => light ? navy : const Color(0xFFF3F7F8);
+  static Color get soft => light ? const Color(0xFF334A53) : const Color(0xFFD5E2E7);
+  static Color get muted => light ? const Color(0xFF647078) : const Color(0xFF9BB4BD);
+  static Color get dim => light ? const Color(0xFF89949A) : const Color(0xFF78919A);
   static List<Color> get heroGradient => light
-      ? const [Color(0xFF315243), Color(0xFF22382F), Color(0xFF563F2F)]
+      ? const [Color(0xFF00394A), navy, Color(0xFF102D42)]
       : const [Color(0xFF26382D), Color(0xFF121C17), Color(0xFF35251D)];
 }
 
@@ -120,13 +121,10 @@ class CupCard extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: base,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(7),
         border: Border.all(
           color: CupUi.stroke.withValues(alpha: CupUi.light ? .94 : .75)),
-        boxShadow: CupUi.light
-          ? [BoxShadow(color: const Color(0xFF233A2B).withValues(alpha: .04),
-              blurRadius: 8, offset: const Offset(0, 3))]
-          : null,
+        boxShadow: null,
       ),
       clipBehavior: Clip.antiAlias,
       child: Material(type: MaterialType.transparency, child: child),
@@ -143,27 +141,15 @@ class CupSection extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    final tone=CupUi.featureAccents[title.runes.fold<int>(0,(sum,rune)=>sum+rune)%CupUi.featureAccents.length];
-    return Padding(padding:const EdgeInsets.fromLTRB(16,24,16,11),
-      child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Container(height:2,decoration:BoxDecoration(gradient:LinearGradient(
-          colors:[tone,tone.withValues(alpha:.05)]))),
-        const SizedBox(height:10),
-        Row(children:[
-          Container(padding:const EdgeInsets.symmetric(horizontal:7,vertical:5),
-            decoration:BoxDecoration(color:tone.withValues(alpha:.14),
-              borderRadius:BorderRadius.circular(3)),
-            child:Text('U16',style:TextStyle(color:tone,fontSize:9,
-              fontWeight:FontWeight.w900,letterSpacing:1))),
-          const SizedBox(width:10),
-          Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-            Text(title,style:TextStyle(color:CupUi.white,fontWeight:FontWeight.w900,
-              fontSize:14,letterSpacing:.4)),
-            if(subtitle!=null)Padding(padding:const EdgeInsets.only(top:3),
-              child:Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:10))),
-          ])),
-          if(trailing!=null)trailing!,
-        ]),
+    return Container(color:CupUi.raised,
+      padding:const EdgeInsets.fromLTRB(18,9,18,9),
+      child:Row(children:[
+        Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+          Text(title,style:TextStyle(color:CupUi.white,
+            fontWeight:FontWeight.w900,fontSize:12,letterSpacing:.2)),
+          if(subtitle!=null)Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:10)),
+        ])),
+        if(trailing!=null)trailing!,
       ]));
   }
 }
