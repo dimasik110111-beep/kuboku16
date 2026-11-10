@@ -12,7 +12,6 @@ import 'tournament_page.dart';
 import 'player_statistics_page.dart';
 import 'team_hub.dart';
 import 'app_services.dart';
-import 'my_team.dart';
 import 'scenario_page.dart';
 import 'command_center_page.dart';
 
@@ -162,14 +161,6 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   List<TeamInfo> clubs=[];
   Set<String> favorites={};
   static const filters=['ВСЕ','LIVE','РЕЗУЛЬТАТЫ','РАСПИСАНИЕ'];
-  static const sections=[
-    (Icons.home_outlined,Icons.home_rounded,'Главная'),
-    (Icons.sports_hockey_outlined,Icons.sports_hockey,'Матчи'),
-    (Icons.leaderboard_outlined,Icons.leaderboard_rounded,'Турнир'),
-    (Icons.bar_chart_outlined,Icons.bar_chart_rounded,'Игроки'),
-    (Icons.shield_outlined,Icons.shield_rounded,'Команды'),
-    (Icons.star_border_rounded,Icons.star_rounded,'Избранное'),
-  ];
   @override void initState(){
     super.initState();WidgetsBinding.instance.addObserver(this);
     _loadLocal().then((_){refresh();loadClubs();});
