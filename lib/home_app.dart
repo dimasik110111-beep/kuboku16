@@ -468,8 +468,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
               Row(children:[
                 Expanded(child:_matchTeamColumn(game.home,home?.logo)),
                 Text(showScore?
-                  (score?[0]?.toString()??'–')+'  :  '+
-                    (score?[1]?.toString()??'–'):'VS',
+                  (score?[0].toString()??'–')+'  :  '+
+                    (score?[1].toString()??'–'):'VS',
                   style:TextStyle(color:CupUi.white,fontFamily:'ArenaCondensed',
                     fontSize:27,fontWeight:FontWeight.w700)),
                 Expanded(child:_matchTeamColumn(game.away,away?.logo,
@@ -497,15 +497,6 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         textAlign:align==CrossAxisAlignment.end?TextAlign.end:TextAlign.start,
         style:TextStyle(color:CupUi.white,fontSize:12,fontWeight:FontWeight.w800)),
     ]);
-  Widget _matchTeamRow(String name,String? logo,int? goals,bool scored)=>Row(children:[
-    fhrTeamLogo(logo,size:22),const SizedBox(width:9),
-    Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
-      style:TextStyle(color:CupUi.white,fontSize:13,fontWeight:FontWeight.w700))),
-    if(scored)Text('${goals??'–'}',style:TextStyle(
-      color:CupUi.white,fontSize:15,fontWeight:FontWeight.w900,
-      fontFamily:'monospace')),
-  ]);
-
   Widget _leagueBlock(String label,List<Match> list)=>Column(children:[
     Container(color:CupUi.raised,padding:const EdgeInsets.fromLTRB(18,9,15,9),
       child:Row(children:[
