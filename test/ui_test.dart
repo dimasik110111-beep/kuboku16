@@ -33,13 +33,13 @@ void main(){
     expect(Theme.of(tester.element(find.text('JUNIOR'))).textTheme.bodyMedium?.fontFamily,
       'ArenaSans');
     expect(find.text('Матчи'),findsOneWidget);
-    expect(find.text('LIVE'),findsNWidgets(2));
-    expect(find.text('Турниры'),findsOneWidget);
-    expect(find.text('Избранное'),findsOneWidget);
+    expect(find.text('LIVE'),findsOneWidget);
+    expect(find.text('Таблица'),findsOneWidget);
+    expect(find.byTooltip('Избранное'),findsOneWidget);
     await tester.tap(find.byTooltip('Разделы'));
     await tester.pumpAndSettle();
-    expect(find.text('Игроки'),findsOneWidget);
-    expect(find.text('Команды'),findsOneWidget);
+    expect(find.text('Игроки'),findsNWidgets(2));
+    expect(find.text('Команды'),findsNWidgets(2));
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
@@ -51,7 +51,7 @@ void main(){
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
-    expect(find.text('Избранное'),findsOneWidget);
+    expect(find.byTooltip('Избранное'),findsOneWidget);
     expect(tester.takeException(),isNull);
     await tester.pumpWidget(const MaterialApp(home:CommandCenterPage(
       matches:[],clubs:[],onTeam:_ignoreTeam,onMatch:_ignoreMatch)));
