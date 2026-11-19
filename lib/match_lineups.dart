@@ -96,8 +96,10 @@ class GameLineups {
       .toList().asMap().entries.map((e)=>GameSide.fromApi(
         Map<String,dynamic>.from(e.value),fallbackSide:e.key==0?'home':'away'))
       .toList():<GameSide>[];
-    return GameLineups(available:obj['available']==true&&teams.length==2,
-      partial:obj['partial']==true,teams:teams);
+    final bothSides=teams.length==2 &&
+      teams.map((team)=>team.side).toSet().containsAll({'home','away'});
+    return GameLineups(available:obj['available']==true&&bothSides,
+      partial:obj['partial']==true||!bothSides,teams:teams);
   }
   GameSide? side(String side){
     for(final t in teams)if(t.side==side)return t;
@@ -131,7 +133,7 @@ class _MatchLineupPanelState extends State<MatchLineupPanel>{
       CupSection(title:'ЗАЯВКА НА МАТЧ',subtitle:'Источник: официальный протокол ФХР Джуниор'),
       Padding(padding:EdgeInsets.symmetric(horizontal:12),
         child:Row(children:[
-          if(lineup.available)CupTag(text:'ПОДТВЕРЖДЕНО ФХР',color:CupUi.green,filled:true)
+          if(lineup.available&&!lineup.partial)CupTag(text:'ПОДТВЕРЖДЕНО ФХР',color:CupUi.green,filled:true)
           else CupTag(text:'ЗАЯВКА ЧАСТИЧНАЯ',color:CupUi.yellow,filled:true),
           Spacer(),
           Text(team==null?'': '${team.players.length} игроков',
@@ -175,6 +177,15 @@ class _MatchLineupPanelState extends State<MatchLineupPanel>{
           CupCard(padding:EdgeInsets.symmetric(vertical:2),
             child:Column(children:[
               for(final player in team.players.where((p)=>p.position==entry.$1))
+                _playerRow(context,player,teamName),
+            ])),
+        ],
+        if(team.players.any((p)=>!const {'GOALIE','DEFENDER','FORWARD'}.contains(p.position)))...[
+          const CupSection(title:'ДРУГИЕ ИГРОКИ',subtitle:'Амплуа пока не указано ФХР'),
+          CupCard(padding:const EdgeInsets.symmetric(vertical:2),
+            child:Column(children:[
+              for(final player in team.players.where((p)=>
+                !const {'GOALIE','DEFENDER','FORWARD'}.contains(p.position)))
                 _playerRow(context,player,teamName),
             ])),
         ],

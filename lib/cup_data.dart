@@ -29,7 +29,7 @@ class Match {
       item['arena']?.toString().trim() ?? '',
       timeMsk: item['timeMsk']?.toString() ?? '',
       scoreNote: item['scoreNote']?.toString() ?? '',
-      status: item['status']?.toString() ?? 'UNKNOWN',
+      status: item['status']?.toString().trim().toUpperCase() ?? 'UNKNOWN',
       gameId: _apiInt(id),
       matchUrl: item['matchUrl']?.toString(),
     );
@@ -48,14 +48,14 @@ class Match {
     final p = score.split(':');
     return [int.parse(p[0]), int.parse(p[1])];
   }
-  bool get isLive => status == 'LIVE' || status == 'LIVE_PAUSED';
+  bool get isLive => const {'LIVE','LIVE_PAUSED'}.contains(status.trim().toUpperCase());
   bool get isFinalConfirmed => const {'FINAL','FINISHED','COMPLETED'}.contains(status.toUpperCase());
   // A calendar score can be published during play. Treat it as final after
   // the scheduled start plus a full game window unless FHR still reports LIVE.
   bool isResultAt(DateTime utcNow) {
     if (!hasScore || isLive) return false;
     if (isFinalConfirmed) return true;
-    if (status != 'SCORE_AVAILABLE') return false;
+    if (status.trim().toUpperCase() != 'SCORE_AVAILABLE') return false;
     final day = DateTime.tryParse(date);
     if (day == null) return false;
     final mskToday = utcNow.toUtc().add(const Duration(hours: 3));
@@ -68,7 +68,9 @@ class Match {
       }
     }
     final mskDay=DateTime.utc(mskToday.year,mskToday.month,mskToday.day);
-    return day.isBefore(mskDay);
+    // Compare calendar dates in the same zone. DateTime.tryParse('yyyy-MM-dd')
+    // is local, which otherwise marks today's unknown-time score final in MSK.
+    return DateTime.utc(day.year,day.month,day.day).isBefore(mskDay);
   }
   bool get finished => isResultAt(DateTime.now().toUtc());
   bool get overtime {
@@ -118,7 +120,7 @@ class Match {
       timeMsk: timeMsk, gameId: gameId, matchUrl: matchUrl,
       status: RegExp(r'ЗАВЕРШ|ОКОНЧ|FINISH|FINAL|COMPLETED',caseSensitive:false)
           .hasMatch(detail['statusText']?.toString()??'')
-        ? 'FINAL' : detail['status']?.toString() ?? status,
+        ? 'FINAL' : detail['status']?.toString().trim().toUpperCase() ?? status,
       scoreNote: detail['scoreNote']?.toString() ?? scoreNote);
   }
 }
@@ -146,20 +148,25 @@ class FhrFeed {
     }
     final stages = json['groups'] is List ? json['groups'] as List : [];
     final issues = <String>[];
+    // Cached snapshots retain the same completeness warnings as the network
+    // response. Older versions discarded these when serializing the feed.
+    if(json['cacheSchema']==1 && json['issues'] is List) {
+      issues.addAll((json['issues'] as List).whereType<String>());
+    }
     for (final group in stages) {
       if (group is! Map) continue;
       final name = group['name']?.toString() ?? '';
-      final count = group['matchesCount'];
+      final count = _apiInt(group['matchesCount']);
       final error = group['error'];
       if (error != null) issues.add('$name: $error');
       final upper=name.toUpperCase().replaceAll('Ё','Е');
       final expected = upper.startsWith('ГРУППА ') && RegExp(r'-(I|II|III)$').hasMatch(upper) ? 10 :
         (upper.contains('СТЫКОВ') || upper.startsWith('ПЛЕЙ-ОФФ')) ? 5 : 0;
-      if (expected > 0 && count is num && count.toInt()!=expected) {
+      if (expected > 0 && count != null && count!=expected) {
         issues.add('$name: опубликовано $count из $expected ожидаемых матчей');
       }
     }
-    final fetched = (json['groupsFetched'] as num?)?.toInt() ?? 0;
+    final fetched = _apiInt(json['groupsFetched']) ?? 0;
     // First two qualification tours contain eight 5-team groups and two
     // five-game crossover sections. Later sections appear only when FHR publishes them.
     if (stages.isNotEmpty && fetched < stages.length) {
@@ -174,14 +181,21 @@ class FhrFeed {
         return c != 0 ? c : b.timeMsk.compareTo(a.timeMsk);
       });
     return FhrFeed(byDate, DateTime.tryParse(json['fetchedAt']?.toString() ?? ''),
-        issues, fetched, issues.isEmpty && stages.length >= 10, 90);
+        issues, fetched, json['cacheSchema']==1
+          ? json['allStagesComplete']==true && issues.isEmpty
+          : issues.isEmpty && stages.length >= 10,
+        json['cacheSchema']==1 ? _apiInt(json['expectedMatchCount'])??90 : 90);
   }
   Map<String, dynamic> toCache() => {
+    'cacheSchema': 1,
     'ok': true,
     'matches': matches.map((m)=>m.toJson()).toList(),
     'groupsFetched': groupsFetched,
     'fetchedAt': updatedAt?.toIso8601String(),
     'groups': [],
+    'issues': issues,
+    'allStagesComplete': allStagesComplete,
+    'expectedMatchCount': expectedMatchCount,
   };
 }
 
@@ -320,7 +334,18 @@ class OfficialStatsFeed {
 class FhrApiClient {
   final http.Client client;
   FhrApiClient(this.client);
-  Future<Map<String, dynamic>> _get(String path) async {
+  final Map<String,Future<Map<String,dynamic>>> _pending={};
+  Future<Map<String,dynamic>> _get(String path) {
+    final existing=_pending[path];
+    if(existing!=null)return existing;
+    final request=_request(path);
+    _pending[path]=request;
+    // Observe both outcomes: cleanup must not create an unhandled error future.
+    request.then<void>((_){_pending.remove(path);},
+      onError:(Object _,StackTrace __){_pending.remove(path);});
+    return request;
+  }
+  Future<Map<String, dynamic>> _request(String path) async {
     try {
     final response = await client.get(Uri.parse('$fhrApiBase$path'),
       headers: {'Accept':'application/json'})
@@ -330,17 +355,20 @@ class FhrApiClient {
     }
     final data = jsonDecode(utf8.decode(response.bodyBytes));
     if (data is! Map) throw const FormatException('Ответ сервера не JSON-объект');
-    final result=Map<String,dynamic>.from(data);
-    if(result['ok']==true && path!='/api/v1/live')await FeedCache.write(path,result);
-    return result;
+    return Map<String,dynamic>.from(data);
     }catch(e){Diagnostics.record(path,e);rethrow;}
   }
   Future<List<TeamInfo>> teams() async {
     final data=await _get('/api/v1/teams');
     if(data['ok']!=true || data['teams'] is! List) throw const FormatException('Нет списка команд ФХР');
-    return (data['teams'] as List).whereType<Map>()
+    final teams=(data['teams'] as List).whereType<Map>()
       .map((item)=>TeamInfo.fromApi(Map<String,dynamic>.from(item)))
       .where((t)=>t.fullName.isNotEmpty && t.id>0).toList();
+    if(teams.isEmpty || teams.length!=(data['teams'] as List).length) {
+      throw const FormatException('Список команд ФХР неполный');
+    }
+    await FeedCache.write('/api/v1/teams',data);
+    return teams;
   }
   Future<TeamRoster> roster(int teamId) async {
     final data=await _get('/api/v1/teams/$teamId');
@@ -350,15 +378,25 @@ class FhrApiClient {
     final team=TeamInfo.fromApi(Map<String,dynamic>.from(data['team'] as Map));
     final players=(data['players'] as List).whereType<Map>()
       .map((item)=>PlayerInfo.fromApi(Map<String,dynamic>.from(item))).toList();
+    await FeedCache.write('/api/v1/teams/$teamId',data);
     return TeamRoster(team,players);
   }
 
   Future<OfficialStatsFeed> statistics({String? group}) async {
     final normalized=group?.trim()??'';
     final suffix=normalized.isEmpty?'':'?group=${Uri.encodeQueryComponent(normalized)}';
-    return OfficialStatsFeed.fromApi(await _get('/api/v1/stats$suffix'));
+    final path='/api/v1/stats$suffix';
+    final data=await _get(path);
+    final feed=OfficialStatsFeed.fromApi(data);
+    await FeedCache.write(path,data);
+    return feed;
   }
-  Future<FhrFeed> calendar() async => FhrFeed.fromApi(await _get('/api/v1/matches'));
+  Future<FhrFeed> calendar() async {
+    final data=await _get('/api/v1/matches');
+    final feed=FhrFeed.fromApi(data);
+    await FeedCache.write('/api/v1/matches',feed.toCache());
+    return feed;
+  }
   Future<List<Map<String, dynamic>>> liveCheck() async {
     final data = await _get('/api/v1/live');
     if (data['ok'] != true) throw Exception('Проверка LIVE ФХР недоступна');
@@ -367,8 +405,15 @@ class FhrApiClient {
     return raw.whereType<Map>().where((e)=>e['ok']==true)
       .map((e)=>Map<String,dynamic>.from(e)).toList();
   }
-  Future<Map<String,dynamic>> detail(int gameId) async =>
-      _get('/api/v1/matches/$gameId');
+  Future<Map<String,dynamic>> detail(int gameId) async {
+    final path='/api/v1/matches/$gameId';
+    final data=await _get(path);
+    if(data['ok']!=true || _apiInt(data['gameId'])!=gameId) {
+      throw const FormatException('ФХР не прислал протокол выбранного матча');
+    }
+    await FeedCache.write(path,data);
+    return data;
+  }
 }
 
 class Rank {

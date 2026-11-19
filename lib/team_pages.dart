@@ -10,6 +10,7 @@ Widget fhrTeamLogo(String? url,{double size=32}) {
   return SizedBox(width:size,height:size,
     child:valid
       ? Image.network(url!,fit:BoxFit.contain,
+        webHtmlElementStrategy:WebHtmlElementStrategy.fallback,
         errorBuilder:(_,__,___)=>Icon(Icons.shield_outlined,color:CupUi.muted))
       : Icon(Icons.shield_outlined,color:CupUi.muted));
 }
@@ -20,6 +21,7 @@ Widget fhrPlayerPhoto(String? url,{double size=54}){
   return ClipRRect(borderRadius:BorderRadius.circular(9),
     child:Container(width:size,height:size,color:CupUi.raised,
       child:valid?Image.network(url!,fit:BoxFit.cover,
+        webHtmlElementStrategy:WebHtmlElementStrategy.fallback,
         errorBuilder:(_,__,___)=>Icon(Icons.person_outline,color:CupUi.muted)):
         Icon(Icons.person_outline,color:CupUi.muted)));
 }

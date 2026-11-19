@@ -3,11 +3,11 @@ name: Build JUNIOR U16 Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [main, codex/full-rebuild]
+    branches: [main, 'codex/**']
 
 concurrency:
-  group: junior-u16-v36-capture-fix
-  cancel-in-progress: false
+  group: junior-u16-android-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: '3.38.10'
           cache: true
       - name: Create Android platform
         run: |
@@ -57,7 +57,13 @@ jobs:
       - name: Check standings and LIVE rules
         run: flutter test
       - name: Capture phone layout
-        run: timeout 90s flutter test --dart-define=DESIGN_CAPTURE=true test/design_capture_test.dart
+        run: timeout 180s flutter test --dart-define=DESIGN_CAPTURE=true test/design_capture_test.dart test/navigation_v37_test.dart
+      - name: Upload interface previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: JUNIOR-U16-v37-previews
+          path: build/previews/
+          if-no-files-found: error
       - name: Build release APK
         run: flutter build apk --release
       - name: Verify permanent signature
@@ -66,23 +72,23 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JUNIOR-U16-v36-APK
+          name: JUNIOR-U16-v37-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 30
-      - name: Publish verified v36 APK
+      - name: Publish verified v37 APK
         if: github.ref == 'refs/heads/main' && steps.signing.outputs.ready == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v36.apk
-          sha256sum JUNIOR-U16-v36.apk > SHA256SUMS.txt
-          if gh release view v36.0.0 >/dev/null 2>&1; then
-            gh release upload v36.0.0 JUNIOR-U16-v36.apk SHA256SUMS.txt --clobber
-            gh release edit v36.0.0 --target "$GITHUB_SHA" --title "JUNIOR U16 v36 · NEXT" --notes-file RELEASE_NOTES_v36.md
+          cp build/app/outputs/flutter-apk/app-release.apk JUNIOR-U16-v37.apk
+          sha256sum JUNIOR-U16-v37.apk > SHA256SUMS.txt
+          if gh release view v37.0.0 >/dev/null 2>&1; then
+            gh release upload v37.0.0 JUNIOR-U16-v37.apk SHA256SUMS.txt --clobber
+            gh release edit v37.0.0 --target "$GITHUB_SHA" --title "JUNIOR U16 v37" --notes-file RELEASE_NOTES_v37.md
           else
-            gh release create v36.0.0 JUNIOR-U16-v36.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v36 · NEXT" --notes-file RELEASE_NOTES_v36.md
+            gh release create v37.0.0 JUNIOR-U16-v37.apk SHA256SUMS.txt --target "$GITHUB_SHA" --title "JUNIOR U16 v37" --notes-file RELEASE_NOTES_v37.md
           fi
       - name: Explain skipped publication
         if: steps.signing.outputs.ready != 'true'
