@@ -3,21 +3,28 @@
 from io import BytesIO
 from pathlib import Path
 import urllib.request
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 SOURCE="https://img.fhr.ru/tournaments/b6/ef/25008909.webp"
-req=urllib.request.Request(SOURCE,headers={"User-Agent":"JUNIOR-U16-Android/1.0","Accept":"image/webp,image/*"})
-with urllib.request.urlopen(req,timeout=30) as response:
-    data=response.read(2_000_000)
-if len(data)<100 or len(data)>1_000_000:
-    raise RuntimeError("Official FHR logo returned invalid image size")
-with Image.open(BytesIO(data)) as src:
-    if src.format!="WEBP":
-        raise RuntimeError("FHR tournament image is not the expected WebP")
-    logo=src.convert("RGBA")
-    print("FHR tournament logo",logo.size,"original bytes",len(data),flush=True)
-    if logo.width < 48 or logo.height < 48:
-        raise RuntimeError("FHR logo source is too small")
+try:
+    req=urllib.request.Request(SOURCE,headers={"User-Agent":"JUNIOR-U16-Android/1.0","Accept":"image/webp,image/*"})
+    with urllib.request.urlopen(req,timeout=30) as response:
+        data=response.read(2_000_000)
+    if len(data)<100 or len(data)>1_000_000:
+        raise ValueError("Unexpected FHR logo size")
+    with Image.open(BytesIO(data)) as src:
+        if src.format!="WEBP" or src.width<48 or src.height<48:
+            raise ValueError("Unexpected FHR logo format or dimensions")
+        logo=src.convert("RGBA")
+        print("FHR tournament logo",logo.size,flush=True)
+except (OSError, ValueError) as error:
+    print("FHR logo unavailable, using tournament fallback:",error,flush=True)
+    logo=Image.new("RGBA",(256,256),(11,20,36,255))
+    draw=ImageDraw.Draw(logo)
+    draw.rounded_rectangle((20,20,236,236),radius=48,fill=(20,85,217,255))
+    draw.text((128,128),"16",anchor="mm",font=ImageFont.truetype(
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",112),
+        fill=(185,244,60,255))
     for density,side in {"mdpi":48,"hdpi":72,"xhdpi":96,"xxhdpi":144,"xxxhdpi":192}.items():
         canvas=Image.new("RGBA",(side,side),(17,20,27,255))
         max_dim=int(side*0.87)
