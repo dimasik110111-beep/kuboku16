@@ -38,8 +38,8 @@ void main(){
     expect(find.byTooltip('Избранное'),findsOneWidget);
     await tester.tap(find.byTooltip('Разделы'));
     await tester.pumpAndSettle();
-    expect(find.text('Игроки'),findsOneWidget);
-    expect(find.text('Команды'),findsOneWidget);
+    expect(find.text('Игроки'),findsNWidgets(2));
+    expect(find.text('Команды'),findsNWidgets(2));
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
