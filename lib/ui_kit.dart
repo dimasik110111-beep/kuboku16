@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 /// JUNIOR U16 / Ice Signal design system.
 class CupUi {
   static bool light = true;
-  static const navy = Color(0xFF102B38);
+  static const navy = Color(0xFF0B1424);
 
-  static Color get background => light ? const Color(0xFFF5F8F7) : const Color(0xFF091B25);
-  static Color get surface => light ? Colors.white : const Color(0xFF142C37);
-  static Color get raised => light ? const Color(0xFFEAF1F1) : const Color(0xFF203B45);
-  static Color get stroke => light ? const Color(0xFFDCE8E8) : const Color(0xFF355460);
+  static Color get background => light ? const Color(0xFFF2F5F9) : const Color(0xFF070D18);
+  static Color get surface => light ? Colors.white : const Color(0xFF111E31);
+  static Color get raised => light ? const Color(0xFFE6EDF5) : const Color(0xFF1B2B42);
+  static Color get stroke => light ? const Color(0xFFD4DFEB) : const Color(0xFF30425B);
 
   /// Primary action. Historical name is retained for backwards compatibility.
-  static const red = Color(0xFF087F9E);
-  static const ice = Color(0xFF147B93);
-  static const signal = Color(0xFFD9F36B);
+  static const red = Color(0xFF1455D9);
+  static const ice = Color(0xFF42B6FF);
+  static const signal = Color(0xFFB9F43C);
   static const gold = Color(0xFFE1B54F);
   static const violet = Color(0xFF816AC6);
   static const coral = Color(0xFFE96D55);
@@ -22,16 +22,16 @@ class CupUi {
   static List<Color> get featureAccents => light
       ? const [red, violet, teal, coral, orange, Color(0xFF177350), Color(0xFF886519)]
       : const [Color(0xFF5FD1E5), violet, teal, coral, orange, signal, gold];
-  static Color get redMuted => light ? const Color(0xFFDDF4F7) : const Color(0xFF164552);
+  static Color get redMuted => light ? const Color(0xFFE2EBFF) : const Color(0xFF203B69);
   static Color get green => light ? const Color(0xFF16714A) : const Color(0xFF83E8A6);
   static Color get yellow => light ? const Color(0xFF91600F) : const Color(0xFFFFD47A);
   static Color get white => light ? navy : const Color(0xFFF0F8F8);
-  static Color get soft => light ? const Color(0xFF36535D) : const Color(0xFFD5E8EA);
-  static Color get muted => light ? const Color(0xFF5D777F) : const Color(0xFFA6C3C8);
-  static Color get dim => light ? const Color(0xFF7D969E) : const Color(0xFF85A9B1);
+  static Color get soft => light ? const Color(0xFF34465F) : const Color(0xFFD5E8EA);
+  static Color get muted => light ? const Color(0xFF657792) : const Color(0xFFA6C3C8);
+  static Color get dim => light ? const Color(0xFF8695AA) : const Color(0xFF85A9B1);
   static List<Color> get heroGradient => light
-      ? const [Color(0xFF164859), navy, Color(0xFF0B2634)]
-      : const [Color(0xFF174D5B), Color(0xFF102B38), Color(0xFF071B26)];
+      ? const [Color(0xFF1646A0), navy, Color(0xFF07142A)]
+      : const [Color(0xFF183D86), Color(0xFF0B1424), Color(0xFF060D1C)];
 }
 
 /// Broadcast panel: field markings and sharp scoreboard framing.
@@ -50,14 +50,14 @@ class CupArena extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     margin: margin ?? const EdgeInsets.fromLTRB(12, 12, 12, 9),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(24),
       boxShadow: [
         BoxShadow(color: Colors.black.withValues(alpha: .24),
             blurRadius: 16, offset: const Offset(0, 7)),
       ],
     ),
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(24),
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -65,7 +65,7 @@ class CupArena extends StatelessWidget {
             colors: CupUi.heroGradient,
           ),
           border: Border.all(color: CupUi.signal.withValues(alpha: .35)),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(24),
         ),
         child: Stack(children: [
           Positioned.fill(child: IgnorePointer(
@@ -121,7 +121,7 @@ class CupCard extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: base,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: CupUi.stroke.withValues(alpha: CupUi.light ? .94 : .75)),
         boxShadow: CupUi.light ? [BoxShadow(color:CupUi.navy.withValues(alpha:.045),
