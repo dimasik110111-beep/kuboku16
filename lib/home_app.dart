@@ -300,6 +300,8 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         Text('КУБОК РОССИИ  /  26·27',maxLines:1,overflow:TextOverflow.ellipsis,
           style:TextStyle(color:Color(0xFFACCCD2),fontSize:8,fontWeight:FontWeight.w800)),
       ])),
+      IconButton(tooltip:'Избранное',onPressed:()=>selectTab(5),
+        icon:const Icon(Icons.star_rounded,color:CupUi.signal)),
       IconButton(tooltip:'Прогнозы',onPressed:()=>Navigator.push(context,
         MaterialPageRoute(builder:(_)=>ScenarioPage(matches:games,
           teams:clubs.map((t)=>t.fullName).toList(),
@@ -346,33 +348,32 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
   );
 
   Widget _nav()=>SafeArea(top:false,child:Container(
-    padding:const EdgeInsets.fromLTRB(6,7,6,4),
-    decoration:const BoxDecoration(color:CupUi.navy,
-      borderRadius:BorderRadius.vertical(top:Radius.circular(18))),
+    padding:const EdgeInsets.fromLTRB(4,8,4,5),
+    decoration:BoxDecoration(color:CupUi.surface,
+      border:Border(top:BorderSide(color:CupUi.stroke))),
     child:Row(children:[
-      _bottomItem('Матчи',Icons.sports_hockey_rounded,tab==0,(){
-        setState((){filter=0;dateFilter=false;});selectTab(0);
-      }),
-      _bottomItem('LIVE',Icons.sensors_rounded,tab==1&&filter==1,(){
-        setState((){filter=1;dateFilter=false;});selectTab(1);
-      }),
-      _bottomItem('Избранное',Icons.star_outline_rounded,tab==5,()=>selectTab(5)),
-      _bottomItem('Турниры',Icons.emoji_events_outlined,tab==2,()=>selectTab(2)),
+      _bottomItem('Обзор',Icons.dashboard_rounded,tab==0,()=>selectTab(0)),
+      _bottomItem('Матчи',Icons.sports_hockey_rounded,tab==1,()=>selectTab(1)),
+      _bottomItem('Таблица',Icons.emoji_events_rounded,tab==2,()=>selectTab(2)),
+      _bottomItem('Игроки',Icons.person_rounded,tab==3,()=>selectTab(3)),
+      _bottomItem('Команды',Icons.groups_rounded,tab==4,()=>selectTab(4)),
     ])));
   Widget _bottomItem(String label,IconData icon,bool selected,VoidCallback tap)=>
-    Expanded(child:InkWell(onTap:tap,borderRadius:BorderRadius.circular(12),child:Padding(
-      padding:const EdgeInsets.symmetric(vertical:5),child:Column(
-        mainAxisSize:MainAxisSize.min,children:[
-        Container(width:46,height:34,alignment:Alignment.center,
-          decoration:BoxDecoration(color:selected?CupUi.signal:Colors.transparent,
-            borderRadius:BorderRadius.circular(11)),
-          child:Icon(icon,size:21,color:selected?CupUi.navy:const Color(0xFFA5C0C8))),
-        const SizedBox(height:2),
-        Text(label,maxLines:1,overflow:TextOverflow.ellipsis,
-          style:TextStyle(fontSize:10,fontWeight:FontWeight.w800,
-            color:selected?CupUi.signal:const Color(0xFFA5C0C8))),
-      ]))));
-
+    Expanded(child:InkWell(onTap:tap,borderRadius:BorderRadius.circular(14),
+      child:Padding(padding:const EdgeInsets.symmetric(vertical:4),
+        child:Column(mainAxisSize:MainAxisSize.min,children:[
+          Container(width:48,height:35,alignment:Alignment.center,
+            decoration:BoxDecoration(
+              color:selected?CupUi.redMuted:Colors.transparent,
+              borderRadius:BorderRadius.circular(12)),
+            child:Icon(icon,size:22,color:selected?CupUi.red:CupUi.muted)),
+          const SizedBox(height:3),
+          Text(label,maxLines:1,overflow:TextOverflow.ellipsis,
+            style:TextStyle(fontSize:10,fontWeight:selected?
+              FontWeight.w900:FontWeight.w700,
+              color:selected?CupUi.red:CupUi.muted)),
+        ]))));
+  
   Widget _filterChip(String text,bool active,VoidCallback tap)=>InkWell(
     onTap:tap,borderRadius:BorderRadius.circular(99),
     child:AnimatedContainer(duration:Duration(milliseconds:150),
