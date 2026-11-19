@@ -25,7 +25,7 @@ void main(){
     addTearDown(tester.view.resetPhysicalSize);addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());await tester.pump(const Duration(milliseconds:200));
-    await tester.tap(find.text('Избранное'));await tester.pump(const Duration(milliseconds:200));
+    await tester.tap(find.byTooltip('Избранное'));await tester.pump(const Duration(milliseconds:200));
     expect((await SharedPreferences.getInstance()).getInt('junior_tab'),5);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     await tester.pump(const Duration(seconds:30));
