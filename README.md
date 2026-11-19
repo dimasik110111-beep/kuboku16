@@ -1,9 +1,41 @@
 # JUNIOR U16
 
-Android Flutter app for Kubok Rossii U16 2026/27. Source: junior.fhr.ru.
+Приложение Кубка России U16 сезона 2026/27 на Flutter. Матчи, турнирные таблицы, игроки, составы, профили команд и личные прогнозы.
 
-## Build
+## Данные
 
-GitHub Actions: `Build JUNIOR U16 Android APK` → Run workflow. The release APK is uploaded as an Actions artifact after a successful build.
+Официальный источник — [ФХР Джуниор](https://junior.fhr.ru/tournaments/kubokrossii-25008909/calendar/). Приложение обращается к API `kubok-u16-live.dimasik110111.workers.dev`. Исходники API находятся в репозитории `dimasik110111-beep/kubok-rossii-u16-live.`.
 
-The current direct HTML import can see only available calendar markup, so the standings are preliminary and may be incomplete. A verified backend is required for complete LIVE and match events.
+- LIVE появляется только после проверки протокола. Сохранённый протокол явно отмечается как сохранённый.
+- Календарь, команды, статистика и просмотренные протоколы сохраняются на устройстве. Наличие офлайн-данных зависит от предыдущей успешной загрузки.
+- Частичный ответ не удаляет ранее полученные игры. В интерфейсе показывается предупреждение о неполноте.
+- Пользовательские прогнозы хранятся отдельно от официальных результатов и не меняют их.
+- Доступность новых данных зависит от API и ФХР; прогнозы и предварительные расклады не являются официальной жеребьёвкой.
+
+## Разработка и проверка
+
+Проверяемая версия: Flutter **3.38.10**, Dart **3.10.9**. Все шрифты поставляются с приложением; загрузка шрифтов из интернета не требуется.
+
+```sh
+flutter pub get
+flutter analyze --no-fatal-infos
+flutter test
+flutter test --dart-define=DESIGN_CAPTURE=true test/design_capture_test.dart test/navigation_v37_test.dart
+```
+
+Последняя команда сохраняет снимки интерфейса в `build/previews`. Без `PREVIEW_DATA_DIR` используются тестовые данные. Для снимков реального API можно передать `--dart-define=PREVIEW_DATA_DIR=/path/to/snapshots` с файлами `matches.json`, `teams.json`, `match-25170469.json`.
+
+## Android
+
+Workflow `Build JUNIOR U16 Android APK` создаёт платформенную папку, запускает анализ и тесты, сохраняет снимки интерфейса, собирает APK и проверяет постоянную подпись, если настроен `ANDROID_SIGNING_BUNDLE`.
+
+Ветки `codex/**` собирают проверочный APK в артефактах Actions. Публикация GitHub Release выполняется только для `main` и только с постоянной подписью. Ветка разработки сама по себе не публикует обновление пользователям.
+
+Для локальной Android-сборки нужны JDK 17 и Android SDK. Платформенные папки генерируются командой:
+
+```sh
+flutter create --platforms=android --project-name=junior_u16 --org=ru.junioru16 .
+flutter build apk --release
+```
+
+Постоянную подпись для обновления уже установленного приложения настраивает `tools/configure_signing.py`. Не распространяйте APK, подписанный случайным или отладочным ключом, как обновление существующей установки.

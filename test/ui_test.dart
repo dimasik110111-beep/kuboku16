@@ -6,66 +6,81 @@ import 'package:junior_u16/match_center.dart';
 import 'package:junior_u16/cup_data.dart';
 import 'package:junior_u16/command_center_page.dart';
 
-void main(){
+void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Native match center shows own four tabs and no embedded webpage',
       (tester) async {
-    const game=Match('2026-09-10','ЦСКА Москва','НЕФТЕХИМИК Нижнекамск',
-      '4:2','Группа Г-I','МАУ ЛК Владимир',timeMsk:'18:00');
-    await tester.pumpWidget(const MaterialApp(home:MatchCenterPage(match:game)));
-    expect(find.text('КУБОК РОССИИ · ПРОТОКОЛ'),findsOneWidget);
-    expect(find.text('ОБЗОР'),findsOneWidget);
-    expect(find.text('СОБЫТИЯ'),findsOneWidget);
-    expect(find.text('СОСТАВЫ'),findsOneWidget);
-    expect(find.text('СТАТИСТИКА'),findsOneWidget);
-    expect(find.text('4 : 2'),findsOneWidget);
-    expect(find.byType(Scaffold),findsOneWidget);
+    const game = Match('2026-09-10', 'ЦСКА Москва', 'НЕФТЕХИМИК Нижнекамск',
+        '4:2', 'Группа Г-I', 'МАУ ЛК Владимир',
+        timeMsk: '18:00');
+    await tester
+        .pumpWidget(const MaterialApp(home: MatchCenterPage(match: game)));
+    expect(find.text('КУБОК РОССИИ · ПРОТОКОЛ'), findsOneWidget);
+    expect(find.text('ОБЗОР'), findsOneWidget);
+    expect(find.text('СОБЫТИЯ'), findsOneWidget);
+    expect(find.text('СОСТАВЫ'), findsOneWidget);
+    expect(find.text('СТАТИСТИКА'), findsOneWidget);
+    expect(find.text('4 : 2'), findsOneWidget);
+    expect(find.byType(Scaffold), findsOneWidget);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('Ice Signal navigation retains player and team access',(tester) async {
+  testWidgets('Ice Signal navigation retains player and team access',
+      (tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
-    expect(find.text('JUNIOR'),findsOneWidget);
-    expect(tester.widget<Text>(find.text('JUNIOR')).style?.fontFamily,'ArenaCondensed');
-    expect(Theme.of(tester.element(find.text('JUNIOR'))).textTheme.bodyMedium?.fontFamily,
-      'ArenaSans');
-    expect(find.text('Матчи'),findsOneWidget);
-    expect(find.text('LIVE'),findsOneWidget);
-    expect(find.text('Таблица'),findsOneWidget);
-    expect(find.byTooltip('Избранное'),findsOneWidget);
+    expect(find.text('JUNIOR'), findsOneWidget);
+    expect(
+        tester.widget<Text>(find.text('JUNIOR')).style?.fontFamily, 'Manrope');
+    expect(
+        Theme.of(tester.element(find.text('JUNIOR')))
+            .textTheme
+            .bodyMedium
+            ?.fontFamily,
+        'Manrope');
+    expect(find.text('Матчи'), findsOneWidget);
+    await tester.tap(find.text('Матчи'));
+    await tester.pump();
+    expect(find.text('LIVE'), findsOneWidget);
+    expect(find.text('Таблица'), findsOneWidget);
+    expect(find.byTooltip('Избранное'), findsOneWidget);
     await tester.tap(find.byTooltip('Разделы'));
     await tester.pumpAndSettle();
-    expect(find.text('Игроки'),findsNWidgets(2));
-    expect(find.text('Команды'),findsNWidgets(2));
+    expect(find.text('Игроки'), findsNWidgets(2));
+    expect(find.text('Команды'), findsNWidgets(2));
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('Arena navigation and match center fit a narrow phone',(tester) async {
-    tester.view.physicalSize=const Size(360,780);
-    tester.view.devicePixelRatio=1;
+  testWidgets('Arena navigation and match center fit a narrow phone',
+      (tester) async {
+    tester.view.physicalSize = const Size(360, 780);
+    tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const JuniorApp());
     await tester.pump();
-    expect(find.byTooltip('Избранное'),findsOneWidget);
-    expect(tester.takeException(),isNull);
-    await tester.pumpWidget(const MaterialApp(home:CommandCenterPage(
-      matches:[],clubs:[],onTeam:_ignoreTeam,onMatch:_ignoreMatch)));
+    expect(find.byTooltip('Избранное'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const MaterialApp(
+        home: CommandCenterPage(
+            matches: [],
+            clubs: [],
+            onTeam: _ignoreTeam,
+            onMatch: _ignoreMatch)));
     await tester.pump();
-    expect(find.text('АНАЛИТИЧЕСКИЙ ПУЛЬТ'),findsOneWidget);
-    await tester.drag(find.byType(ListView).first,const Offset(-1100,0));
+    expect(find.text('АНАЛИТИЧЕСКИЙ ПУЛЬТ'), findsOneWidget);
+    await tester.drag(find.byType(ListView).first, const Offset(-1100, 0));
     await tester.pump();
     await tester.tap(find.byKey(const ValueKey('command-tab-6')));
     await tester.pump();
-    expect(find.text('07 / 07'),findsOneWidget);
-    expect(tester.takeException(),isNull);
+    expect(find.text('07 / 07'), findsOneWidget);
+    expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
 }
 
-void _ignoreTeam(String team){}
-void _ignoreMatch(Match match){}
+void _ignoreTeam(String team) {}
+void _ignoreMatch(Match match) {}

@@ -4,9 +4,9 @@ import 'cup_data.dart';
 import 'app_services.dart';
 
 double? _decimal(dynamic value) {
-  if(value is num)return value.toDouble();
-  if(value is! String)return null;
-  return double.tryParse(value.replaceAll(',','.'));
+  final parsed=value is num?value.toDouble():value is String
+    ?double.tryParse(value.replaceAll(',','.')):null;
+  return parsed!=null&&parsed.isFinite?parsed:null;
 }
 int _whole(dynamic value)=>_decimal(value)?.toInt()??0;
 
@@ -113,8 +113,8 @@ class CupStatistics {
     final goalies=(json['goalies'] as List).whereType<Map>()
       .map((m)=>CupPlayerStats.fromApi(Map<String,dynamic>.from(m),goalie:true))
       .where((p)=>p.id>0&&p.name.isNotEmpty&&p.team.isNotEmpty).toList();
-    final total=(json['skaterCount'] as num?)?.toInt();
-    final keepers=(json['goalieCount'] as num?)?.toInt();
+    final total=_decimal(json['skaterCount'])?.toInt();
+    final keepers=_decimal(json['goalieCount'])?.toInt();
     if(total!=skaters.length||keepers!=goalies.length){
       throw const FormatException('Часть строк статистики ФХР не распознана');
     }
@@ -123,7 +123,7 @@ class CupStatistics {
       group:json['group']?.toString()??'Общая статистика',
       sourceUrl:json['sourceUrl']?.toString()??'',
       updatedAt:DateTime.tryParse(json['fetchedAt']?.toString()??''),
-      availableGroups:(json['availableGroups'] as List?)?.map((e)=>e.toString()).toList()??
+      availableGroups:(json['availableGroups'] as List?)?.map((e)=>e.toString()).toSet().toList()??
         const ['Общая статистика'],complete:true,
     );
   }
@@ -137,14 +137,27 @@ class CupStatistics {
 class CupStatisticsClient {
   final http.Client client;
   CupStatisticsClient(this.client);
+  final Map<String,Future<CupStatistics>> _pending={};
   Future<CupStatistics?> cached({String? group})async{
-    final raw=await FeedCache.read('stats:${group??''}');
+    final raw=await FeedCache.read('stats:${group?.trim()??''}');
     if(raw==null)return null;
     try{return CupStatistics.fromApi(raw);}catch(e){Diagnostics.record('stats cache',e);return null;}
   }
-  Future<CupStatistics> fetch({String? group})async{
+  Future<CupStatistics> fetch({String? group}) {
+    final key=group?.trim()??'';
+    final existing=_pending[key];
+    if(existing!=null)return existing;
+    final request=_fetch(key);
+    _pending[key]=request;
+    request.then<void>((_){_pending.remove(key);},
+      onError:(Object error,StackTrace _){
+        _pending.remove(key);Diagnostics.record('stats',error);
+      });
+    return request;
+  }
+  Future<CupStatistics> _fetch(String group)async{
     final uri=Uri.parse('$fhrApiBase/api/v1/stats').replace(
-      queryParameters:group==null||group.isEmpty?null:{'group':group});
+      queryParameters:group.isEmpty?null:{'group':group});
     final response=await client.get(uri,headers:{'Accept':'application/json'})
       .timeout(const Duration(seconds:35));
     if(response.statusCode!=200)throw Exception('Статистика ФХР: HTTP ${response.statusCode}');
@@ -152,7 +165,7 @@ class CupStatisticsClient {
     if(raw is! Map)throw const FormatException('Статистика ФХР вернула неверный формат');
     final obj=Map<String,dynamic>.from(raw);
     final result=CupStatistics.fromApi(obj);
-    await FeedCache.write('stats:${group??''}',obj);
+    await FeedCache.write('stats:$group',obj);
     return result;
   }
 }

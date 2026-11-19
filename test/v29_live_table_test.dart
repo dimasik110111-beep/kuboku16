@@ -60,8 +60,8 @@ void main() {
     ))));
     await tester.tap(find.text('ТАБЛИЦЫ'));
     await tester.pumpAndSettle();
-    expect(find.text('ОБЩАЯ'),findsOneWidget);
-    await tester.tap(find.text('ОБЩАЯ'));
+    expect(find.text('Общая таблица'),findsOneWidget);
+    await tester.tap(find.text('Общая таблица'));
     await tester.pumpAndSettle();
     expect(find.textContaining('LIVE-таблица учитывает текущий счёт'),findsOneWidget);
     expect(tester.takeException(),isNull);
