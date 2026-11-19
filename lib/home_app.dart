@@ -522,42 +522,73 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     }).toList();
     final live=today.where((m)=>m.isLive).length;
     final complete=today.where((m)=>m.finished).length;
+    final spotlight=today.where((m)=>m.isLive).firstOrNull ??
+      today.where((m)=>!m.finished).firstOrNull ??
+      games.where((m)=>!m.finished).firstOrNull;
     return RefreshIndicator(onRefresh:refresh,child:ListView(
       key:const PageStorageKey('home'),children:[
-      CupArena(margin:const EdgeInsets.fromLTRB(12,12,12,8),
-        padding:const EdgeInsets.fromLTRB(18,16,18,17),child:Column(
-          crossAxisAlignment:CrossAxisAlignment.start,children:[
+      CupArena(
+        margin:const EdgeInsets.fromLTRB(12,14,12,10),
+        padding:const EdgeInsets.fromLTRB(20,22,20,22),
+        child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Row(children:[
-            const Expanded(child:Text('КУБОК РОССИИ',style:TextStyle(
-              fontFamily:'ArenaCondensed',color:Colors.white,fontSize:27,
-              fontWeight:FontWeight.w700,letterSpacing:.5))),
-            Container(padding:const EdgeInsets.symmetric(horizontal:8,vertical:5),
-              decoration:BoxDecoration(color:CupUi.signal,
-                borderRadius:BorderRadius.circular(6)),
-              child:const Text('U16  /  26·27',style:TextStyle(
-                color:CupUi.navy,fontSize:10,fontWeight:FontWeight.w900))),
-          ]),
-          const SizedBox(height:5),
-          const Text('ЛЕДОВАЯ СВОДКА  ·  ОБНОВЛЯЕТСЯ С ФХР',
-            style:TextStyle(color:Color(0xFFAACCD2),fontSize:9,
-              fontWeight:FontWeight.w700,letterSpacing:.8)),
-          const SizedBox(height:16),
-          Row(children:[
-            _pulseMetric('$live','LIVE',CupUi.signal),
-            const SizedBox(width:23),
-            _pulseMetric('$complete','ЗАВЕРШЕНО',Colors.white),
-            const SizedBox(width:23),
-            _pulseMetric('${today.length}','СЕГОДНЯ',Colors.white),
-          ]),
-          const SizedBox(height:15),
-          Row(children:[
-            Expanded(child:_pulseLink('ТАБЛИЦА LIVE',Icons.leaderboard_outlined,openCommandCenter)),
+            Container(width:8,height:8,decoration:const BoxDecoration(
+              color:CupUi.signal,shape:BoxShape.circle)),
             const SizedBox(width:8),
-            Expanded(child:_pulseLink('ПРЕДИКТЫ',Icons.auto_graph_rounded,()=>Navigator.push(context,
-              MaterialPageRoute(builder:(_)=>ScenarioPage(matches:games,
+            const Expanded(child:Text('КУБОК РОССИИ  /  СЕЗОН 26·27',
+              style:TextStyle(color:Color(0xFFBDD4F0),
+                fontSize:10,fontWeight:FontWeight.w800,letterSpacing:1.2))),
+            const Icon(Icons.sports_hockey_rounded,color:CupUi.signal,size:23),
+          ]),
+          const SizedBox(height:16),
+          const Text('Весь кубок.\nКаждая шайба.',
+            style:TextStyle(fontFamily:'ArenaCondensed',color:Colors.white,
+              fontSize:38,fontWeight:FontWeight.w700,height:1.02)),
+          const SizedBox(height:10),
+          Text(refreshTime(),style:const TextStyle(color:Color(0xFFB8CAE5),
+            fontSize:11,fontWeight:FontWeight.w700)),
+          const SizedBox(height:22),
+          Row(children:[
+            Expanded(child:_pulseMetric('$live','В ЭФИРЕ',CupUi.signal)),
+            Expanded(child:_pulseMetric('$complete','ЗАВЕРШЕНО',Colors.white)),
+            Expanded(child:_pulseMetric('${today.length}','СЕГОДНЯ',Colors.white)),
+          ]),
+          if(spotlight!=null)...[
+            const SizedBox(height:22),
+            Container(height:1,color:Colors.white24),
+            const SizedBox(height:18),
+            Row(children:[
+              Text(spotlight.isLive?'●  ПРЯМО СЕЙЧАС':'СЛЕДУЮЩИЙ МАТЧ',
+                style:TextStyle(color:spotlight.isLive?CupUi.signal:
+                  const Color(0xFFB8CAE5),fontSize:10,
+                  fontWeight:FontWeight.w900,letterSpacing:1)),
+              const Spacer(),
+              Text('${spotlight.dayLabel}  ·  ${spotlight.timeMsk}',
+                style:const TextStyle(color:Color(0xFFB8CAE5),fontSize:10)),
+            ]),
+            const SizedBox(height:12),
+            _spotlightTeam(spotlight.home,findClub(spotlight.home)?.logo,
+              spotlight.goals?[0],spotlight.isLive||spotlight.finished),
+            const SizedBox(height:8),
+            _spotlightTeam(spotlight.away,findClub(spotlight.away)?.logo,
+              spotlight.goals?[1],spotlight.isLive||spotlight.finished),
+            const SizedBox(height:14),
+            SizedBox(width:double.infinity,child:FilledButton.icon(
+              onPressed:()=>openMatch(spotlight),
+              icon:const Icon(Icons.arrow_forward_rounded,size:17),
+              label:const Text('ОТКРЫТЬ МАТЧ'))),
+          ],
+        ])),
+      Padding(padding:const EdgeInsets.fromLTRB(12,2,12,7),
+        child:Row(children:[
+          Expanded(child:_pulseLink('ТАБЛИЦА',Icons.leaderboard_outlined,
+            openCommandCenter)),
+          const SizedBox(width:8),
+          Expanded(child:_pulseLink('ПРОГНОЗ',Icons.auto_graph_rounded,
+            ()=>Navigator.push(context,MaterialPageRoute(builder:(_)=>
+              ScenarioPage(matches:games,
                 teams:clubs.map((t)=>t.fullName).toList(),
                 teamLogos:{for(final t in clubs)t.fullName:t.logo}))))),
-          ]),
         ])),
       CupSection(title:'МАТЧИ',subtitle:dateFilter?'Выбранный день · ${shortDate(date)}':'Все опубликованные игры'),
       if(recent.isEmpty)CupMessage(icon:Icons.sports_hockey,
@@ -570,6 +601,18 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
     ]));
   }
 
+  Widget _spotlightTeam(String name,String? logo,int? score,bool showScore)=>
+    Row(children:[
+      fhrTeamLogo(logo,size:31),
+      const SizedBox(width:11),
+      Expanded(child:Text(name,maxLines:1,overflow:TextOverflow.ellipsis,
+        style:const TextStyle(color:Colors.white,fontSize:17,
+          fontWeight:FontWeight.w800))),
+      if(showScore)Text('${score??'–'}',
+        style:const TextStyle(color:Colors.white,fontFamily:'ArenaCondensed',
+          fontSize:27,fontWeight:FontWeight.w700)),
+    ]);
+
   Widget _pulseMetric(String value,String label,Color color)=>Column(
     crossAxisAlignment:CrossAxisAlignment.start,children:[
       Text(value,style:TextStyle(color:color,fontFamily:'ArenaCondensed',
@@ -579,14 +622,19 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
         fontSize:9,fontWeight:FontWeight.w800)),
     ]);
   Widget _pulseLink(String label,IconData icon,VoidCallback tap)=>InkWell(
-    onTap:tap,borderRadius:BorderRadius.circular(8),child:Container(
-      padding:const EdgeInsets.symmetric(horizontal:9,vertical:10),
-      decoration:BoxDecoration(border:Border.all(color:Colors.white24),
-        borderRadius:BorderRadius.circular(8)),
+    onTap:tap,borderRadius:BorderRadius.circular(16),
+    child:Container(
+      padding:const EdgeInsets.symmetric(horizontal:15,vertical:16),
+      decoration:BoxDecoration(color:CupUi.surface,
+        border:Border.all(color:CupUi.stroke),
+        borderRadius:BorderRadius.circular(16)),
       child:Row(children:[
-        Icon(icon,color:CupUi.signal,size:17),const SizedBox(width:6),
+        Icon(icon,color:CupUi.red,size:20),
+        const SizedBox(width:9),
         Expanded(child:Text(label,maxLines:1,overflow:TextOverflow.ellipsis,
-          style:const TextStyle(color:Colors.white,fontSize:10,fontWeight:FontWeight.w800))),
+          style:TextStyle(color:CupUi.white,fontSize:11,
+            fontWeight:FontWeight.w900))),
+        Icon(Icons.north_east_rounded,color:CupUi.muted,size:16),
       ])));
 
   Widget _matchesPage()=>RefreshIndicator(onRefresh:refresh,child:ListView(key:const PageStorageKey('matches'),children:[
