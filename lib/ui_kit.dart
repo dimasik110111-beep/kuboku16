@@ -142,16 +142,16 @@ class CupSection extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Padding(padding:const EdgeInsets.fromLTRB(17,22,17,10),
-      child:Row(children:[
-        Container(width:4,height:30,decoration:BoxDecoration(
-          color:CupUi.red,borderRadius:BorderRadius.circular(3))),
-        const SizedBox(width:11),
+    return Padding(padding:const EdgeInsets.fromLTRB(17,26,17,12),
+      child:Row(crossAxisAlignment:CrossAxisAlignment.end,children:[
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
           Text(title,style:TextStyle(color:CupUi.white,
             fontFamily:'ArenaCondensed',fontWeight:FontWeight.w700,
-            fontSize:19,letterSpacing:.4)),
-          if(subtitle!=null)Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:11)),
+            fontSize:25,height:1.1,letterSpacing:.2)),
+          if(subtitle!=null)...[
+            const SizedBox(height:4),
+            Text(subtitle!,style:TextStyle(color:CupUi.muted,fontSize:11)),
+          ],
         ])),
         if(trailing!=null)trailing!,
       ]));
@@ -173,7 +173,7 @@ class CupTag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
         color: filled ? tone.withValues(alpha: .14) : CupUi.raised,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: tone.withValues(alpha: filled ? .3 : .12)),
       ),
       child: Text(text, style: TextStyle(color: tone,
