@@ -549,7 +549,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver{
             fontSize:11,fontWeight:FontWeight.w700)),
           const SizedBox(height:22),
           Row(children:[
-            Expanded(child:_pulseMetric('$live','В ЭФИРЕ',CupUi.signal)),
+            Expanded(child:_pulseMetric('$live','LIVE',CupUi.signal)),
             Expanded(child:_pulseMetric('$complete','ЗАВЕРШЕНО',Colors.white)),
             Expanded(child:_pulseMetric('${today.length}','СЕГОДНЯ',Colors.white)),
           ]),
