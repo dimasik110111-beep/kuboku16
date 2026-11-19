@@ -92,6 +92,57 @@ void main() {
     }, () => MockClient((_) => response.future));
   });
 
+  testWidgets('Reverse FHR timeline is shown chronologically in match story',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final detail = {
+      'ok': true,
+      'gameId': 46,
+      'status': 'FINAL',
+      'homeScore': 3,
+      'awayScore': 0,
+      'timeline': [
+        {
+          'type': 'GOAL',
+          'elapsedSeconds': 1800,
+          'elapsed': '30:00',
+          'score': '3:0',
+          'player': 'Третий гол'
+        },
+        {
+          'type': 'GOAL',
+          'elapsedSeconds': 900,
+          'elapsed': '15:00',
+          'score': '2:0',
+          'player': 'Второй гол'
+        },
+        {
+          'type': 'GOAL',
+          'elapsedSeconds': 300,
+          'elapsed': '05:00',
+          'score': '1:0',
+          'player': 'Первый гол'
+        },
+      ]
+    };
+    await http.runWithClient(() async {
+      const match = Match('2026-11-19', 'ЦСКА Москва', 'Авангард Омск', '3:0',
+          'Группа А-II', '',
+          status: 'FINAL', gameId: 46);
+      await tester
+          .pumpWidget(const MaterialApp(home: MatchCenterPage(match: match)));
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(find.text('Первый гол')).dy,
+          lessThan(tester.getTopLeft(find.text('Второй гол')).dy));
+      expect(tester.getTopLeft(find.text('Второй гол')).dy,
+          lessThan(tester.getTopLeft(find.text('Третий гол')).dy));
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+        () => MockClient((_) async => http.Response(jsonEncode(detail), 200,
+            headers: {'content-type': 'application/json; charset=utf-8'})));
+  });
+
   testWidgets('Team form wraps on a narrow screen and opens a contextual match',
       (tester) async {
     SharedPreferences.setMockInitialValues({});

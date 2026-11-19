@@ -328,12 +328,28 @@ class _MatchCenterPageState extends State<MatchCenterPage>
                                               fontSize: 13,
                                               fontWeight: FontWeight.w700,
                                               color: tab == i
-                                                  ? CupUi.red
+                                                  ? CupUi.action
                                                   : CupUi.muted)))))))),
           ])));
 
   Widget _matchStory() {
-    final all = events.where((e) => str(e, 'type') == 'GOAL').toList();
+    int elapsed(Map<String, dynamic> event) {
+      final seconds = int.tryParse('${event['elapsedSeconds']}');
+      if (seconds != null) return seconds;
+      final clock = str(event, 'elapsed').split(':');
+      if (clock.length == 2) {
+        return (int.tryParse(clock[0]) ?? 0) * 60 +
+            (int.tryParse(clock[1]) ?? 0);
+      }
+      final score =
+          str(event, 'score').split(':').map((n) => int.tryParse(n) ?? 0);
+      return score.fold<int>(0, (total, n) => total + n) * 3600;
+    }
+
+    // FHR sends its timeline newest first. Both the chart and the story must
+    // follow elapsed game time rather than run the final score backwards.
+    final all = events.where((e) => str(e, 'type') == 'GOAL').toList()
+      ..sort((a, b) => elapsed(a).compareTo(elapsed(b)));
     final series = <List<int>>[
       [0, 0]
     ];

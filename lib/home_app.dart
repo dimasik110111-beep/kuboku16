@@ -455,7 +455,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                         tab == 5
                             ? Icons.bookmark_rounded
                             : Icons.bookmark_border_rounded,
-                        color: tab == 5 ? CupUi.red : CupUi.soft)),
+                        color: tab == 5 ? CupUi.action : CupUi.soft)),
                 PopupMenuButton<String>(
                     tooltip: 'Разделы',
                     icon: const Icon(Icons.more_horiz_rounded),
@@ -569,7 +569,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                                           child: Icon(icons[i],
                                               size: 21,
                                               color: tab == i
-                                                  ? CupUi.red
+                                                  ? CupUi.action
                                                   : CupUi.muted)),
                                       const SizedBox(height: 5),
                                       Text(labels[i],
@@ -671,7 +671,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                                     : Icons.bookmark_border_rounded,
                                 size: 19,
                                 color: favorites.contains(game.key)
-                                    ? CupUi.red
+                                    ? CupUi.action
                                     : CupUi.dim)),
                       ]),
                       Padding(
@@ -757,7 +757,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                                 borderRadius: BorderRadius.circular(9)),
                             child: Text('U16',
                                 style: TextStyle(
-                                    color: CupUi.red,
+                                    color: CupUi.action,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w800))),
                       ])),
@@ -859,7 +859,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(icon, color: CupUi.red, size: 23),
+                        Icon(icon, color: CupUi.action, size: 23),
                         const SizedBox(height: 14),
                         Text(title,
                             style: TextStyle(
@@ -886,7 +886,7 @@ class _ScoresHomeState extends State<ScoresHome> with WidgetsBindingObserver {
                         labelStyle: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: filter == i ? CupUi.red : CupUi.muted),
+                            color: filter == i ? CupUi.action : CupUi.muted),
                         selectedColor: CupUi.redMuted,
                         backgroundColor: CupUi.surface,
                         side: BorderSide(

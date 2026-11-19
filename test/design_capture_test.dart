@@ -25,6 +25,9 @@ void main() {
       fonts.addFont(rootBundle.load('assets/fonts/Manrope-$style.ttf'));
     }
     await fonts.load();
+    await (FontLoader('MaterialIcons')
+          ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf')))
+        .load();
     var match = const Match('2026-11-10', 'Крылья Советов Москва',
         'Авангард Омск', '4:2', 'Группа В-II', '',
         status: 'FINAL', timeMsk: '18:00');
@@ -32,16 +35,18 @@ void main() {
     const dataDir = String.fromEnvironment('PREVIEW_DATA_DIR');
     if (dataDir.isNotEmpty) {
       detail =
-          jsonDecode(await File('$dataDir/match-25170469.json').readAsString());
+          jsonDecode(File('$dataDir/match-25170469.json').readAsStringSync());
       final feed = FhrFeed.fromApi(
-          jsonDecode(await File('$dataDir/matches.json').readAsString()));
+          jsonDecode(File('$dataDir/matches.json').readAsStringSync()));
       match = feed.matches.firstWhere((m) => m.gameId == 25170469);
     }
     await http.runWithClient(() async {
       await tester.pumpWidget(RepaintBoundary(
           key: const ValueKey('match-preview'),
           child: MaterialApp(
-              theme: juniorTheme(true), home: MatchCenterPage(match: match))));
+              debugShowCheckedModeBanner: false,
+              theme: juniorTheme(true),
+              home: MatchCenterPage(match: match))));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       final boundary = tester.renderObject<RenderRepaintBoundary>(
@@ -53,7 +58,7 @@ void main() {
         await file.parent.create(recursive: true);
         await file.writeAsBytes(bytes!.buffer.asUint8List());
         shot.dispose();
-      });
+      }).timeout(const Duration(seconds: 20));
       await tester.pumpWidget(const SizedBox.shrink());
     },
         () => MockClient((_) async => http.Response(jsonEncode(detail), 200,

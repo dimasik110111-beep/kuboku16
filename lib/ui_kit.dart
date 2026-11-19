@@ -15,6 +15,7 @@ class CupUi {
 
   /// Primary action. Historical name is retained for backwards compatibility.
   static const red = Color(0xFF007F68);
+  static Color get action => light ? red : const Color(0xFF77D6BC);
   static const ice = Color(0xFF58BFA9);
   static const signal = Color(0xFFBCE8D8);
   static const gold = Color(0xFFE1B54F);
@@ -195,7 +196,8 @@ class CupTag extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    final tone = color == const Color(0xFF8995A6) ? CupUi.muted : color;
+    final tone = color == const Color(0xFF8995A6)
+      ? CupUi.muted : color == CupUi.red ? CupUi.action : color;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(

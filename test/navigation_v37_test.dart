@@ -187,12 +187,15 @@ void main() {
       fonts.addFont(rootBundle.load('assets/fonts/Manrope-$style.ttf'));
     }
     await fonts.load();
+    await (FontLoader('MaterialIcons')
+          ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf')))
+        .load();
     Map<String, dynamic>? calendar;
     Map<String, dynamic>? teams;
     const dataDir = String.fromEnvironment('PREVIEW_DATA_DIR');
     if (dataDir.isNotEmpty) {
-      calendar = jsonDecode(await File('$dataDir/matches.json').readAsString());
-      teams = jsonDecode(await File('$dataDir/teams.json').readAsString());
+      calendar = jsonDecode(File('$dataDir/matches.json').readAsStringSync());
+      teams = jsonDecode(File('$dataDir/teams.json').readAsStringSync());
     }
     final client = MockClient((r) async {
       if (r.url.path == '/api/v1/matches')
@@ -216,7 +219,7 @@ void main() {
         await file.parent.create(recursive: true);
         await file.writeAsBytes(bytes!.buffer.asUint8List());
         shot.dispose();
-      });
+      }).timeout(const Duration(seconds: 20));
     }
 
     await capture('overview-v37');
