@@ -3,7 +3,7 @@ name: Build JUNIOR U16 Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [main, codex/arena-revolution]
+    branches: [main, codex/full-rebuild]
 
 concurrency:
   group: junior-u16-v35-capture-fix
